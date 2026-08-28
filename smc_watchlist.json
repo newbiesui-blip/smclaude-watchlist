@@ -1,0 +1,620 @@
+[
+  {
+    "symbol": "MSFTUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 88,
+    "current_score": 88,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T14:50:43.132041+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 505.37,
+    "zone_high": 506.26,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 505.815,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 503.673355,
+    "original_invalidation": 503.673355,
+    "targets": [
+      {
+        "price": 513.2,
+        "label": "prior swing high (liquidity)",
+        "r": 0.10560954988862688
+      }
+    ],
+    "trail_mode": "trail_breakeven",
+    "last_note": "Still pending -- price 513.64, ~1.55% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "IRENUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "triggered",
+    "added_score": 90,
+    "current_score": 48,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T17:27:24.439523+00:00",
+    "triggered_at": "2026-08-28T19:30:26.089775+00:00",
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 35.24,
+    "zone_high": 35.58,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 35.41,
+        "size_pct": 100,
+        "filled": true
+      }
+    ],
+    "invalidation": 36.003925,
+    "original_invalidation": 37.27583,
+    "targets": [
+      {
+        "price": 35.19,
+        "label": "prior swing low (liquidity)",
+        "r": 1.5126958400864334
+      },
+      {
+        "price": 34.98,
+        "label": "prior swing low (liquidity)",
+        "r": 2.1609940572663335
+      },
+      {
+        "price": 34.87,
+        "label": "prior swing low (liquidity)",
+        "r": 2.500578837693897
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Refreshed: score 60.0 -> 48.0 (down), currently -0.14R. Stop trailed to 36.0039. Targets updated. | Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.68) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.68) if you haven't already, or on your next confirmation candle.",
+    "history": [
+      "[2026-08-28 19:30 UTC] Entry condition met at 35.52 -- now tracking as triggered. Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.52) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:30 UTC] Refreshed: score 90.0 -> 60.0 (down), currently -0.06R. Stop held at 37.2758 (no tighter structural level yet). Targets updated. | Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.52) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:51 UTC] Refreshed: score 60.0 -> 60.0 (flat), currently -0.19R. Stop held at 37.2758 (no tighter structural level yet). Targets updated. | Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.76) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 20:02 UTC] Refreshed: score 60.0 -> 60.0 (flat), currently -0.10R. Stop held at 37.2758 (no tighter structural level yet). Targets updated. | Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.6) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 20:27 UTC] Refreshed: score 60.0 -> 48.0 (down), currently -0.14R. Stop trailed to 36.0039. Targets updated. | Filled: 100% @ 35.41. All legs filled. Enter at CMP (35.68) if you haven't already, or on your next confirmation candle."
+    ]
+  },
+  {
+    "symbol": "SPYUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 72,
+    "current_score": 72,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T17:27:29.973618+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 770.1,
+    "zone_high": 771.0,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 770.55,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 771.6056750000001,
+    "original_invalidation": 771.6056750000001,
+    "targets": [
+      {
+        "price": 768.89,
+        "label": "prior swing low (liquidity)",
+        "r": 0.06260576951292986
+      },
+      {
+        "price": 768.1,
+        "label": "prior swing low (liquidity)",
+        "r": 0.37172175648306827
+      },
+      {
+        "price": 767.11,
+        "label": "Order Block (demand)",
+        "r": 0.7590949553444023
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 769.59, ~0.12% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "GOOGLUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 68,
+    "current_score": 68,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T17:27:36.498415+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 340.52,
+    "zone_high": 341.78,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 341.15,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 340.318755,
+    "original_invalidation": 340.318755,
+    "targets": [
+      {
+        "price": 349.16,
+        "label": "prior swing high (liquidity)",
+        "r": 0.5007430517658086
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 346.32, ~1.52% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "TQQQUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 60,
+    "current_score": 60,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T17:27:42.392102+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 70.63,
+    "zone_high": 70.89,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 70.75999999999999,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 70.244475,
+    "original_invalidation": 70.244475,
+    "targets": [
+      {
+        "price": 72.27,
+        "label": "prior swing high (liquidity)",
+        "r": 0.3821156240937565
+      },
+      {
+        "price": 72.45,
+        "label": "prior swing high (liquidity)",
+        "r": 0.5049385032667538
+      },
+      {
+        "price": 72.53,
+        "label": "prior swing high (liquidity)",
+        "r": 0.5595264495658605
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 71.87, ~1.57% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "XAUTUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 70,
+    "current_score": 70,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:44:22.615447+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 4460.68,
+    "zone_high": 4469.41,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 4465.045,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 4484.717000000001,
+    "original_invalidation": 4484.717000000001,
+    "targets": [],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 4452.14, ~0.29% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "INJUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 70,
+    "current_score": 70,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:44:29.461438+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 5.157,
+    "zone_high": 5.198,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 5.1775,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 5.3430025,
+    "original_invalidation": 5.3430025,
+    "targets": [],
+    "trail_mode": "trail_structural",
+    "last_note": "Inside the zone (price 5.165, zone 5.157-5.198) but hasn't reached your leg price(s) yet -- still pending.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "DOTUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 65,
+    "current_score": 65,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:44:31.572796+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.8498,
+    "zone_high": 0.8543,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.85205,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.8578849000000001,
+    "original_invalidation": 0.8578849000000001,
+    "targets": [
+      {
+        "price": 0.8344,
+        "label": "prior swing low (liquidity)",
+        "r": 0.10856789505732678
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.8472, ~0.57% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "DEXEUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "triggered",
+    "added_score": 60,
+    "current_score": 58,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:44:34.485125+00:00",
+    "triggered_at": "2026-08-28T18:52:19.164216+00:00",
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 2.361,
+    "zone_high": 2.421,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 2.391,
+        "size_pct": 100,
+        "filled": true
+      }
+    ],
+    "invalidation": 2.1877135,
+    "original_invalidation": 1.9400855000000001,
+    "targets": [
+      {
+        "price": 2.465,
+        "label": "prior swing high (liquidity)",
+        "r": 1.8212063711699973
+      },
+      {
+        "price": 2.635,
+        "label": "prior swing high (liquidity)",
+        "r": 3.55084370691804
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Refreshed: score 58.0 -> 58.0 (flat), currently -0.23R. Stop trailed to 2.18771. Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.286) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.286) if you haven't already, or on your next confirmation candle.",
+    "history": [
+      "[2026-08-28 18:52 UTC] Entry condition met at 2.264 -- now tracking as triggered. Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.264) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 18:52 UTC] Refreshed: score 60.0 -> 70.0 (up), currently -0.28R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.264) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:04 UTC] Refreshed: score 70.0 -> 58.0 (down), currently -0.10R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.347) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:05 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.13R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.332) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:08 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.11R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.343) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:09 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.24R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.284) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:12 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.27R. Stop held at 1.94009 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.268) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:31 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.31R. Stop trailed to 2.14777. Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.252) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 19:52 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.35R. Stop held at 2.14777 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.235) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 20:03 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.27R. Stop held at 2.14777 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.268) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-28 20:28 UTC] Refreshed: score 58.0 -> 58.0 (flat), currently -0.23R. Stop trailed to 2.18771. Targets updated. | Filled: 100% @ 2.391. All legs filled. Enter at CMP (2.286) if you haven't already, or on your next confirmation candle."
+    ]
+  },
+  {
+    "symbol": "SPYUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 60,
+    "current_score": 60,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:44:41.370528+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 766.61,
+    "zone_high": 767.11,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 766.86,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 764.880955,
+    "original_invalidation": 764.880955,
+    "targets": [
+      {
+        "price": 769.92,
+        "label": "prior swing high (liquidity)",
+        "r": 0.02857699817004872
+      },
+      {
+        "price": 770.74,
+        "label": "prior swing high (liquidity)",
+        "r": 0.1959565588803606
+      },
+      {
+        "price": 771.8,
+        "label": "prior swing high (liquidity)",
+        "r": 0.41232525931073943
+      }
+    ],
+    "trail_mode": "fixed",
+    "last_note": "Still pending -- price 769.6, ~0.36% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "BLESSUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 75,
+    "current_score": 75,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T18:50:30.816087+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.010881,
+    "zone_high": 0.011008,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.0109445,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.0108187475,
+    "original_invalidation": 0.0108187475,
+    "targets": [
+      {
+        "price": 0.011199,
+        "label": "prior swing high (liquidity)",
+        "r": 0.0026367657431421035
+      },
+      {
+        "price": 0.011232,
+        "label": "prior swing high (liquidity)",
+        "r": 0.08965003526674462
+      },
+      {
+        "price": 0.011279,
+        "label": "prior swing high (liquidity)",
+        "r": 0.21357802519429997
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.011228, ~2.59% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "BEUSDT",
+    "exchange": "binance",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 90,
+    "current_score": 90,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T20:00:53.240200+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 211.48,
+    "zone_high": 212.52,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 212.0,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 213.43968,
+    "original_invalidation": 213.43968,
+    "targets": [],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 210.66, ~0.63% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "RUNEUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 90,
+    "current_score": 90,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T20:02:08.313476+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.4706,
+    "zone_high": 0.4726,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.4716,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.4688956,
+    "original_invalidation": 0.4688956,
+    "targets": [
+      {
+        "price": 0.4736,
+        "label": "prior swing high (liquidity)",
+        "r": 0.0444010301039062
+      },
+      {
+        "price": 0.4793,
+        "label": "prior swing high (liquidity)",
+        "r": 1.3098303880650173
+      },
+      {
+        "price": 0.4816,
+        "label": "prior swing high (liquidity)",
+        "r": 1.820442234259846
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.4744, ~0.59% from zone.",
+    "entry_instruction": null,
+    "history": []
+  },
+  {
+    "symbol": "MSTRUSDT",
+    "exchange": "binance",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 85,
+    "current_score": 85,
+    "trade_type": "SCALP",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-08-28T20:09:53.619470+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 124.37,
+    "zone_high": 124.56,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 124.465,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 124.03367,
+    "original_invalidation": 124.03367,
+    "targets": [
+      {
+        "price": 127.7,
+        "label": "prior swing high (liquidity)",
+        "r": 0.054655340545919834
+      },
+      {
+        "price": 127.92,
+        "label": "prior swing high (liquidity)",
+        "r": 0.11794047170435375
+      },
+      {
+        "price": 128.23,
+        "label": "prior swing high (liquidity)",
+        "r": 0.20711497470032586
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 127.62, ~2.53% from zone.",
+    "entry_instruct
