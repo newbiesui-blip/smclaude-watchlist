@@ -31,3 +31,30 @@ jobs:
         run: pip install pandas numpy requests
 
       - name: Run watchlist refresh
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python refresh_watchlist.py
+
+      - name: Commit updated watchlist (if changed)
+        run: |
+          git config user.name "watchlist-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if git diff --quiet smc_watchlist.json 2>/dev/null; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git add smc_watchlist.json
+          git commit -m "Auto-refresh watchlist [skip ci]"
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Pushed successfully on attempt $attempt."
+              exit 0
+            fi
+            echo "Push attempt $attempt failed (likely raced with the other "
+            echo "workflow writing the same file) -- retrying after a short wait."
+            git rebase --abort 2>/dev/null || true
+            sleep $(( (RANDOM % 10) + 5 ))
+          done
+          echo "Failed to push after 5 attempts -- this run's watchlist update was NOT saved. Nothing corrupted, just skipped; next scheduled run will pick up fresh data anyway."
+          exit 1
