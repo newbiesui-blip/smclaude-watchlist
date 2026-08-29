@@ -5,13 +5,10 @@ on:
     # Every 15 minutes -- as close to continuous as makes sense given the
     # scan itself takes 13-20 min to run (150 symbols x 4 timeframes with a
     # polite delay between calls). Runs will often still be finishing when
-    # the next one is due; the concurrency block below makes sure that
-    # never causes two scans to collide, it just queues the next one.
+    # the next one is due; the concurrency block just makes sure a new run
+    # never overlaps and duplicate-alerts you.
     - cron: "*/15 * * * *"
   workflow_dispatch: {}   # manual trigger from the Actions tab, for testing
-
-permissions:
-  contents: write
 
 concurrency:
   group: full-market-scan
@@ -38,15 +35,4 @@ jobs:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
         run: python full_scan.py
-
-      - name: Commit updated watchlist (if changed)
-        run: |
-          git config user.name "watchlist-bot"
-          git config user.email "actions@users.noreply.github.com"
-          if git diff --quiet smc_watchlist.json 2>/dev/null; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git add smc_watchlist.json
-          git commit -m "Auto full-scan: add qualifying setups [skip ci]"
-          for attempt in 1 2 3 4 5; do
+        
