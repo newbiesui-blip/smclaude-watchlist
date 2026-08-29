@@ -3,14 +3,14 @@
     "symbol": "SPYUSDT",
     "exchange": "binance",
     "direction": "BEARISH",
-    "status": "pending",
+    "status": "triggered",
     "added_score": 72,
-    "current_score": 72,
+    "current_score": 30,
     "trade_type": "SCALP",
     "attempt_num": 1,
     "lineage_note": null,
     "added_at": "2026-08-28T17:27:29.973618+00:00",
-    "triggered_at": null,
+    "triggered_at": "2026-08-29T00:06:56.085273+00:00",
     "invalidated_at": null,
     "expired_at": null,
     "expire_reason": null,
@@ -21,35 +21,38 @@
       {
         "price": 770.55,
         "size_pct": 100,
-        "filled": false
+        "filled": true
       }
     ],
-    "invalidation": 771.6056750000001,
+    "invalidation": 771.5155400000001,
     "original_invalidation": 771.6056750000001,
     "targets": [
       {
-        "price": 768.89,
+        "price": 770.45,
         "label": "prior swing low (liquidity)",
-        "r": 0.06260576951292986
+        "r": 0.4292190895188524
       },
       {
-        "price": 768.1,
+        "price": 769.6,
         "label": "prior swing low (liquidity)",
-        "r": 0.37172175648306827
+        "r": 1.5693322960535614
       },
       {
-        "price": 767.11,
-        "label": "Order Block (demand)",
-        "r": 0.7590949553444023
+        "price": 768.73,
+        "label": "prior swing low (liquidity)",
+        "r": 2.7362716956831794
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Inside the zone (price 770.22, zone 770.1-771) but hasn't reached your leg price(s) yet -- still pending.",
-    "entry_instruction": null,
-    "history": [],
+    "last_note": "Refreshed: score 72.0 -> 30.0 (down -58.3%), currently -0.21R. Stop trailed to 771.516. Targets updated. | Filled: 100% @ 770.55. All legs filled. Enter at CMP (770.77) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 770.55. All legs filled. Enter at CMP (770.77) if you haven't already, or on your next confirmation candle.",
+    "history": [
+      "[2026-08-29 00:06 UTC] Entry condition met at 770.77 -- now tracking as triggered. Filled: 100% @ 770.55. All legs filled. Enter at CMP (770.77) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-29 00:06 UTC] Refreshed: score 72.0 -> 30.0 (down -58.3%), currently -0.21R. Stop trailed to 771.516. Targets updated. | Filled: 100% @ 770.55. All legs filled. Enter at CMP (770.77) if you haven't already, or on your next confirmation candle."
+    ],
     "dead_reported": false,
-    "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_delta_pct": -58.3,
+    "last_score_arrow": "down"
   },
   {
     "symbol": "GOOGLUSDT",
@@ -86,7 +89,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 342.07, ~0.27% from zone.",
+    "last_note": "Still pending -- price 342.56, ~0.41% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
@@ -138,7 +141,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 72.35, ~2.25% from zone.",
+    "last_note": "Still pending -- price 72.53, ~2.50% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
@@ -149,14 +152,14 @@
     "symbol": "DOTUSDT",
     "exchange": "binance",
     "direction": "BEARISH",
-    "status": "pending",
+    "status": "triggered",
     "added_score": 65,
-    "current_score": 65,
+    "current_score": 25,
     "trade_type": "SCALP",
     "attempt_num": 1,
     "lineage_note": null,
     "added_at": "2026-08-28T18:44:31.572796+00:00",
-    "triggered_at": null,
+    "triggered_at": "2026-08-29T00:07:09.310148+00:00",
     "invalidated_at": null,
     "expired_at": null,
     "expire_reason": null,
@@ -167,25 +170,38 @@
       {
         "price": 0.85205,
         "size_pct": 100,
-        "filled": false
+        "filled": true
       }
     ],
-    "invalidation": 0.8578849000000001,
+    "invalidation": 0.8552810000000001,
     "original_invalidation": 0.8578849000000001,
     "targets": [
       {
-        "price": 0.8344,
+        "price": 0.853,
         "label": "prior swing low (liquidity)",
-        "r": 0.10856789505732678
+        "r": 4.172461752434438
+      },
+      {
+        "price": 0.842,
+        "label": "prior swing low (liquidity)",
+        "r": 19.47148817802738
+      },
+      {
+        "price": 0.838,
+        "label": "prior swing low (liquidity)",
+        "r": 25.034770514606628
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Inside the zone (price 0.85, zone 0.8498-0.8543) but hasn't reached your leg price(s) yet -- still pending.",
-    "entry_instruction": null,
-    "history": [],
+    "last_note": "Refreshed: score 65.0 -> 25.0 (down -61.5%), currently -0.68R. Stop trailed to 0.855281. Targets updated. | Filled: 100% @ 0.85205. All legs filled. Enter at CMP (0.856) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 0.85205. All legs filled. Enter at CMP (0.856) if you haven't already, or on your next confirmation candle.",
+    "history": [
+      "[2026-08-29 00:07 UTC] Entry condition met at 0.856 -- now tracking as triggered. Filled: 100% @ 0.85205. All legs filled. Enter at CMP (0.856) if you haven't already, or on your next confirmation candle.",
+      "[2026-08-29 00:07 UTC] Refreshed: score 65.0 -> 25.0 (down -61.5%), currently -0.68R. Stop trailed to 0.855281. Targets updated. | Filled: 100% @ 0.85205. All legs filled. Enter at CMP (0.856) if you haven't already, or on your next confirmation candle."
+    ],
     "dead_reported": false,
-    "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_delta_pct": -61.5,
+    "last_score_arrow": "down"
   },
   {
     "symbol": "SPYUSDT",
@@ -232,7 +248,7 @@
       }
     ],
     "trail_mode": "fixed",
-    "last_note": "Still pending -- price 770.22, ~0.44% from zone.",
+    "last_note": "Still pending -- price 770.77, ~0.51% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
