@@ -2,20 +2,24 @@ name: Full Market Scan
 
 on:
   schedule:
-    # Every 4 hours, on the hour. Best-effort timing like the 15-min job --
-    # can run a few minutes late under GitHub's load, that's normal.
-    - cron: "0 */4 * * *"
+    # Every 15 minutes -- as close to continuous as makes sense given the
+    # scan itself takes 13-20 min to run (150 symbols x 4 timeframes with a
+    # polite delay between calls). Runs will often still be finishing when
+    # the next one is due; the concurrency block below makes sure that
+    # never causes two scans to collide, it just queues the next one.
+    - cron: "*/15 * * * *"
   workflow_dispatch: {}   # manual trigger from the Actions tab, for testing
 
 permissions:
   contents: write
 
+concurrency:
+  group: full-market-scan
+  cancel-in-progress: false   # queue rather than kill an in-progress scan
+
 jobs:
   full-scan:
     runs-on: ubuntu-latest
-    # A full 150-symbol x 4-timeframe scan does a lot of API calls with a
-    # polite delay between each -- give it real headroom instead of the
-    # default 6h cap being the only thing stopping a runaway job.
     timeout-minutes: 30
     steps:
       - name: Checkout repo
@@ -39,10 +43,10 @@ jobs:
         run: |
           git config user.name "watchlist-bot"
           git config user.email "actions@users.noreply.github.com"
-          if ! git diff --quiet smc_watchlist.json 2>/dev/null; then
-            git add smc_watchlist.json
-            git commit -m "Auto full-scan: add qualifying setups [skip ci]"
-            git push
-          else
+          if git diff --quiet smc_watchlist.json 2>/dev/null; then
             echo "No changes to commit."
+            exit 0
           fi
+          git add smc_watchlist.json
+          git commit -m "Auto full-scan: add qualifying setups [skip ci]"
+          for attempt in 1 2 3 4 5; do
