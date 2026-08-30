@@ -3,7 +3,7 @@
     "symbol": "SPYUSDT",
     "exchange": "binance",
     "direction": "BULLISH",
-    "status": "pending",
+    "status": "expired",
     "added_score": 60,
     "current_score": 60,
     "trade_type": "SCALP",
@@ -12,8 +12,8 @@
     "added_at": "2026-08-28T18:44:41.370528+00:00",
     "triggered_at": null,
     "invalidated_at": null,
-    "expired_at": null,
-    "expire_reason": null,
+    "expired_at": "2026-08-30T18:53:44.029221+00:00",
+    "expire_reason": "still pending after 48h with no trigger",
     "zone_low": 766.61,
     "zone_high": 767.11,
     "zone_label": "Order Block",
@@ -44,10 +44,12 @@
       }
     ],
     "trail_mode": "fixed",
-    "last_note": "Still pending -- price 772.44, ~0.73% from zone.",
+    "last_note": "Expired -- still pending after 48h with no trigger.",
     "entry_instruction": null,
-    "history": [],
-    "dead_reported": false,
+    "history": [
+      "[2026-08-30 18:53 UTC] Expired -- still pending after 48h with no trigger."
+    ],
+    "dead_reported": true,
     "last_score_delta_pct": 0.0,
     "last_score_arrow": "flat"
   }
