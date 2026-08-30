@@ -3,7 +3,7 @@
     "symbol": "TQQQUSDT",
     "exchange": "binance",
     "direction": "BULLISH",
-    "status": "pending",
+    "status": "expired",
     "added_score": 60,
     "current_score": 60,
     "trade_type": "SCALP",
@@ -12,8 +12,8 @@
     "added_at": "2026-08-28T17:27:42.392102+00:00",
     "triggered_at": null,
     "invalidated_at": null,
-    "expired_at": null,
-    "expire_reason": null,
+    "expired_at": "2026-08-30T17:38:34.574210+00:00",
+    "expire_reason": "still pending after 48h with no trigger",
     "zone_low": 70.63,
     "zone_high": 70.89,
     "zone_label": "Order Block",
@@ -44,10 +44,12 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 72.73, ~2.78% from zone.",
+    "last_note": "Expired -- still pending after 48h with no trigger.",
     "entry_instruction": null,
-    "history": [],
-    "dead_reported": false,
+    "history": [
+      "[2026-08-30 17:38 UTC] Expired -- still pending after 48h with no trigger."
+    ],
+    "dead_reported": true,
     "last_score_delta_pct": 0.0,
     "last_score_arrow": "flat"
   },
@@ -96,7 +98,7 @@
       }
     ],
     "trail_mode": "fixed",
-    "last_note": "Still pending -- price 772.39, ~0.72% from zone.",
+    "last_note": "Still pending -- price 772.17, ~0.69% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
