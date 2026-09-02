@@ -1,1 +1,49 @@
-[]
+[
+  {
+    "symbol": "PUMP-USDT",
+    "exchange": "bingx",
+    "direction": "BEARISH",
+    "status": "pending",
+    "added_score": 90,
+    "current_score": 90,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-09-02T10:20:22.464165+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.004215,
+    "zone_high": 0.004239,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.004227,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.004256375000000001,
+    "original_invalidation": 0.004256375000000001,
+    "targets": [
+      {
+        "price": 0.004201,
+        "label": "prior swing low (liquidity)",
+        "r": 0.018390804597703387
+      },
+      {
+        "price": 0.004133,
+        "label": "prior swing low (liquidity)",
+        "r": 1.268965517241358
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.004208, ~0.45% from zone.",
+    "entry_instruction": null,
+    "history": [],
+    "dead_reported": false,
+    "last_score_delta_pct": 0.0,
+    "last_score_arrow": "flat"
+  }
+]
