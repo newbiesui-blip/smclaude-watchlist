@@ -5,7 +5,7 @@
     "direction": "BEARISH",
     "status": "triggered",
     "added_score": 90,
-    "current_score": 115,
+    "current_score": 118,
     "trade_type": "INTRADAY",
     "attempt_num": 1,
     "lineage_note": null,
@@ -28,19 +28,19 @@
     "original_invalidation": 0.004256375000000001,
     "targets": [
       {
-        "price": 0.004133,
-        "label": "prior swing low (liquidity)",
-        "r": 0.16133088489989986
-      },
-      {
         "price": 0.00408,
         "label": "prior swing low (liquidity)",
-        "r": 0.6643036437054811
+        "r": 0.28597931416294176
+      },
+      {
+        "price": 0.004049,
+        "label": "prior swing low (liquidity)",
+        "r": 0.513296204907849
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 130.0 -> 115.0 (down -11.5%), currently +5.92R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004053) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004053) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 115.0 -> 118.0 (up +2.6%), currently +3.68R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004119) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004119) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 12:02 UTC] Entry condition met at 0.004233 -- now tracking as triggered. Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 12:02 UTC] Refreshed: score 90.0 -> 60.0 (down -33.3%), currently -0.20R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
@@ -58,11 +58,18 @@
       "[2026-09-02 16:26 UTC] Refreshed: score 97.8 -> 89.9 (down -8.1%), currently +1.12R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004194) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 16:49 UTC] Refreshed: score 89.9 -> 97.3 (up +8.2%), currently +2.62R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.00415) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 17:02 UTC] Refreshed: score 97.3 -> 130.0 (up +33.6%), currently +5.58R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004063) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-02 17:20 UTC] Refreshed: score 130.0 -> 115.0 (down -11.5%), currently +5.92R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004053) if you haven't already, or on your next confirmation candle."
+      "[2026-09-02 17:20 UTC] Refreshed: score 130.0 -> 115.0 (down -11.5%), currently +5.92R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004053) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 17:49 UTC] Refreshed: score 115.0 -> 118.0 (up +2.6%), currently +3.68R. Stop held at 0.00425537 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004119) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
-    "last_score_delta_pct": -11.5,
-    "last_score_arrow": "down"
+    "last_score_delta_pct": 2.6,
+    "last_score_arrow": "up",
+    "entry_price": null,
+    "max_r": 3.6765957446807427,
+    "max_favorable_price": 0.004119,
+    "peak_score": 118,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "AVAX-USDT",
@@ -109,12 +116,18 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 7.105, ~0.31% from zone.",
+    "last_note": "Still pending -- price 7.164, ~1.14% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 92,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "DOT-USDT",
@@ -122,7 +135,7 @@
     "direction": "BULLISH",
     "status": "triggered",
     "added_score": 100,
-    "current_score": 89.7,
+    "current_score": 109.6,
     "trade_type": "INTRADAY",
     "attempt_num": 1,
     "lineage_note": null,
@@ -145,24 +158,24 @@
     "original_invalidation": 0.83604405,
     "targets": [
       {
-        "price": 0.8485,
+        "price": 0.86,
         "label": "prior swing high (liquidity)",
-        "r": 0.39406189489418647
+        "r": 0.1982460729380313
       },
       {
-        "price": 0.8544,
-        "label": "prior swing high (liquidity)",
-        "r": 1.1957740258858056
+        "price": 0.8614,
+        "label": "Order Block (supply)",
+        "r": 0.275341767969493
       },
       {
-        "price": 0.8555,
+        "price": 0.866,
         "label": "prior swing high (liquidity)",
-        "r": 1.3452457791215295
+        "r": 0.5286561945014229
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 76.2 -> 89.7 (up +17.7%), currently +0.65R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8456) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8456) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 89.7 -> 109.6 (up +22.2%), currently +2.51R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8564) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8564) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 12:51 UTC] Entry condition met at 0.8408 -- now tracking as triggered. Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8408) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 12:51 UTC] Refreshed: score 100.0 -> 78.0 (down -22.0%), currently -0.18R. Stop trailed to 0.838241. Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8408) if you haven't already, or on your next confirmation candle.",
@@ -178,11 +191,18 @@
       "[2026-09-02 16:26 UTC] Refreshed: score 69.0 -> 91.4 (up +32.5%), currently +2.09R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.854) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 16:49 UTC] Refreshed: score 91.4 -> 88.3 (down -3.4%), currently +1.89R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8528) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 17:02 UTC] Refreshed: score 88.3 -> 76.2 (down -13.7%), currently +1.75R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.852) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-02 17:20 UTC] Refreshed: score 76.2 -> 89.7 (up +17.7%), currently +0.65R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8456) if you haven't already, or on your next confirmation candle."
+      "[2026-09-02 17:20 UTC] Refreshed: score 76.2 -> 89.7 (up +17.7%), currently +0.65R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8456) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 17:49 UTC] Refreshed: score 89.7 -> 109.6 (up +22.2%), currently +2.51R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8564) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
-    "last_score_delta_pct": 17.7,
-    "last_score_arrow": "up"
+    "last_score_delta_pct": 22.2,
+    "last_score_arrow": "up",
+    "entry_price": null,
+    "max_r": 2.506049828193524,
+    "max_favorable_price": 0.8564,
+    "peak_score": 109.6,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "GOAT-USDT",
@@ -213,12 +233,18 @@
     "original_invalidation": 0.014752095000000002,
     "targets": [],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.0145, ~1.33% from zone.",
+    "last_note": "Still pending -- price 0.01452, ~1.19% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 90,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "ALLO-USDT",
@@ -265,12 +291,18 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.23421, ~1.89% from zone.",
+    "last_note": "Still pending -- price 0.23571, ~1.26% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 92,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "ZEC-USDT",
@@ -278,7 +310,7 @@
     "direction": "BULLISH",
     "status": "triggered",
     "added_score": 92,
-    "current_score": 90,
+    "current_score": 75,
     "trade_type": "SWING",
     "attempt_num": 1,
     "lineage_note": null,
@@ -303,30 +335,37 @@
       {
         "price": 817.3,
         "label": "prior swing high (liquidity)",
-        "r": 7.196667999383201
+        "r": 0.3691536862519729
       },
       {
         "price": 818.64,
         "label": "prior swing high (liquidity)",
-        "r": 8.040371859328411
+        "r": 0.5100841533681145
       },
       {
         "price": 820.92,
         "label": "prior swing high (liquidity)",
-        "r": 9.475927680727674
+        "r": 0.7498762914463168
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 65.0 -> 90.0 (up +38.5%), currently -0.84R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (805.87) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 814.27. All legs filled. Enter at CMP (805.87) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 90.0 -> 75.0 (down -16.7%), currently -0.05R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (813.79) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 814.27. All legs filled. Enter at CMP (813.79) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 17:02 UTC] Entry condition met at 810.87 -- now tracking as triggered. Filled: 100% @ 814.27. All legs filled. Enter at CMP (810.87) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 17:02 UTC] Refreshed: score 92.0 -> 65.0 (down -29.3%), currently -0.34R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (810.87) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-02 17:20 UTC] Refreshed: score 65.0 -> 90.0 (up +38.5%), currently -0.84R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (805.87) if you haven't already, or on your next confirmation candle."
+      "[2026-09-02 17:20 UTC] Refreshed: score 65.0 -> 90.0 (up +38.5%), currently -0.84R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (805.87) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 17:49 UTC] Refreshed: score 90.0 -> 75.0 (down -16.7%), currently -0.05R. Stop held at 804.282 (no tighter structural level yet). Targets updated. | Filled: 100% @ 814.27. All legs filled. Enter at CMP (813.79) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
-    "last_score_delta_pct": 38.5,
-    "last_score_arrow": "up"
+    "last_score_delta_pct": -16.7,
+    "last_score_arrow": "down",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": 813.79,
+    "peak_score": 90,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "FLOKI-USDT",
@@ -334,7 +373,7 @@
     "direction": "BULLISH",
     "status": "triggered",
     "added_score": 92,
-    "current_score": 60,
+    "current_score": 74.2,
     "trade_type": "SWING",
     "attempt_num": 1,
     "lineage_note": null,
@@ -357,44 +396,51 @@
     "original_invalidation": 2.3714375000000003e-05,
     "targets": [
       {
-        "price": 2.391e-05,
-        "label": "prior swing high (liquidity)",
-        "r": 3.2876712328769555
-      },
-      {
         "price": 2.397e-05,
         "label": "prior swing high (liquidity)",
-        "r": 4.602739726027723
+        "r": 0.1855072463768126
       },
       {
         "price": 2.4e-05,
         "label": "prior swing high (liquidity)",
-        "r": 5.2602739726031436
+        "r": 0.3246376811594299
+      },
+      {
+        "price": 2.408e-05,
+        "label": "Order Block (supply)",
+        "r": 0.6956521739130551
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.59R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 60.0 -> 74.2 (up +23.7%), currently +0.95R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.393e-05) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.393e-05) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 17:20 UTC] Entry condition met at 2.376e-05 -- now tracking as triggered. Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-02 17:20 UTC] Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.59R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle."
+      "[2026-09-02 17:20 UTC] Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.59R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 17:49 UTC] Refreshed: score 60.0 -> 74.2 (up +23.7%), currently +0.95R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.393e-05) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
-    "last_score_delta_pct": -34.8,
-    "last_score_arrow": "down"
+    "last_score_delta_pct": 23.7,
+    "last_score_arrow": "up",
+    "entry_price": null,
+    "max_r": 0.9491525423729062,
+    "max_favorable_price": 2.393e-05,
+    "peak_score": 74.2,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "NCCOXAG2USD-USDT",
     "exchange": "bingx",
     "direction": "BEARISH",
-    "status": "pending",
+    "status": "triggered",
     "added_score": 92,
-    "current_score": 92,
+    "current_score": 60,
     "trade_type": "SWING",
     "attempt_num": 1,
     "lineage_note": null,
     "added_at": "2026-09-02T16:49:26.956231+00:00",
-    "triggered_at": null,
+    "triggered_at": "2026-09-02T17:49:43.003295+00:00",
     "invalidated_at": null,
     "expired_at": null,
     "expire_reason": null,
@@ -405,35 +451,44 @@
       {
         "price": 65.095,
         "size_pct": 100,
-        "filled": false
+        "filled": true
       }
     ],
     "invalidation": 65.227695,
     "original_invalidation": 65.227695,
     "targets": [
       {
+        "price": 64.99,
+        "label": "prior swing low (liquidity)",
+        "r": 2.059334577515007
+      },
+      {
+        "price": 64.89,
+        "label": "prior swing low (liquidity)",
+        "r": 3.3464186884617266
+      },
+      {
         "price": 64.76,
         "label": "prior swing low (liquidity)",
-        "r": 0.888189103534609
-      },
-      {
-        "price": 64.65,
-        "label": "prior swing low (liquidity)",
-        "r": 1.3322836553019135
-      },
-      {
-        "price": 64.56,
-        "label": "prior swing low (liquidity)",
-        "r": 1.695633743111542
+        "r": 5.0196280326924985
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 64.92, ~0.27% from zone.",
-    "entry_instruction": null,
-    "history": [],
+    "last_note": "Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.41R. Stop held at 65.2277 (no tighter structural level yet). Targets updated. | Filled: 100% @ 65.095. All legs filled. Enter at CMP (65.15) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 65.095. All legs filled. Enter at CMP (65.15) if you haven't already, or on your next confirmation candle.",
+    "history": [
+      "[2026-09-02 17:49 UTC] Entry condition met at 65.15 -- now tracking as triggered. Filled: 100% @ 65.095. All legs filled. Enter at CMP (65.15) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 17:49 UTC] Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.41R. Stop held at 65.2277 (no tighter structural level yet). Targets updated. | Filled: 100% @ 65.095. All legs filled. Enter at CMP (65.15) if you haven't already, or on your next confirmation candle."
+    ],
     "dead_reported": false,
-    "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_delta_pct": -34.8,
+    "last_score_arrow": "down",
+    "entry_price": 65.095,
+    "max_r": 0.0,
+    "max_favorable_price": 65.15,
+    "peak_score": 92,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "NCCO1OILWTI2USD-USDT",
@@ -475,12 +530,18 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 91.05, ~0.37% from zone.",
+    "last_note": "Still pending -- price 90.98, ~0.29% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 100,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "ZK-USDT",
@@ -527,12 +588,18 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.008805, ~1.48% from zone.",
+    "last_note": "Still pending -- price 0.008869, ~0.76% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat"
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 92,
+    "last_warning": null,
+    "setup_fingerprint": null
   },
   {
     "symbol": "NCFXEUR2GBP-USDT",
@@ -569,8 +636,72 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.85898, ~0.03% from zone.",
+    "last_note": "Still pending -- price 0.85912, ~0.05% from zone.",
     "entry_instruction": null,
+    "history": [],
+    "dead_reported": false,
+    "last_score_delta_pct": 0.0,
+    "last_score_arrow": "flat",
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 90,
+    "last_warning": null,
+    "setup_fingerprint": null
+  },
+  {
+    "symbol": "IMX-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 92,
+    "current_score": 92,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "setup_fingerprint": "afdec6b9137542bf",
+    "added_at": "2026-09-02T17:49:25.024333+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.1217,
+    "zone_high": 0.1223,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.122,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.12151745000000001,
+    "original_invalidation": 0.12151745000000001,
+    "targets": [
+      {
+        "price": 0.1236,
+        "label": "prior swing high (liquidity)",
+        "r": 0.5063108025026328
+      },
+      {
+        "price": 0.1241,
+        "label": "prior swing high (liquidity)",
+        "r": 0.8679613757187964
+      },
+      {
+        "price": 0.1243,
+        "label": "prior swing high (liquidity)",
+        "r": 1.0126216050052557
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.1235, ~1.23% from zone.",
+    "entry_instruction": null,
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 92,
+    "last_warning": null,
     "history": [],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
