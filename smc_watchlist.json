@@ -5,7 +5,7 @@
     "direction": "BEARISH",
     "status": "triggered",
     "added_score": 90,
-    "current_score": 60,
+    "current_score": 90,
     "trade_type": "INTRADAY",
     "attempt_num": 1,
     "lineage_note": null,
@@ -30,28 +30,133 @@
       {
         "price": 0.004221,
         "label": "prior swing low (liquidity)",
-        "r": 0.513368983957195
+        "r": 2.773333333333124
       },
       {
         "price": 0.004201,
         "label": "prior swing low (liquidity)",
-        "r": 1.368983957219199
+        "r": 4.906666666666303
       },
       {
         "price": 0.004187,
         "label": "Order Block (demand)",
-        "r": 1.9679144385026057
+        "r": 6.399999999999538
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 90.0 -> 60.0 (down -33.3%), currently -0.20R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 60.0 -> 90.0 (up +50.0%), currently -0.68R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004247) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004247) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 12:02 UTC] Entry condition met at 0.004233 -- now tracking as triggered. Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-02 12:02 UTC] Refreshed: score 90.0 -> 60.0 (down -33.3%), currently -0.20R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle."
+      "[2026-09-02 12:02 UTC] Refreshed: score 90.0 -> 60.0 (down -33.3%), currently -0.20R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004233) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-02 12:24 UTC] Refreshed: score 60.0 -> 90.0 (up +50.0%), currently -0.68R. Stop held at 0.00425638 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.004227. All legs filled. Enter at CMP (0.004247) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
-    "last_score_delta_pct": -33.3,
-    "last_score_arrow": "down"
+    "last_score_delta_pct": 50.0,
+    "last_score_arrow": "up"
+  },
+  {
+    "symbol": "AVAX-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 92,
+    "current_score": 92,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-09-02T12:24:24.165116+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 7.071,
+    "zone_high": 7.095,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 7.083,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 7.066384500000001,
+    "original_invalidation": 7.066384500000001,
+    "targets": [
+      {
+        "price": 7.191,
+        "label": "Order Block (supply)",
+        "r": 1.4620027461943659
+      },
+      {
+        "price": 7.211,
+        "label": "prior swing high (liquidity)",
+        "r": 1.8571386235442044
+      },
+      {
+        "price": 7.226,
+        "label": "prior swing high (liquidity)",
+        "r": 2.1534905315565704
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 7.127, ~0.62% from zone.",
+    "entry_instruction": null,
+    "history": [],
+    "dead_reported": false,
+    "last_score_delta_pct": 0.0,
+    "last_score_arrow": "flat"
+  },
+  {
+    "symbol": "DOT-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 100,
+    "current_score": 100,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "added_at": "2026-09-02T12:24:24.692182+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 0.8395,
+    "zone_high": 0.8442,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 0.84185,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 0.83604405,
+    "original_invalidation": 0.83604405,
+    "targets": [
+      {
+        "price": 0.8493,
+        "label": "prior swing high (liquidity)",
+        "r": 0.4968411068264949
+      },
+      {
+        "price": 0.8548,
+        "label": "prior swing high (liquidity)",
+        "r": 1.117892490359598
+      },
+      {
+        "price": 0.86,
+        "label": "prior swing high (liquidity)",
+        "r": 1.7050683438818077
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Still pending -- price 0.8476, ~0.68% from zone.",
+    "entry_instruction": null,
+    "history": [],
+    "dead_reported": false,
+    "last_score_delta_pct": 0.0,
+    "last_score_arrow": "flat"
   }
 ]
