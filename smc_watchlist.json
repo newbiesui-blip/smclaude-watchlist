@@ -179,7 +179,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-03T14:50:56.678314+00:00 -- price ran away without ever reaching the zone. Current price 7.535 vs zone 7.071-7.095.",
+    "last_note": "Expired on 2026-09-03T14:50:56.678314+00:00 -- price ran away without ever reaching the zone. Current price 7.477 vs zone 7.071-7.095.",
     "entry_instruction": null,
     "history": [
       "[2026-09-03 14:50 UTC] Expired -- price ran away without ever reaching the zone."
@@ -248,24 +248,24 @@
     "original_invalidation": 0.83604405,
     "targets": [
       {
+        "price": 0.887,
+        "label": "prior swing high (liquidity)",
+        "r": 0.08211410531688934
+      },
+      {
+        "price": 0.89,
+        "label": "prior swing high (liquidity)",
+        "r": 0.1486931096278801
+      },
+      {
         "price": 0.892,
         "label": "prior swing high (liquidity)",
-        "r": 0.030675287700648486
-      },
-      {
-        "price": 0.8929,
-        "label": "prior swing high (liquidity)",
-        "r": 0.047930137032262995
-      },
-      {
-        "price": 0.8949,
-        "label": "prior swing high (liquidity)",
-        "r": 0.08627424665807254
+        "r": 0.19307911250187393
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +8.36R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8904) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8904) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +7.14R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8833) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8833) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 12:51 UTC] Entry condition met at 0.8408 -- now tracking as triggered. Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8408) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 12:51 UTC] Refreshed: score 100.0 -> 78.0 (down -22.0%), currently -0.18R. Stop trailed to 0.838241. Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8408) if you haven't already, or on your next confirmation candle.",
@@ -383,7 +383,8 @@
       "[2026-09-03 21:35 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +9.81R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8988) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 21:48 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +9.26R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8956) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:00 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +8.81R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.893) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +8.36R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8904) if you haven't already, or on your next confirmation candle."
+      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +8.36R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8904) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-03 22:34 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +7.14R. Stop held at 0.838241 (no tighter structural level yet). Targets updated. | Filled: 100% @ 0.84185. All legs filled. Enter at CMP (0.8833) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
@@ -392,12 +393,12 @@
     "max_r": 9.808902935781493,
     "max_favorable_price": 0.8988,
     "peak_score": 147,
-    "last_warning": "\u26a0\ufe0f REVERSAL RISK: DOT-USDT BULLISH -- LIQUIDITY_SWEEP. +9.81R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 15M,1H; rejection exists but structure has not confirmed reversal.",
+    "last_warning": "\u26a0\ufe0f REVERSAL RISK: DOT-USDT BULLISH -- LIQUIDITY_SWEEP. +9.81R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 15M,1H,4H; rejection exists but structure has not confirmed reversal.",
     "setup_fingerprint": null,
     "reversal_state": "LIQUIDITY_SWEEP",
-    "reversal_reason": "Bearish liquidity sweep detected on 15M,1H; rejection exists but structure has not confirmed reversal.",
+    "reversal_reason": "Bearish liquidity sweep detected on 15M,1H,4H; rejection exists but structure has not confirmed reversal.",
     "reversal_alert_state": "STABLE",
-    "current_r": 8.36211128239141,
+    "current_r": 7.139227861073615,
     "position_tracker_version": 1,
     "position_opened_at": "2026-09-02T12:51:44.565583+00:00",
     "position_lifecycle": "ACTIVE",
@@ -830,24 +831,24 @@
     "original_invalidation": 2.3714375000000003e-05,
     "targets": [
       {
+        "price": 2.594e-05,
+        "label": "Order Block (supply)",
+        "r": 0.2326064382139149
+      },
+      {
         "price": 2.607e-05,
         "label": "prior swing high (liquidity)",
-        "r": 0.1187295933511426
+        "r": 0.30460366908965086
       },
       {
         "price": 2.615e-05,
         "label": "prior swing high (liquidity)",
-        "r": 0.15672306322350796
-      },
-      {
-        "price": 2.622e-05,
-        "label": "prior swing high (liquidity)",
-        "r": 0.18996734936182846
+        "r": 0.34890965732087237
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +18.03R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.582e-05) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.582e-05) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +15.32R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.552e-05) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.552e-05) if you haven't already, or on your next confirmation candle.",
     "history": [
       "[2026-09-02 17:20 UTC] Entry condition met at 2.376e-05 -- now tracking as triggered. Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
       "[2026-09-02 17:20 UTC] Refreshed: score 92.0 -> 60.0 (down -34.8%), currently -0.59R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.376e-05) if you haven't already, or on your next confirmation candle.",
@@ -955,7 +956,9 @@
       "[2026-09-03 21:48 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +19.75R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.601e-05) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:01 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +18.12R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.583e-05) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:23 UTC] Position state: LIQUIDITY_SWEEP -> STABLE. Original structure remains intact; no active reversal evidence detected.",
-      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +18.03R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.582e-05) if you haven't already, or on your next confirmation candle."
+      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +18.03R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.582e-05) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-03 22:34 UTC] Position state: STABLE -> LIQUIDITY_SWEEP. Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
+      "[2026-09-03 22:34 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +15.32R. Stop held at 2.37144e-05 (no tighter structural level yet). Targets updated. | Filled: 100% @ 2.3825e-05. All legs filled. Enter at CMP (2.552e-05) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
@@ -964,12 +967,12 @@
     "max_r": 21.19774011299493,
     "max_favorable_price": 2.617e-05,
     "peak_score": 147,
-    "last_warning": "\u26a0\ufe0f REVERSAL RISK: FLOKI-USDT BULLISH -- LIQUIDITY_SWEEP. +21.20R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
+    "last_warning": "\u26a0\ufe0f REVERSAL RISK: FLOKI-USDT BULLISH -- LIQUIDITY_SWEEP. +21.20R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
     "setup_fingerprint": null,
-    "reversal_state": "STABLE",
-    "reversal_reason": "Original structure remains intact; no active reversal evidence detected.",
+    "reversal_state": "LIQUIDITY_SWEEP",
+    "reversal_reason": "Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
     "reversal_alert_state": "STABLE",
-    "current_r": 18.03389830508525,
+    "current_r": 15.32203389830551,
     "position_tracker_version": 1,
     "position_opened_at": "2026-09-02T17:20:27.539574+00:00",
     "position_lifecycle": "TP3_HIT",
@@ -1350,7 +1353,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.85968, ~0.12% from zone.",
+    "last_note": "Still pending -- price 0.85966, ~0.11% from zone.",
     "entry_instruction": null,
     "history": [],
     "dead_reported": false,
@@ -1434,7 +1437,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-03T15:03:30.851248+00:00 -- price ran away without ever reaching the zone. Current price 0.1263 vs zone 0.1217-0.1223.",
+    "last_note": "Expired on 2026-09-03T15:03:30.851248+00:00 -- price ran away without ever reaching the zone. Current price 0.125 vs zone 0.1217-0.1223.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -1748,33 +1751,33 @@
     "original_invalidation": 99.73816800000002,
     "targets": [
       {
+        "price": 104.846,
+        "label": "Order Block (supply)",
+        "r": 0.23501921741502393
+      },
+      {
         "price": 105.191,
         "label": "prior swing high (liquidity)",
-        "r": 0.0444373617078657
+        "r": 0.31843653223825674
       },
       {
         "price": 105.406,
         "label": "prior swing high (liquidity)",
-        "r": 0.08561853742851787
-      },
-      {
-        "price": 105.602,
-        "label": "prior swing high (liquidity)",
-        "r": 0.12316044645757654
+        "r": 0.3704212356788231
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +11.98R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (104.959) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 100.141. All legs filled. Enter at CMP (104.959) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +9.28R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (103.874) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 100.141. All legs filled. Enter at CMP (103.874) if you haven't already, or on your next confirmation candle.",
     "entry_price": 100.1405,
     "max_r": 13.15455892148816,
     "max_favorable_price": 105.433,
     "peak_score": 147,
-    "last_warning": "\u26a0\ufe0f REVERSAL RISK: SOL-USDT BULLISH -- LIQUIDITY_SWEEP. +13.15R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
-    "reversal_state": "STABLE",
-    "reversal_reason": "Original structure remains intact; no active reversal evidence detected.",
+    "last_warning": "\u26a0\ufe0f REVERSAL RISK: SOL-USDT BULLISH -- LIQUIDITY_SWEEP. +13.15R max; health 100/100 vs peak 147. Why: Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
+    "reversal_state": "LIQUIDITY_SWEEP",
+    "reversal_reason": "Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
     "reversal_alert_state": "STABLE",
-    "current_r": 11.976427428094597,
+    "current_r": 9.279649642584017,
     "history": [
       "[2026-09-03 04:21 UTC] Entry condition met at 100.101 -- now tracking as triggered. Filled: 100% @ 100.141. All legs filled. Enter at CMP (100.101) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 04:21 UTC] Position state: STABLE -> LIQUIDITY_SWEEP. Bearish liquidity sweep detected on 15M,1H; rejection exists but structure has not confirmed reversal.",
@@ -1851,7 +1854,9 @@
       "[2026-09-03 21:48 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +11.78R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (104.878) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:01 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +12.14R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (105.023) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:23 UTC] Position state: LIQUIDITY_SWEEP -> STABLE. Original structure remains intact; no active reversal evidence detected.",
-      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +11.98R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (104.959) if you haven't already, or on your next confirmation candle."
+      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +11.98R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (104.959) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-03 22:34 UTC] Position state: STABLE -> LIQUIDITY_SWEEP. Bearish liquidity sweep detected on 1H,4H; rejection exists but structure has not confirmed reversal.",
+      "[2026-09-03 22:34 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +9.28R. Stop held at 99.7382 (no tighter structural level yet). Targets updated. | Filled: 100% @ 100.141. All legs filled. Enter at CMP (103.874) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
@@ -1948,7 +1953,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.4968, ~2.73% from zone.",
+    "last_note": "Still pending -- price 0.4935, ~2.05% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2017,22 +2022,22 @@
       {
         "price": 951.64,
         "label": "prior swing high (liquidity)",
-        "r": 0.038916590279057466
+        "r": 0.09724435131218451
       },
       {
         "price": 956.28,
         "label": "Order Block (supply)",
-        "r": 0.07733637302263804
+        "r": 0.13782113099640522
       },
       {
         "price": 968.37,
         "label": "prior swing high (liquidity)",
-        "r": 0.17744309142132164
+        "r": 0.24354812806154133
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +36.41R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (946.94) if you haven't already, or on your next confirmation candle.",
-    "entry_instruction": "Filled: 100% @ 829.31. All legs filled. Enter at CMP (946.94) if you haven't already, or on your next confirmation candle.",
+    "last_note": "Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +34.42R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (940.52) if you haven't already, or on your next confirmation candle.",
+    "entry_instruction": "Filled: 100% @ 829.31. All legs filled. Enter at CMP (940.52) if you haven't already, or on your next confirmation candle.",
     "entry_price": 829.31,
     "max_r": 44.769698357776356,
     "max_favorable_price": 973.96,
@@ -2041,7 +2046,7 @@
     "reversal_state": "LIQUIDITY_SWEEP",
     "reversal_reason": "Bearish liquidity sweep detected on 15M,1H; rejection exists but structure has not confirmed reversal.",
     "reversal_alert_state": "STABLE",
-    "current_r": 36.406910596786965,
+    "current_r": 34.41989736860219,
     "position_tracker_version": 1,
     "position_opened_at": "2026-09-03T10:40:04.116783+00:00",
     "position_lifecycle": "TP2_HIT",
@@ -2140,7 +2145,8 @@
       "[2026-09-03 21:35 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +41.14R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (962.24) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 21:48 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +37.50R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (950.48) if you haven't already, or on your next confirmation candle.",
       "[2026-09-03 22:01 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +35.82R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (945.05) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +36.41R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (946.94) if you haven't already, or on your next confirmation candle."
+      "[2026-09-03 22:23 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +36.41R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (946.94) if you haven't already, or on your next confirmation candle.",
+      "[2026-09-03 22:34 UTC] Refreshed: score 100.0 -> 100.0 (flat +0.0%), currently +34.42R. Stop held at 826.169 (no tighter structural level yet). Targets updated. | Filled: 100% @ 829.31. All legs filled. Enter at CMP (940.52) if you haven't already, or on your next confirmation candle."
     ],
     "dead_reported": false,
     "last_score_delta_pct": 0.0,
@@ -2303,7 +2309,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.13634, ~0.81% from zone.",
+    "last_note": "Still pending -- price 0.13587, ~0.46% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2365,7 +2371,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 91.66, ~0.42% from zone.",
+    "last_note": "Still pending -- price 91.63, ~0.39% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2417,7 +2423,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 1.1529, ~0.45% from zone.",
+    "last_note": "Still pending -- price 1.1514, ~0.32% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
