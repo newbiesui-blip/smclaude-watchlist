@@ -57,6 +57,14 @@ jobs:
             git add smc_entry_behavior.json
           fi
 
+          if [ -f derivatives_history.json ]; then
+            git add derivatives_history.json
+          fi
+
+          if [ -f derivatives_state.json ]; then
+            git add derivatives_state.json
+          fi
+
           if git diff --cached --quiet; then
             echo "No scanner state changes to commit."
           else
