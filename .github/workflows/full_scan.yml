@@ -1,0 +1,65 @@
+name: Full Market Scan
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: full-market-scan
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  full-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pandas numpy requests
+
+      - name: Run full scan
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          BINGX_API_KEY: ${{ secrets.BINGX_API_KEY }}
+          BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
+        run: python full_scan.py
+
+      - name: Persist scanner state
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -f smc_setup_states.json ]; then
+            git add smc_setup_states.json
+          fi
+
+          if [ -f smc_watchlist.json ]; then
+            git add smc_watchlist.json
+          fi
+
+          if [ -f smc_entry_behavior.json ]; then
+            git add smc_entry_behavior.json
+          fi
+
+          if git diff --cached --quiet; then
+            echo "No scanner state changes to commit."
+          else
+            git commit -m "bot: persist scanner state [skip ci]"
+            git push
+          fi
