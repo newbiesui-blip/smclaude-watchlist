@@ -2,7 +2,6 @@ name: Full Market Scan
 
 on:
   schedule:
-    # Every 15 minutes, offset to reduce GitHub scheduling delays.
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch: {}
 
@@ -52,6 +51,10 @@ jobs:
 
           if [ -f smc_watchlist.json ]; then
             git add smc_watchlist.json
+          fi
+
+          if [ -f smc_entry_behavior.json ]; then
+            git add smc_entry_behavior.json
           fi
 
           if git diff --cached --quiet; then
