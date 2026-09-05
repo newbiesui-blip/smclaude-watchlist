@@ -3159,7 +3159,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-04T19:51:45.734892+00:00 -- price ran away without ever reaching the zone. Current price 2.004 vs zone 2.043-2.055.",
+    "last_note": "Expired on 2026-09-04T19:51:45.734892+00:00 -- price ran away without ever reaching the zone. Current price 2.001 vs zone 2.043-2.055.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3581,7 +3581,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-04T09:08:12.924417+00:00 -- price ran away without ever reaching the zone. Current price 1008.18 vs zone 946.79-950.63.",
+    "last_note": "Expired on 2026-09-04T09:08:12.924417+00:00 -- price ran away without ever reaching the zone. Current price 1013.17 vs zone 946.79-950.63.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3997,7 +3997,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-05T09:20:19.687065+00:00 -- price ran away without ever reaching the zone. Current price 0.00998 vs zone 0.009515-0.009542.",
+    "last_note": "Expired on 2026-09-05T09:20:19.687065+00:00 -- price ran away without ever reaching the zone. Current price 0.009948 vs zone 0.009515-0.009542.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4062,7 +4062,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.012312, ~1.65% from zone.",
+    "last_note": "Still pending -- price 0.012284, ~1.42% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4232,7 +4232,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.401, ~3.81% from zone.",
+    "last_note": "Still pending -- price 0.4025, ~4.19% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4295,7 +4295,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 121.12, ~0.71% from zone.",
+    "last_note": "Still pending -- price 121.16, ~0.74% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4458,7 +4458,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 0.010197, ~1.77% from zone.",
+    "last_note": "Still pending -- price 0.010204, ~1.84% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4521,12 +4521,75 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Waiting for price to reach entry zone.",
+    "last_note": "Still pending -- price 0.0155, ~0.71% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
     "max_favorable_price": null,
     "peak_score": 90,
+    "last_warning": null,
+    "reversal_state": "STABLE",
+    "reversal_reason": "No active reversal evidence detected.",
+    "reversal_alert_state": "STABLE",
+    "current_r": 0.0,
+    "history": [],
+    "dead_reported": false,
+    "position_close_reported": false,
+    "last_score_delta_pct": 0.0,
+    "last_score_arrow": "flat"
+  },
+  {
+    "symbol": "ZEC-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 100,
+    "current_score": 100,
+    "trade_type": "INTRADAY",
+    "attempt_num": 3,
+    "lineage_note": "Attempt #3 for ZEC-USDT BULLISH -- NEW setup after a prior expired attempt (2026-09-04T09:08:12.924417+00:00: price ran away without ever reaching the zone).",
+    "setup_fingerprint": "25ac0c06d94b61fc",
+    "added_at": "2026-09-05T10:38:42.834073+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 1007.97,
+    "zone_high": 1012.08,
+    "zone_label": "Order Block",
+    "entries": [
+      {
+        "price": 1010.0250000000001,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 1004.980265,
+    "original_invalidation": 1004.980265,
+    "targets": [
+      {
+        "price": 1018.56,
+        "label": "prior swing high (liquidity)",
+        "r": 0.5699596577236147
+      },
+      {
+        "price": 1025.83,
+        "label": "prior swing high (liquidity)",
+        "r": 1.4104478345290326
+      },
+      {
+        "price": 1028.43,
+        "label": "prior swing high (liquidity)",
+        "r": 1.7110350779532701
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Waiting for price to reach entry zone.",
+    "entry_instruction": null,
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 100,
     "last_warning": null,
     "reversal_state": "STABLE",
     "reversal_reason": "No active reversal evidence detected.",
