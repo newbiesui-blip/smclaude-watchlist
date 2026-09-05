@@ -700,5 +700,282 @@ def main():
 
             if scanner.send_telegram_message(message):
                 alerts_sent += 1
+def scan_all(active_key, symbols):
+    """Run the SMC pipeline with derivatives as non-invasive context."""
+    qualifying = []
 
+    derivatives_data = derivatives.monitor(symbols=symbols)
+
+    derivatives_results = (
+        derivatives_data.get("results", {})
+        if isinstance(derivatives_data, dict)
+        else {}
+    )
+
+    if (
+        not isinstance(derivatives_data, dict)
+        or not derivatives_data.get("bulk_fetch_ok", False)
+    ):
+        print(
+            "Derivatives intelligence unavailable this cycle; "
+            "continuing SMC-only."
+        )
+
+    scan_cycle = int(time.time() // 900)
+
+    total = len(symbols)
+
+    for n, symbol in enumerate(symbols, 1):
+        print(f"\nScanning {symbol} ({n}/{total})...")
+
+        try:
+            tf_results, used = scanner.scan_symbol(
+                active_key,
+                symbol
+            )
+
+            score, direction, regime_info = (
+                scanner.score_setup_with_regime(tf_results)
+            )
+
+            if score < scanner.MIN_SETUP_SCORE or not direction:
+                continue
+
+            plan = scanner.build_entry_plan(
+                tf_results,
+                direction,
+                regime_info
+            )
+
+            if not plan:
+                continue
+
+            if regime_info:
+                plan.update(regime_info)
+
+            exec_state = scanner.determine_execution_state(
+                plan,
+                tf_results,
+                direction
+            )
+            plan.update(exec_state)
+
+            lifecycle = scanner.update_setup_lifecycle(
+                symbol,
+                plan,
+                scan_cycle
+            )
+            plan["lifecycle_info"] = lifecycle
+
+            # Context only: NEVER modify SMC score, direction, entry, SL, TP,
+            # execution state, or trade classification.
+            dctx = derivatives_results.get(symbol)
+
+            if dctx:
+                plan["derivatives_context"] = {
+                    "state": dctx.get("state"),
+                    "score": dctx.get("score"),
+                    "reason": dctx.get("reason"),
+                    "since": dctx.get("since"),
+                    "is_new_transition": bool(
+                        dctx.get("is_new_transition", False)
+                    ),
+                }
+
+            qualifying.append(
+                (
+                    symbol,
+                    tf_results,
+                    used,
+                    score,
+                    direction,
+                    plan,
+                )
+            )
+
+        except Exception as exc:
+            print(
+                f"  ! {symbol}: scan error: "
+                f"{type(exc).__name__}: {exc}"
+            )
+
+    return qualifying
+
+
+def main():
+    started = time.time()
+
+    print("=" * 78)
+    print("FULL MARKET SCAN — SMC PHASE 1-4.5")
+    print(
+        f"Started: "
+        f"{datetime.now(timezone.utc).isoformat()}"
+    )
+    print("=" * 78)
+
+    active_key = scanner.detect_active_exchange()
+
+    if not active_key:
+        print("ERROR: no supported exchange is reachable.")
+        return 1
+
+    used_key, symbols = scanner.get_symbols_with_fallback(
+        active_key,
+        MAX_SYMBOLS
+    )
+
+    if not symbols:
+        print("ERROR: could not retrieve the market list.")
+        return 1
+
+    symbols = symbols[:MAX_SYMBOLS]
+
+    print(f"Exchange: {used_key or active_key}")
+    print(f"Markets: {len(symbols)}")
+    print(f"Timeframes: {', '.join(scanner.TFS_ALL)}")
+
+    # Exchange synchronization must happen before the final watchlist refresh,
+    # so confirmed closures cannot be reinterpreted as active setup changes.
+    _sync_watchlist(active_key)
+
+    qualifying = scan_all(active_key, symbols)
+
+    buckets = scanner.classify_and_rank(
+        [q[5] for q in qualifying]
+    )
+
+    ready = buckets["READY_NOW"]
+    near = buckets["NEAR_READY"]
+    waiting = buckets["WAITING"]
+    invalidated = buckets["INVALIDATED"]
+    no_trade = buckets["NO_TRADE"]
+
+    print("\n" + "#" * 78)
+    print("FINAL SCAN RESULT")
+    print("#" * 78)
+
+    print(f"Markets scanned : {len(symbols)}")
+    print(f"Setup-qualified : {len(qualifying)}")
+    print(f"READY NOW       : {len(ready)}")
+    print(f"NEAR READY      : {len(near)}")
+    print(f"WAITING         : {len(waiting)}")
+    print(f"INVALIDATED     : {len(invalidated)}")
+    print(f"NO TRADE        : {len(no_trade)}")
+
+    if ready:
+        print("\nTOP ACTIONABLE SETUPS")
+
+        for rank, plan in enumerate(
+            ready[:TOP_ACTIONABLE_TO_PRINT],
+            1
+        ):
+            print(
+                f"{rank}. "
+                f"{plan.get('symbol', '?')} "
+                f"{plan.get('direction', '?')} "
+                f"{plan.get('status')} | "
+                f"SQ={plan.get('setup_quality', 0):.0f} "
+                f"EQ={plan.get('entry_quality', 0):.0f} "
+                f"SRR={plan.get('structural_rr', 0):.2f}"
+            )
+
+    by_plan_id = {
+        id(q[5]): q
+        for q in qualifying
+    }
+
+    alerts_sent = 0
+    auto_added = 0
+
+    for plan in ready:
+        match = by_plan_id.get(id(plan))
+
+        if not match:
+            continue
+
+        (
+            symbol,
+            _tf_results,
+            used,
+            score,
+            direction,
+            plan,
+        ) = match
+
+        lifecycle = plan.get(
+            "lifecycle_info",
+            {}
+        )
+
+        if lifecycle.get("send_alert"):
+            message = _format_alert(
+                symbol,
+                used,
+                score,
+                direction,
+                plan,
+                is_new=bool(
+                    lifecycle.get("is_new")
+                ),
+                reason=lifecycle.get("reason"),
+            )
+
+            print("\n" + "-" * 78)
+            print("ALERT")
+            print(message)
+            print("-" * 78)
+
+            if scanner.send_telegram_message(message):
+                alerts_sent += 1
+
+        if _is_auto_add_candidate(score, plan):
+            try:
+                exchange_for_watchlist = (
+                    used.get(scanner.ENTRY_TF)
+                    or active_key
+                )
+
+                scanner.add_to_watchlist(
+                    symbol,
+                    exchange_for_watchlist,
+                    score,
+                    direction,
+                    plan,
+                    trail_mode=getattr(
+                        scanner,
+                        "AUTO_TRAIL_MODE",
+                        "fixed",
+                    ),
+                    split_entries=None,
+                )
+
+                auto_added += 1
+
+            except Exception as exc:
+                print(
+                    f"  ! auto-add failed for {symbol}: "
+                    f"{type(exc).__name__}: {exc}"
+                )
+
+    # Do NOT call scanner.check_watchlist() here.
+    # _sync_watchlist() already refreshed pending setups and
+    # exchange-gated triggered positions.
+
+    elapsed = time.time() - started
+
+    print("\n" + "=" * 78)
+    print(f"Alerts sent      : {alerts_sent}")
+    print(f"Auto-added       : {auto_added}")
+    print(f"Elapsed          : {elapsed / 60:.1f} minutes")
+    print(
+        f"Finished         : "
+        f"{datetime.now(timezone.utc).isoformat()}"
+    )
+    print("=" * 78)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
        
