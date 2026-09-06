@@ -1,4 +1,3 @@
-```python
 """
 market_intelligence_config.py
 
@@ -112,4 +111,3 @@ class MarketIntelligenceConfig:
     def validate(self) -> None:
         for asset in self.assets:
             asset.validate()
-```
