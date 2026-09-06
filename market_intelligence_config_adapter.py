@@ -1,4 +1,3 @@
-```python
 """
 market_intelligence_config_adapter.py
 
@@ -237,5 +236,4 @@ def _run_tests() -> None:
 
 if __name__ == "__main__":
     _run_tests()
-```
             
