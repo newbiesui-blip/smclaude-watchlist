@@ -37,6 +37,8 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           BINGX_API_KEY: ${{ secrets.BINGX_API_KEY }}
           BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
+          CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
+          CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
         run: python full_scan.py
 
       - name: Persist scanner state
