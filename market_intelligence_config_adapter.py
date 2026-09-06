@@ -1,3 +1,4 @@
+```python
 """
 market_intelligence_config_adapter.py
 
@@ -14,7 +15,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-from market_intelligence import AssetIdentifiers, ETFRequest, PoolRequest
 from market_intelligence_config import (
     ETFRequestConfig,
     MarketAssetConfig,
@@ -27,13 +27,15 @@ from market_intelligence_config import (
 class MarketAssetRequests:
     """Converted requests for one configured asset."""
 
-    identifiers: AssetIdentifiers
-    etf_request: Optional[ETFRequest]
-    pool_requests: List[PoolRequest]
+    identifiers: "AssetIdentifiers"
+    etf_request: Optional["ETFRequest"]
+    pool_requests: List["PoolRequest"]
 
 
-def to_asset_identifiers(asset: MarketAssetConfig) -> AssetIdentifiers:
+def to_asset_identifiers(asset: MarketAssetConfig) -> "AssetIdentifiers":
     """Convert one validated config asset without applying any fallback."""
+    from market_intelligence import AssetIdentifiers
+
     asset.validate()
     return AssetIdentifiers(
         symbol=asset.symbol,
@@ -43,11 +45,15 @@ def to_asset_identifiers(asset: MarketAssetConfig) -> AssetIdentifiers:
     )
 
 
-def to_etf_request(request: Optional[ETFRequestConfig]) -> Optional[ETFRequest]:
+def to_etf_request(request: Optional[ETFRequestConfig]) -> Optional["ETFRequest"]:
     """Convert an optional ETF configuration request exactly as supplied."""
+    from market_intelligence import ETFRequest
+
     if request is None:
         return None
+
     request.validate()
+
     extra_params = {}
     if request.start_date is not None:
         extra_params["start_date"] = request.start_date
@@ -55,6 +61,7 @@ def to_etf_request(request: Optional[ETFRequestConfig]) -> Optional[ETFRequest]:
         extra_params["end_date"] = request.end_date
     if request.limit is not None:
         extra_params["limit"] = request.limit
+
     return ETFRequest(
         symbol=request.symbol,
         country_code=request.country_code,
@@ -62,9 +69,12 @@ def to_etf_request(request: Optional[ETFRequestConfig]) -> Optional[ETFRequest]:
     )
 
 
-def to_pool_request(request: PoolRequestConfig) -> PoolRequest:
+def to_pool_request(request: PoolRequestConfig) -> "PoolRequest":
     """Convert one validated pool configuration request exactly as supplied."""
+    from market_intelligence import PoolRequest
+
     request.validate()
+
     return PoolRequest(
         network=request.network,
         pool_address=request.pool_address,
@@ -74,6 +84,7 @@ def to_pool_request(request: PoolRequestConfig) -> PoolRequest:
 def to_asset_requests(asset: MarketAssetConfig) -> MarketAssetRequests:
     """Convert one configured asset into existing market-intelligence requests."""
     asset.validate()
+
     return MarketAssetRequests(
         identifiers=to_asset_identifiers(asset),
         etf_request=to_etf_request(asset.etf_request),
@@ -84,6 +95,7 @@ def to_asset_requests(asset: MarketAssetConfig) -> MarketAssetRequests:
 def to_request_bundle(config: MarketIntelligenceConfig) -> List[MarketAssetRequests]:
     """Convert every configured asset, preserving order and explicit values."""
     config.validate()
+
     return [to_asset_requests(asset) for asset in config.assets]
 
 
@@ -170,9 +182,18 @@ def _run_tests() -> None:
             )
             bundle = to_request_bundle(config)
 
-            self.assertEqual([x.identifiers.symbol for x in bundle], ["BTC", "ETH"])
-            self.assertEqual(bundle[0].identifiers.coingecko_id, "bitcoin")
-            self.assertEqual(bundle[1].identifiers.cmc_symbol, "ETH")
+            self.assertEqual(
+                [x.identifiers.symbol for x in bundle],
+                ["BTC", "ETH"],
+            )
+            self.assertEqual(
+                bundle[0].identifiers.coingecko_id,
+                "bitcoin",
+            )
+            self.assertEqual(
+                bundle[1].identifiers.cmc_symbol,
+                "ETH",
+            )
 
         def test_no_network_modules_are_imported_by_adapter_source(self):
             source = Path(__file__).read_text(encoding="utf-8")
@@ -209,9 +230,12 @@ def _run_tests() -> None:
 
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(AdapterTests)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
+
     if not result.wasSuccessful():
         raise SystemExit(1)
 
 
 if __name__ == "__main__":
     _run_tests()
+```
+            
