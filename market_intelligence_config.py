@@ -1,323 +1,235 @@
 """
-market_intelligence_config.py
+market_intelligence_config_adapter.py
 
-Reusable, dependency-free configuration structures for defining ATHENA
-market-intelligence assets and optional data requests.
+Small conversion layer between the explicit market-intelligence
+configuration contract and the existing market_intelligence.py request
+dataclasses.
 
-This is a data/configuration contract ONLY. It contains:
-    - no HTTP/network code
-    - no API clients
-    - no SMC logic
-    - no trading/order/BingX logic
-    - no environment-variable loading
-    - no API keys
-    - no source-client imports
-
-It never calculates or modifies SMC score, direction, entry, SL, TP,
-execution state, or trade classification, and it never infers a
-source-specific identifier (coingecko_id, cmc_symbol, cryptorank_symbol,
-pool address, ETF symbol) from the generic `symbol` field. A missing
-source identifier stays missing so market_intelligence.py can skip that
-source cleanly (SKIPPED_MISSING_IDENTIFIER) -- this file performs no
-guessing on its behalf.
-
-These dataclasses are intentionally structured to be easy to convert
-into market_intelligence.py's AssetIdentifiers / ETFRequest / PoolRequest
-later, without importing market_intelligence.py here (avoids circular
-imports; conversion is the orchestration layer's job, not this file's).
-
-Python standard library only.
+This module performs no network I/O and never resolves or infers identifiers.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Optional
 
-
-class MarketIntelligenceConfigError(ValueError):
-    """Raised when a configuration object fails lightweight validation.
-
-    This validates SHAPE only (blank/missing required values) -- it
-    never checks whether an identifier actually exists at an external
-    provider. That verification belongs to the source clients.
-    """
+from market_intelligence_config import (
+    ETFRequestConfig,
+    MarketAssetConfig,
+    MarketIntelligenceConfig,
+    PoolRequestConfig,
+)
 
 
-@dataclass
-class ETFRequestConfig:
-    """
-    Configuration for an optional SoSoValue ETF-flow data request.
+@dataclass(frozen=True)
+class MarketAssetRequests:
+    """Converted requests for one configured asset."""
 
-    Mirrors market_intelligence.py's ETFRequest fields so conversion is
-    a straight field-for-field copy, without importing that module here.
-    """
-    symbol: str
-    country_code: str
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-    limit: Optional[int] = None
-
-    def validate(self) -> None:
-        if not self.symbol or not self.symbol.strip():
-            raise MarketIntelligenceConfigError(
-                "ETFRequestConfig.symbol must not be empty/blank"
-            )
-        if not self.country_code or not self.country_code.strip():
-            raise MarketIntelligenceConfigError(
-                "ETFRequestConfig.country_code must not be empty/blank"
-            )
+    identifiers: "AssetIdentifiers"
+    etf_request: Optional["ETFRequest"]
+    pool_requests: List["PoolRequest"]
 
 
-@dataclass
-class PoolRequestConfig:
-    """
-    Configuration for an optional GeckoTerminal pool lookup.
+def to_asset_identifiers(asset: MarketAssetConfig) -> "AssetIdentifiers":
+    """Convert one validated config asset without applying any fallback."""
+    from market_intelligence import AssetIdentifiers
 
-    Mirrors market_intelligence.py's PoolRequest fields. Pool addresses
-    are never generated or inferred -- they must be supplied explicitly.
-    """
-    network: str
-    pool_address: str
-
-    def validate(self) -> None:
-        if not self.network or not self.network.strip():
-            raise MarketIntelligenceConfigError(
-                "PoolRequestConfig.network must not be empty/blank"
-            )
-        if not self.pool_address or not self.pool_address.strip():
-            raise MarketIntelligenceConfigError(
-                "PoolRequestConfig.pool_address must not be empty/blank"
-            )
+    asset.validate()
+    return AssetIdentifiers(
+        symbol=asset.symbol,
+        coingecko_id=asset.coingecko_id,
+        cmc_symbol=asset.cmc_symbol,
+        cryptorank_symbol=asset.cryptorank_symbol,
+    )
 
 
-@dataclass
-class MarketAssetConfig:
-    """
-    Configuration for a single logical asset's market-intelligence
-    identifiers and optional data requests.
+def to_etf_request(request: Optional[ETFRequestConfig]) -> Optional["ETFRequest"]:
+    """Convert an optional ETF configuration request exactly as supplied."""
+    from market_intelligence import ETFRequest
 
-    `symbol` is a generic/display ticker only. It is NEVER substituted
-    for a missing source-specific identifier -- each of `coingecko_id`,
-    `cmc_symbol`, and `cryptorank_symbol` must be supplied explicitly or
-    is left as None, meaning that source is skipped by the orchestration
-    layer.
-    """
-    symbol: str
-    coingecko_id: Optional[str] = None
-    cmc_symbol: Optional[str] = None
-    cryptorank_symbol: Optional[str] = None
-    etf_request: Optional[ETFRequestConfig] = None
-    pool_requests: List[PoolRequestConfig] = field(default_factory=list)
+    if request is None:
+        return None
 
-    def validate(self) -> None:
-        if not self.symbol or not self.symbol.strip():
-            raise MarketIntelligenceConfigError(
-                "MarketAssetConfig.symbol must not be empty/blank"
-            )
-        # No fallback/inference logic here: a None source identifier is
-        # a valid, meaningful configuration (that source is skipped).
-        if self.etf_request is not None:
-            self.etf_request.validate()
-        for pool_request in self.pool_requests:
-            pool_request.validate()
+    request.validate()
+
+    extra_params = {}
+    if request.start_date is not None:
+        extra_params["start_date"] = request.start_date
+    if request.end_date is not None:
+        extra_params["end_date"] = request.end_date
+    if request.limit is not None:
+        extra_params["limit"] = request.limit
+
+    return ETFRequest(
+        symbol=request.symbol,
+        country_code=request.country_code,
+        extra_params=extra_params,
+    )
 
 
-@dataclass
-class MarketIntelligenceConfig:
-    """
-    Top-level container for one or more MarketAssetConfig entries.
+def to_pool_request(request: PoolRequestConfig) -> "PoolRequest":
+    """Convert one validated pool configuration request exactly as supplied."""
+    from market_intelligence import PoolRequest
 
-    Kept intentionally minimal -- a plain list container, not a
-    registry, resolver, or lookup index.
-    """
-    assets: List[MarketAssetConfig] = field(default_factory=list)
+    request.validate()
 
-    def validate(self) -> None:
-        for asset in self.assets:
-            asset.validate()
+    return PoolRequest(
+        network=request.network,
+        pool_address=request.pool_address,
+    )
 
 
-# ---------------------------------------------------------------------------
-# Embedded lightweight tests (no network, no real API keys, no pytest dep)
-# ---------------------------------------------------------------------------
+def to_asset_requests(asset: MarketAssetConfig) -> MarketAssetRequests:
+    """Convert one configured asset into existing market-intelligence requests."""
+    asset.validate()
+
+    return MarketAssetRequests(
+        identifiers=to_asset_identifiers(asset),
+        etf_request=to_etf_request(asset.etf_request),
+        pool_requests=[to_pool_request(req) for req in asset.pool_requests],
+    )
+
+
+def to_request_bundle(config: MarketIntelligenceConfig) -> List[MarketAssetRequests]:
+    """Convert every configured asset, preserving order and explicit values."""
+    config.validate()
+
+    return [to_asset_requests(asset) for asset in config.assets]
+
 
 def _run_tests() -> None:
     import unittest
 
-    class MarketAssetConfigTests(unittest.TestCase):
-        def test_valid_asset_with_only_generic_symbol(self):
+    class AdapterTests(unittest.TestCase):
+        def test_generic_symbol_is_not_used_as_source_identifier(self):
             asset = MarketAssetConfig(symbol="BTC")
-            asset.validate()  # must not raise
-            self.assertEqual(asset.symbol, "BTC")
-            self.assertIsNone(asset.coingecko_id)
-            self.assertIsNone(asset.cmc_symbol)
-            self.assertIsNone(asset.cryptorank_symbol)
+            converted = to_asset_identifiers(asset)
 
-        def test_valid_asset_with_explicit_source_identifiers(self):
+            self.assertEqual(converted.symbol, "BTC")
+            self.assertIsNone(converted.coingecko_id)
+            self.assertIsNone(converted.cmc_symbol)
+            self.assertIsNone(converted.cryptorank_symbol)
+
+        def test_explicit_identifiers_are_preserved(self):
             asset = MarketAssetConfig(
                 symbol="BTC",
                 coingecko_id="bitcoin",
                 cmc_symbol="BTC",
                 cryptorank_symbol="BTC",
             )
-            asset.validate()  # must not raise
-            self.assertEqual(asset.coingecko_id, "bitcoin")
-            self.assertEqual(asset.cmc_symbol, "BTC")
-            self.assertEqual(asset.cryptorank_symbol, "BTC")
+            converted = to_asset_identifiers(asset)
 
-        def test_missing_coingecko_id_remains_none(self):
-            asset = MarketAssetConfig(symbol="BTC", cmc_symbol="BTC")
-            asset.validate()  # must not raise
-            self.assertIsNone(asset.coingecko_id)
+            self.assertEqual(converted.coingecko_id, "bitcoin")
+            self.assertEqual(converted.cmc_symbol, "BTC")
+            self.assertEqual(converted.cryptorank_symbol, "BTC")
 
-        def test_generic_symbol_never_copied_into_source_ids(self):
-            asset = MarketAssetConfig(symbol="BTC")
-            asset.validate()
-            # The explicit-ID rule: symbol must NEVER leak into any
-            # source-specific identifier field, by construction.
-            self.assertIsNone(asset.coingecko_id)
-            self.assertIsNone(asset.cmc_symbol)
-            self.assertIsNone(asset.cryptorank_symbol)
-            self.assertNotEqual(asset.coingecko_id, asset.symbol.lower())
+        def test_missing_optional_requests_stay_none_or_empty(self):
+            converted = to_asset_requests(MarketAssetConfig(symbol="ETH"))
 
-        def test_blank_symbol_is_rejected(self):
-            asset = MarketAssetConfig(symbol="   ")
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
+            self.assertIsNone(converted.etf_request)
+            self.assertEqual(converted.pool_requests, [])
 
-        def test_empty_symbol_is_rejected(self):
-            asset = MarketAssetConfig(symbol="")
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
+        def test_etf_request_is_field_for_field_conversion(self):
+            source = ETFRequestConfig(
+                symbol="BTC",
+                country_code="US",
+                start_date="2026-01-01",
+                end_date="2026-02-01",
+                limit=25,
+            )
+            converted = to_etf_request(source)
 
-        def test_invalid_pool_request_is_rejected(self):
+            self.assertIsNotNone(converted)
+            self.assertEqual(converted.symbol, source.symbol)
+            self.assertEqual(converted.country_code, source.country_code)
+            self.assertEqual(
+                converted.extra_params,
+                {
+                    "start_date": "2026-01-01",
+                    "end_date": "2026-02-01",
+                    "limit": 25,
+                },
+            )
+
+        def test_multiple_pool_requests_are_preserved_in_order(self):
             asset = MarketAssetConfig(
                 symbol="ETH",
-                pool_requests=[PoolRequestConfig(network="eth", pool_address="")],
+                pool_requests=[
+                    PoolRequestConfig(network="eth", pool_address="0xone"),
+                    PoolRequestConfig(network="base", pool_address="0xtwo"),
+                ],
             )
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
+            converted = to_asset_requests(asset)
 
-        def test_invalid_pool_request_blank_network_is_rejected(self):
-            asset = MarketAssetConfig(
-                symbol="ETH",
-                pool_requests=[PoolRequestConfig(network="  ", pool_address="0xabc")],
-            )
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
+            self.assertEqual(len(converted.pool_requests), 2)
+            self.assertEqual(converted.pool_requests[0].network, "eth")
+            self.assertEqual(converted.pool_requests[0].pool_address, "0xone")
+            self.assertEqual(converted.pool_requests[1].network, "base")
+            self.assertEqual(converted.pool_requests[1].pool_address, "0xtwo")
 
-        def test_valid_pool_request_passes(self):
-            asset = MarketAssetConfig(
-                symbol="ETH",
-                pool_requests=[PoolRequestConfig(network="eth", pool_address="0xabc")],
-            )
-            asset.validate()  # must not raise
+        def test_invalid_config_is_rejected_before_conversion(self):
+            with self.assertRaises(ValueError):
+                to_asset_identifiers(MarketAssetConfig(symbol=""))
 
-        def test_invalid_etf_request_is_rejected(self):
-            asset = MarketAssetConfig(
-                symbol="BTC",
-                etf_request=ETFRequestConfig(symbol="BTC", country_code=""),
-            )
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
-
-        def test_invalid_etf_request_blank_symbol_is_rejected(self):
-            asset = MarketAssetConfig(
-                symbol="BTC",
-                etf_request=ETFRequestConfig(symbol="  ", country_code="US"),
-            )
-            with self.assertRaises(MarketIntelligenceConfigError):
-                asset.validate()
-
-        def test_valid_etf_request_passes(self):
-            asset = MarketAssetConfig(
-                symbol="BTC",
-                etf_request=ETFRequestConfig(symbol="BTC", country_code="US"),
-            )
-            asset.validate()  # must not raise
-
-    class MarketIntelligenceConfigTests(unittest.TestCase):
-        def test_multiple_assets_can_coexist(self):
+        def test_config_bundle_preserves_asset_order(self):
             config = MarketIntelligenceConfig(
                 assets=[
                     MarketAssetConfig(symbol="BTC", coingecko_id="bitcoin"),
                     MarketAssetConfig(symbol="ETH", cmc_symbol="ETH"),
-                    MarketAssetConfig(symbol="DOGE"),
                 ]
             )
-            config.validate()  # must not raise
-            self.assertEqual(len(config.assets), 3)
-            self.assertEqual(config.assets[0].symbol, "BTC")
-            self.assertEqual(config.assets[2].coingecko_id, None)
+            bundle = to_request_bundle(config)
 
-        def test_one_invalid_asset_fails_whole_config_validation(self):
-            config = MarketIntelligenceConfig(
-                assets=[
-                    MarketAssetConfig(symbol="BTC"),
-                    MarketAssetConfig(symbol=""),
-                ]
+            self.assertEqual(
+                [x.identifiers.symbol for x in bundle],
+                ["BTC", "ETH"],
             )
-            with self.assertRaises(MarketIntelligenceConfigError):
-                config.validate()
+            self.assertEqual(
+                bundle[0].identifiers.coingecko_id,
+                "bitcoin",
+            )
+            self.assertEqual(
+                bundle[1].identifiers.cmc_symbol,
+                "ETH",
+            )
 
-        def test_empty_config_is_valid(self):
-            config = MarketIntelligenceConfig()
-            config.validate()  # must not raise
-            self.assertEqual(config.assets, [])
+        def test_no_network_modules_are_imported_by_adapter_source(self):
+            source = Path(__file__).read_text(encoding="utf-8")
+            production = source.split("def _run_tests() -> None:", 1)[0]
 
-        def test_no_network_or_api_behavior(self):
-            # This module must expose no HTTP/network primitives at all --
-            # confirm no such names leak into its public surface.
-            import market_intelligence_config as mic
-
-            forbidden_names = (
+            for forbidden in (
                 "requests",
                 "urllib",
-                "http",
+                "http.client",
                 "socket",
                 "aiohttp",
-            )
-            module_attrs = dir(mic)
-            for name in forbidden_names:
-                self.assertNotIn(name, module_attrs)
-
-        def test_no_source_client_or_smc_or_bingx_imports(self):
-            with open(__file__, "r", encoding="utf-8") as f:
-                source_text = f.read()
-            production_code = source_text.split("def _run_tests() -> None:")[0]
-            for banned_import in (
-                "import coingecko_client",
-                "from coingecko_client",
-                "import coinmarketcap_client",
-                "from coinmarketcap_client",
-                "import cryptorank_client",
-                "from cryptorank_client",
-                "import sosovalue_client",
-                "from sosovalue_client",
-                "import geckoterminal_client",
-                "from geckoterminal_client",
-                "import market_data_aggregator",
-                "from market_data_aggregator",
-                "import market_intelligence",
-                "from market_intelligence",
-                "import smc_scanner",
-                "from smc_scanner",
-                "import bingx_position_tracker",
-                "from bingx_position_tracker",
-                "import full_scan",
-                "from full_scan",
-                "import position_health",
-                "from position_health",
+                "ccxt",
             ):
-                self.assertNotIn(banned_import, production_code)
+                self.assertNotIn(f"import {forbidden}", production)
+                self.assertNotIn(f"from {forbidden}", production)
 
-    loader = unittest.TestLoader()
-    suite = unittest.TestSuite()
-    suite.addTests(loader.loadTestsFromTestCase(MarketAssetConfigTests))
-    suite.addTests(loader.loadTestsFromTestCase(MarketIntelligenceConfigTests))
-    runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
+        def test_adapter_does_not_import_source_clients_or_smc_layers(self):
+            source = Path(__file__).read_text(encoding="utf-8")
+            production = source.split("def _run_tests() -> None:", 1)[0]
+
+            for forbidden in (
+                "coingecko_client",
+                "coinmarketcap_client",
+                "cryptorank_client",
+                "sosovalue_client",
+                "geckoterminal_client",
+                "market_data_aggregator",
+                "smc_scanner",
+                "bingx_position_tracker",
+                "position_health",
+                "full_scan",
+            ):
+                self.assertNotIn(forbidden, production)
+
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(AdapterTests)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+
     if not result.wasSuccessful():
         raise SystemExit(1)
 
