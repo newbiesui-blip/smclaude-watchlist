@@ -8,13 +8,20 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: full-market-scan
+  cancel-in-progress: false
+
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -26,17 +33,21 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
+          else
+            pip install pandas numpy requests
           fi
 
       - name: Run ATHENA full scan
         env:
+          # Enable exchange-first Position Registry integration.
           USE_POSITION_REGISTRY: "1"
 
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Existing ATHENA / SMC secret names.
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
 
           BINGX_API_KEY: ${{ secrets.BINGX_API_KEY }}
-          BINGX_API_SECRET: ${{ secrets.BINGX_API_SECRET }}
+          BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
 
           CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
           CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
@@ -45,6 +56,7 @@ jobs:
           python full_scan.py
 
       - name: Persist scanner state
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -58,6 +70,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No state changes to commit."
           else
-            git commit -m "chore: persist ATHENA scanner state"
+            git commit -m "chore: persist ATHENA scanner state [skip ci]"
             git push
           fi
