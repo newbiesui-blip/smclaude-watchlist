@@ -1,27 +1,20 @@
-name: Full Market Scan
+name: ATHENA Full Market Scan
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "7,22,37,52 * * * *"
-  workflow_dispatch: {}
-
-concurrency:
-  group: full-market-scan
-  cancel-in-progress: false
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
 
 jobs:
-  full-scan:
+  scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,47 +22,42 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install pandas numpy requests
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
 
-      - name: Run full scan
+      - name: Run ATHENA full scan
         env:
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          USE_POSITION_REGISTRY: "1"
+
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
           BINGX_API_KEY: ${{ secrets.BINGX_API_KEY }}
-          BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
+          BINGX_API_SECRET: ${{ secrets.BINGX_API_SECRET }}
+
           CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
           CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
-        run: python full_scan.py
+
+        run: |
+          python full_scan.py
 
       - name: Persist scanner state
-        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if [ -f smc_setup_states.json ]; then
-            git add smc_setup_states.json
-          fi
-
-          if [ -f smc_watchlist.json ]; then
-            git add smc_watchlist.json
-          fi
-
-          if [ -f smc_entry_behavior.json ]; then
-            git add smc_entry_behavior.json
-          fi
-
-          if [ -f derivatives_history.json ]; then
-            git add derivatives_history.json
-          fi
-
-          if [ -f derivatives_state.json ]; then
-            git add derivatives_state.json
-          fi
+          git add \
+            watchlist.json \
+            position_registry.json \
+            scanner_state.json \
+            2>/dev/null || true
 
           if git diff --cached --quiet; then
-            echo "No scanner state changes to commit."
+            echo "No state changes to commit."
           else
-            git commit -m "bot: persist scanner state [skip ci]"
+            git commit -m "chore: persist ATHENA scanner state"
             git push
           fi
