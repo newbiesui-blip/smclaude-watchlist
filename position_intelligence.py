@@ -224,25 +224,25 @@ def _risk_per_unit(entry: Dict[str, Any]) -> Optional[float]:
     distance = abs(entry_price - stop)
     return distance if distance > 0 else None
 
-
 def _current_r(
     entry: Dict[str, Any],
     pnl: Optional[float],
     amount: Optional[float],
 ) -> Optional[float]:
+    risk_per_unit = _risk_per_unit(entry)
+
+    # Prefer fresh exchange-derived P&L when enough data exists.
+    if pnl is not None and amount is not None and risk_per_unit is not None:
+        risk_amount = risk_per_unit * abs(amount)
+        if risk_amount > 0:
+            return pnl / risk_amount
+
+    # Fall back to the stored R only when fresh calculation is impossible.
     existing = _float(entry.get("current_r"))
-    if existing is not None and existing != 0:
+    if existing is not None:
         return existing
 
-    risk_per_unit = _risk_per_unit(entry)
-    if pnl is None or amount is None or risk_per_unit is None:
-        return None
-
-    risk_amount = risk_per_unit * abs(amount)
-    if risk_amount <= 0:
-        return None
-
-    return pnl / risk_amount
+    return None
 
 
 def _distance_percent(current: float, reference: float) -> Optional[float]:
