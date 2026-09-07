@@ -506,7 +506,7 @@ def classify_smc_links(
         if eid and str(eid).strip() in by_pos_id:
             match = by_pos_id[str(eid).strip()]
         else:
-            key = f"{_canonical_symbol(entry.get('symbol'))}:{bingx.normalize_side(entry.get('side') or "")}"
+            key = f"{_canonical_symbol(entry.get('symbol'))}:{bingx.normalize_side(entry.get('side') or '')}"
             match = by_sym_side.get(key)
 
         if match is not None:
