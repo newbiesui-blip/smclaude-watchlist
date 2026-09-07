@@ -1,0 +1,63 @@
+--- a/full_scan.py
++++ b/full_scan.py
+@@
+ import position_health as health
+ import position_intelligence as position_intel
+ import position_registry as preg
++import market_environment as market_env
+@@
+-def scan_all(active_key, symbols):
++def scan_all(active_key, symbols, environment_state=None):
+     """Run the SMC pipeline with derivatives as non-invasive context."""
+@@
+             exec_state = scanner.determine_execution_state(plan, tf_results, direction)
+             plan.update(exec_state)
+-            lifecycle = scanner.update_setup_lifecycle(symbol, plan, scan_cycle)
+-            plan["lifecycle_info"] = lifecycle
++
++            # Entry-only environment gate. It is deliberately evaluated before
++            # lifecycle/deduplication so a blocked NEW setup is not consumed as
++            # if its entry notification had been emitted. Existing-position
++            # discovery/health/intelligence is completely outside this path.
++            if environment_state is not None and not environment_state.allowed:
++                plan["market_environment"] = environment_state.as_dict()
++                plan["lifecycle_info"] = {
++                    "send_alert": False,
++                    "is_new": True,
++                    "reason": "NEW_ENTRY_BLOCKED_BY_MARKET_ENVIRONMENT",
++                }
++            else:
++                lifecycle = scanner.update_setup_lifecycle(symbol, plan, scan_cycle)
++                plan["lifecycle_info"] = lifecycle
+@@
+     print(f"Timeframes: {', '.join(scanner.TFS_ALL)}")
++
++    # Entry-only market environment. This is intentionally after the
++    # exchange-first Position Registry section below would be ideal, but the
++    # registry must never depend on this state. Therefore discovery is left
++    # before this gate and only the SMC NEW-entry path receives it.
++    environment_state = market_env.can_open_new_position()
++    print(
++        f"Market environment: {environment_state.state} | "
++        f"allowed_new_entries={environment_state.allowed} | "
++        f"reason={environment_state.reason}"
++    )
+@@
+-    qualifying = scan_all(active_key, symbols)
++    qualifying = scan_all(active_key, symbols, environment_state)
+@@
+-        if _is_auto_add_candidate(score, plan):
++        if (
++            environment_state.allowed
++            and _is_auto_add_candidate(score, plan)
++        ):
+             try:
+@@
+                 print(f"  ! auto-add failed for {symbol}: {type(exc).__name__}: {exc}")
++
++        elif not environment_state.allowed and _is_auto_add_candidate(score, plan):
++            print(
++                f"  {symbol}: NEW entry/watchlist add blocked by market "
++                f"environment ({environment_state.reason})."
++            )
+*** End Patch
