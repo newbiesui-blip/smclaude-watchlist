@@ -19,10 +19,10 @@ coordinator (full_scan._sync_watchlist path under feature-flag control).
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import tempfile
+import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -48,25 +48,20 @@ def _canonical_symbol(symbol: Any) -> str:
     return bingx.normalize_symbol(symbol)
 
 
-def _stable_fallback_payload(pos: Dict[str, Any]) -> Dict[str, Any]:
-    """Return fields that should identify a no-ID exchange position.
+def _numeric_or_original(value: Any) -> Any:
+    """Normalize exchange numeric strings for downstream formatters/math.
 
-    Volatile mark/P&L fields are deliberately excluded so a normal market
-    move cannot create a new identity.
+    BingX may serialize prices/P&L as strings. Preserve non-numeric values for
+    diagnostics, but convert finite numeric strings to float so notification
+    formatting cannot abort the monitoring loop.
     """
-    return {
-        "symbol": _canonical_symbol(pos.get("symbol")),
-        "side": bingx.normalize_side(pos.get("side") or ""),
-        "avg_entry_price": pos.get("avg_entry_price"),
-        "amount": pos.get("amount"),
-    }
-
-
-def _fallback_base_identity(pos: Dict[str, Any]) -> str:
-    payload = _stable_fallback_payload(pos)
-    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
-    digest = hashlib.sha256(encoded).hexdigest()[:20]
-    return f"fb:{digest}"
+    try:
+        number = float(value)
+        if number == number and abs(number) != float("inf"):
+            return number
+    except (TypeError, ValueError):
+        pass
+    return value
 
 
 def _make_identity(
@@ -74,51 +69,23 @@ def _make_identity(
     side: str,
     exchange_position_id: Optional[str],
     avg_entry_price: Any = None,
-    amount: Any = None,
 ) -> str:
-    """Return a safe identity. Exchange position ID is authoritative.
+    """Primary identity = exchange position ID when available.
 
-    Without an exchange ID, identity is explicitly a fallback fingerprint.
-    Callers must handle duplicate fingerprints as ambiguous instead of
-    overwriting one position with another.
+    Fallback is deterministic and never silently merges opposite-side
+    or materially different entries.
     """
     if exchange_position_id and str(exchange_position_id).strip():
         return f"id:{str(exchange_position_id).strip()}"
-    return _fallback_base_identity({
-        "symbol": symbol,
-        "side": side,
-        "avg_entry_price": avg_entry_price,
-        "amount": amount,
-    })
 
+    price_bucket = ""
+    try:
+        if avg_entry_price is not None and avg_entry_price != "":
+            price_bucket = f":{float(avg_entry_price):.8g}"
+    except (TypeError, ValueError):
+        price_bucket = ""
 
-def _group_live_positions(live: List[Dict[str, Any]]) -> List[Tuple[str, Dict[str, Any]]]:
-    """Build collision-safe identities for one successful exchange snapshot.
-
-    A duplicate no-ID fingerprint is inherently ambiguous. Preserve every
-    record with a deterministic ordinal rather than silently dropping one.
-    """
-    grouped: Dict[str, List[Dict[str, Any]]] = {}
-    for pos in live:
-        eid = pos.get("exchange_position_id")
-        if eid and str(eid).strip():
-            grouped.setdefault(f"id:{str(eid).strip()}", []).append(pos)
-        else:
-            grouped.setdefault(_fallback_base_identity(pos), []).append(pos)
-
-    out: List[Tuple[str, Dict[str, Any]]] = []
-    for base, positions in grouped.items():
-        if base.startswith("id:") or len(positions) == 1:
-            out.append((base, positions[0]))
-            continue
-        # Duplicate fallback fingerprints cannot be uniquely identified by
-        # exchange data. Keep each one distinct and mark the ambiguity.
-        for ordinal, pos in enumerate(positions):
-            tagged = dict(pos)
-            tagged["_identity_ambiguous"] = True
-            tagged["_identity_base"] = base
-            out.append((f"{base}:{ordinal}", tagged))
-    return out
+    return f"fb:{_canonical_symbol(symbol)}:{side}{price_bucket}"
 
 
 # ---------------------------------------------------------------------------
@@ -185,11 +152,11 @@ def _new_entry_from_exchange(pos: Dict[str, Any], orphan: bool = True) -> Dict[s
     return {
         "symbol": pos["symbol"],
         "side": pos["side"],
-        "amount": pos["amount"],
+        "amount": _numeric_or_original(pos["amount"]),
         "exchange_position_id": pos.get("exchange_position_id"),
-        "avg_entry_price": pos.get("avg_entry_price"),
-        "mark_price": pos.get("mark_price"),
-        "unrealized_pnl": pos.get("unrealized_pnl"),
+        "avg_entry_price": _numeric_or_original(pos.get("avg_entry_price")),
+        "mark_price": _numeric_or_original(pos.get("mark_price")),
+        "unrealized_pnl": _numeric_or_original(pos.get("unrealized_pnl")),
         "lifecycle": bingx.OPEN,
         "orphan": bool(orphan),
         "first_seen_at": now,
@@ -199,9 +166,6 @@ def _new_entry_from_exchange(pos: Dict[str, Any], orphan: bool = True) -> Dict[s
         "close_alert_sent": False,
         "source": "exchange_discovery",
         "smc_context": None,        # never fabricate
-        "identity_kind": "exchange_id" if pos.get("exchange_position_id") else "fallback",
-        "identity_ambiguous": bool(pos.get("_identity_ambiguous", False)),
-        "identity_base": pos.get("_identity_base"),
     }
 
 
@@ -241,28 +205,26 @@ def reconcile(
     try:
         live = bingx.list_open_positions(api_key=api_key, secret=secret)
     except Exception as exc:
-        # A failed read is not evidence that a live position disappeared.
-        # Preserve OPEN exactly and record transport/API diagnostics separately.
+        # Transient API failure must NEVER close anything
         result["ok"] = False
         result["error"] = f"API_ERROR: {type(exc).__name__}: {exc}"
-        for entry in positions_map.values():
+        for identity, entry in positions_map.items():
             if entry.get("lifecycle") == bingx.OPEN:
+                entry["lifecycle"] = "API_ERROR"
                 entry["last_error"] = result["error"]
-                entry["api_error_at"] = _now_iso()
+                entry["last_seen_at"] = _now_iso()
         save_registry(registry, path)
         return result
 
-    live_by_id: Dict[str, Dict[str, Any]] = dict(_group_live_positions(live))
-
-    # If a previously single fallback identity becomes an ambiguous duplicate,
-    # retain its historical alert/health state as ordinal zero rather than
-    # leaving a stale duplicate behind.
-    for identity in list(live_by_id):
-        if not identity.endswith(":0"):
-            continue
-        base = identity[:-2]
-        if base in positions_map and identity not in positions_map:
-            positions_map[identity] = positions_map.pop(base)
+    live_by_id: Dict[str, Dict[str, Any]] = {}
+    for pos in live:
+        identity = _make_identity(
+            pos["symbol"],
+            pos["side"],
+            pos.get("exchange_position_id"),
+            pos.get("avg_entry_price"),
+        )
+        live_by_id[identity] = pos
 
     # Update / discover
     seen_identities = set()
@@ -271,48 +233,26 @@ def reconcile(
         if identity in positions_map:
             entry = positions_map[identity]
             entry["lifecycle"] = bingx.OPEN
-            entry["amount"] = pos["amount"]
-            entry["mark_price"] = pos.get("mark_price")
-            entry["unrealized_pnl"] = pos.get("unrealized_pnl")
-            entry["avg_entry_price"] = pos.get("avg_entry_price") or entry.get("avg_entry_price")
+            entry["amount"] = _numeric_or_original(pos["amount"])
+            entry["mark_price"] = _numeric_or_original(pos.get("mark_price"))
+            entry["unrealized_pnl"] = _numeric_or_original(pos.get("unrealized_pnl"))
+            entry["avg_entry_price"] = _numeric_or_original(pos.get("avg_entry_price")) or entry.get("avg_entry_price")
             entry["last_seen_at"] = _now_iso()
             entry.pop("last_error", None)
-            entry.pop("api_error_at", None)
-            if pos.get("_identity_ambiguous"):
-                entry["identity_ambiguous"] = True
-                entry["identity_base"] = pos.get("_identity_base")
             result["updated"].append(identity)
         else:
             entry = _new_entry_from_exchange(pos, orphan=True)
             positions_map[identity] = entry
             result["discovered"].append(identity)
 
-    # Missing from a successful live response is NOT_FOUND first. Closure is
-    # accepted only when BingX positionHistory confirms the same exchange ID.
+    # Missing from successful live response → NOT_FOUND (never CLOSED)
     for identity, entry in list(positions_map.items()):
         if identity in seen_identities:
             continue
-        if entry.get("lifecycle") not in {bingx.OPEN, "API_ERROR", "NOT_FOUND"}:
-            continue
-
-        entry["lifecycle"] = "NOT_FOUND"
-        entry["last_seen_at"] = _now_iso()
-        result["not_found"].append(identity)
-
-        if entry.get("identity_ambiguous"):
-            continue
-        try:
-            history_item = bingx.confirm_closed_position(entry, api_key=api_key, secret=secret)
-        except Exception as exc:
-            entry["last_error"] = f"CLOSE_CONFIRMATION_ERROR: {type(exc).__name__}: {exc}"
-            entry["close_confirmation_error_at"] = _now_iso()
-            continue
-        if history_item is not None:
-            entry["lifecycle"] = bingx.CLOSED
-            entry["closed_at"] = _now_iso()
-            entry["close_reason"] = "CONFIRMED_HISTORY"
-            entry["close_history"] = history_item
-            result["closed"].append(identity)
+        if entry.get("lifecycle") in {bingx.OPEN, "API_ERROR", "NOT_FOUND"}:
+            entry["lifecycle"] = "NOT_FOUND"
+            entry["last_seen_at"] = _now_iso()
+            result["not_found"].append(identity)
 
     save_registry(registry, path)
     result["registry"] = registry
@@ -333,21 +273,15 @@ def mark_closed(
     identity: str,
     reason: str = "CONFIRMED_HISTORY",
     path: str = REGISTRY_PATH,
-    history_item: Optional[Dict[str, Any]] = None,
-) -> bool:
-    """Persist CLOSED only when authoritative history evidence is supplied."""
-    if reason != "CONFIRMED_HISTORY" or not isinstance(history_item, dict):
-        return False
+) -> None:
+    """Transition to CLOSED only after authoritative confirmation."""
     registry = load_registry(path)
     entry = registry.get("positions", {}).get(identity)
-    if entry is None or entry.get("lifecycle") == bingx.CLOSED:
-        return False
-    entry["lifecycle"] = bingx.CLOSED
-    entry["closed_at"] = _now_iso()
-    entry["close_reason"] = reason
-    entry["close_history"] = history_item
-    save_registry(registry, path)
-    return True
+    if entry is not None and entry.get("lifecycle") != bingx.CLOSED:
+        entry["lifecycle"] = bingx.CLOSED
+        entry["closed_at"] = _now_iso()
+        entry["close_reason"] = reason
+        save_registry(registry, path)
 
 
 # ---------------------------------------------------------------------------
@@ -506,7 +440,7 @@ def classify_smc_links(
         if eid and str(eid).strip() in by_pos_id:
             match = by_pos_id[str(eid).strip()]
         else:
-            key = f"{_canonical_symbol(entry.get('symbol'))}:{bingx.normalize_side(entry.get('side') or '')}"
+            key = f"{entry.get('symbol')}:{entry.get('side')}"
             match = by_sym_side.get(key)
 
         if match is not None:
