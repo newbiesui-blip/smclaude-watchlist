@@ -1,0 +1,70 @@
+name: ATHENA Full Market Scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: full-market-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install pandas numpy requests
+          fi
+
+      - name: Run ATHENA full scan
+        env:
+          USE_POSITION_REGISTRY: "1"
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          BINGX_API_KEY: ${{ secrets.BINGX_API_KEY }}
+          BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
+          CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
+          CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
+        run: |
+          # Install the central Telegram boundary before full_scan starts.
+          # smc_scanner.py itself remains untouched.
+          python -c "import athena_notification_state; import full_scan; raise SystemExit(full_scan.main())"
+
+      - name: Persist ATHENA runtime state
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Persist the AUTHORITATIVE files actually used by production code.
+          # Do not replace these with obsolete names such as watchlist.json
+          # or scanner_state.json.
+          git add             smc_watchlist.json             smc_setup_states.json             position_registry.json             notification_state.json             derivatives_history.json             derivatives_state.json             2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "No ATHENA runtime state changes to commit."
+          else
+            git commit -m "chore: persist ATHENA runtime state [skip ci]"
+            git push
+          fi
