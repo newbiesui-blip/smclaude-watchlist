@@ -649,7 +649,7 @@
   },
   "SPX-USDT": {
     "fingerprint": "4bcdcbf91af7abab",
-    "status": "NEAR_READY",
+    "status": "WAIT_PULLBACK",
     "execution_type": null,
     "setup_type": "LIQUIDITY_SWEEP_REVERSAL",
     "direction": "BEARISH",
@@ -658,12 +658,12 @@
     "preferred_entry": 0.5199,
     "invalidation_level": 0.5281911,
     "structural_target": 0.3627,
-    "structural_rr": 9.284635606018218,
-    "entry_quality": 59,
+    "structural_rr": 10.26471809462867,
+    "entry_quality": 42,
     "setup_quality": 98,
-    "lifecycle": "NEAR_READY",
-    "stale_cycles": 1,
-    "last_seen_cycle": 1987742
+    "lifecycle": "DEVELOPING",
+    "stale_cycles": 0,
+    "last_seen_cycle": 1987743
   },
   "AAVE-USDT": {
     "fingerprint": "cc3412e772957937",
@@ -1385,24 +1385,6 @@
     "stale_cycles": 0,
     "last_seen_cycle": 1987570
   },
-  "BNB-USDT": {
-    "fingerprint": "effd31bd17f2171f",
-    "status": "WAIT_PULLBACK",
-    "execution_type": null,
-    "setup_type": "MOMENTUM_CONTINUATION",
-    "direction": "BEARISH",
-    "regime": "TRANSITION",
-    "trend_alignment": "CONFLICTED",
-    "preferred_entry": 748.73,
-    "invalidation_level": 752.26671,
-    "structural_target": 674.4,
-    "structural_rr": 12.160474317652962,
-    "entry_quality": 52,
-    "setup_quality": 72,
-    "lifecycle": "DEVELOPING",
-    "stale_cycles": 0,
-    "last_seen_cycle": 1987735
-  },
   "INJ-USDT": {
     "fingerprint": "ccab8362ea582f08",
     "status": "WAIT_PULLBACK",
@@ -1763,24 +1745,6 @@
     "stale_cycles": 0,
     "last_seen_cycle": 1987740
   },
-  "TRUTH-USDT": {
-    "fingerprint": "8ea2cc999507ca1a",
-    "status": "READY_LIMIT",
-    "execution_type": "LIMIT",
-    "setup_type": "LIQUIDITY_SWEEP_REVERSAL",
-    "direction": "BULLISH",
-    "regime": "STRONG_UPTREND",
-    "trend_alignment": "TREND_ALIGNED",
-    "preferred_entry": 0.013992,
-    "invalidation_level": 0.0139200885,
-    "structural_target": 0.014238,
-    "structural_rr": 7.17011680351592,
-    "entry_quality": 76,
-    "setup_quality": 98,
-    "lifecycle": "READY",
-    "stale_cycles": 0,
-    "last_seen_cycle": 1987742
-  },
   "NCSKGME2USD-USDT": {
     "fingerprint": "2c296ab2b3512f86",
     "status": "NEAR_READY",
@@ -1792,11 +1756,29 @@
     "preferred_entry": 19.9,
     "invalidation_level": 19.51069,
     "structural_target": 22.08,
-    "structural_rr": 3.4351210923339837,
-    "entry_quality": 69,
+    "structural_rr": 3.3598615329792354,
+    "entry_quality": 68,
     "setup_quality": 89,
     "lifecycle": "NEAR_READY",
+    "stale_cycles": 1,
+    "last_seen_cycle": 1987743
+  },
+  "NCSKGOOGL2USD-USDT": {
+    "fingerprint": "573d31e0386259bd",
+    "status": "NEAR_READY",
+    "execution_type": null,
+    "setup_type": "BOS_CONTINUATION",
+    "direction": "BEARISH",
+    "regime": "STRONG_DOWNTREND",
+    "trend_alignment": "TREND_ALIGNED",
+    "preferred_entry": 330.32,
+    "invalidation_level": 337.49548500000003,
+    "structural_target": 315.0,
+    "structural_rr": 2.0052140910041114,
+    "entry_quality": 69,
+    "setup_quality": 79,
+    "lifecycle": "NEAR_READY",
     "stale_cycles": 0,
-    "last_seen_cycle": 1987742
+    "last_seen_cycle": 1987743
   }
 }
