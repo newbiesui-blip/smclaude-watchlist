@@ -10,7 +10,7 @@
       "identity_ambiguous": false,
       "identity_base": "id:2097054096842506240",
       "identity_kind": "exchange_id",
-      "last_seen_at": "2026-09-09T06:53:19.319278+00:00",
+      "last_seen_at": "2026-09-09T07:05:13.550181+00:00",
       "lifecycle": "NOT_FOUND",
       "mark_price": null,
       "open_alert_sent": false,
@@ -37,7 +37,7 @@
       "identity_ambiguous": false,
       "identity_base": "id:2097062064585654272",
       "identity_kind": "exchange_id",
-      "last_seen_at": "2026-09-09T06:53:19.552123+00:00",
+      "last_seen_at": "2026-09-09T07:05:13.883774+00:00",
       "lifecycle": "NOT_FOUND",
       "mark_price": null,
       "open_alert_sent": false,
@@ -65,12 +65,12 @@
       "identity_base": "id",
       "identity_kind": "exchange_id",
       "last_monitoring_at": "2026-09-09T06:53:20.393987+00:00",
-      "last_seen_at": "2026-09-09T06:53:19.319242+00:00",
+      "last_seen_at": "2026-09-09T07:05:13.550156+00:00",
       "lifecycle": "OPEN",
-      "mark_price": 153.11,
+      "mark_price": 153.14,
       "open_alert_sent": true,
       "open_alert_sent_at": "2026-09-09T06:53:41.778947+00:00",
-      "orphan": true,
+      "orphan": false,
       "position_health_derivatives_score": 0.0,
       "position_health_derivatives_state": "NEUTRAL",
       "position_health_previous_state": null,
@@ -154,13 +154,17 @@
       "position_intelligence_state": "HEALTHY",
       "position_opened_at": "2026-09-09T06:53:19.319242+00:00",
       "side": "LONG",
-      "smc_context": null,
-      "smc_linked": false,
+      "smc_context": {
+        "added_score": 90,
+        "status": "triggered",
+        "trade_type": "SCALP"
+      },
+      "smc_linked": true,
       "source": "exchange_discovery",
       "symbol": "NCSKSPCX2USDUSDT",
-      "unrealized_pnl": -0.0209
+      "unrealized_pnl": 0.0001
     }
   },
-  "updated_at": "2026-09-09T06:53:41.778955+00:00",
+  "updated_at": "2026-09-09T07:05:14.182383+00:00",
   "version": 2
 }
