@@ -1,1 +1,820 @@
-IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwoiIiIKVW5hdHRlbmRlZCBmdWxsLW1hcmtldCBzY2FubmVyIGZvciBzbWNfc2Nhbm5lci5weS4KCkRlc2lnbmVkIGZvciBHaXRCdWIgQWN0aW9ucyAvIGNyb24gYW5kIGZvciByZXBlYXRlZCB+MTUtbWludXRlIHNjYW5zLgpVc2VzIHRoZSBQaGFzZSAxLTQuNSBwaXBlbGluZSBleHBvc2VkIGJ5IHRoZSBjdXJyZW50IHNtY19zY2FubmVyIG1vZHVsZToKICByZWdpbWUgLT4gc2V0dXAgLT4gc3RydWN0dXJhbCBSOlIgLT4gc2V0dXAvZW50cnkgcXVhbGl0eSAtPiBleGVjdXRpb24gc3RhdGUKICAtPiBsaWZlY3ljbGUvZGVkdXBsaWNhdGlvbiAtPiBhY3Rpb25hYmxlIHJhbmtpbmcuCgpCaW5nWCBwb3NpdGlvbiBzeW5jaHJvbml6YXRpb24gYW5kIEFUSEVOQSBwb3NpdGlvbiBoZWFsdGggYXJlIGxheWVyZWQgb24gdG9wCm9mIHRoZSBleGlzdGluZyBzZXR1cCBzY2FubmVyLiBUaGV5IGRvIG5vdCBtb2RpZnkgU01DIHNldHVwIGdlbmVyYXRpb24uCiIiIgoKaW1wb3J0IG9zCmltcG9ydCBzeXMKaW1wb3J0IHRpbWUKZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZXRpbWUsIHRpbWV6b25lCgppbXBvcnQgc21jX3NjYW5uZXIgYXMgc2Nhbm5lcgppbXBvcnQgZGVyaXZhdGl2ZXNfbW9uaXRvciBhcyBkZXJpdmF0aXZlcwppbXBvcnQgYmluZ3hfcG9zaXRpb25fdHJhY2tlciBhcyBiaW5neAppbXBvcnQgcG9zaXRpb25faGVhbHRoIGFzIGhlYWx0aAppbXBvcnQgcG9zaXRpb25faW50ZWxsaWdlbmNlIGFzIHBvc2l0aW9uX2ludGVsCmltcG9ydCBhdGhlbmFfbm90aWZpY2F0aW9uX3N0YXRlIGFzIG5vdGlmaWNhdGlvbl9zdGF0ZQpmcm9tIG1hcmtldF9kYXRhX2FnZ3JlZ2F0b3IgaW1wb3J0IE1hcmtldERhdGFBZ2dyZWdhdG9yCmZyb20gbWFya2V0X2ludGVsbGlnZW5jZSBpbXBvcnQgQXNzZXRJZGVudGlmaWVycywgTWFya2V0SW50ZWxsaWdlbmNlCgp0cnk6CiAgICBmcm9tIGNvaW5tYXJrZXRjYXBfY2xpZW50IGltcG9ydCBDb2luTWFya2V0Q2FwQ2xpZW50CmV4Y2VwdCBFeGNlcHRpb246CiAgICBDb2luTWFya2V0Q2FwQ2xpZW50ID0gTm9uZQoKdHJ5OgogICAgZnJvbSBjcnlwdG9yYW5rX2NsaWVudCBpbXBvcnQgQ3J5cHRvUmFua0NsaWVudApleGNlcHQgRXhjZXB0aW9uOgogICAgQ3J5cHRvUmFua0NsaWVudCA9IE5vbmUKCgpNQVhfU1lNQk9MUyA9IDE1MApUT1BfQUNUSU9OQUJMRV9UT19QUklOVCA9IDEwCk1BUktFVF9JTlRFTExJR0VOQ0VfTUFYX0FTU0VUUyA9IDEwClBPU0lUSU9OX0lOVEVMTElHRU5DRV9BTEVSVF9TVEFURVMgPSB7CiAgICAiRVhJVF9XQVJOSU5HIiwKICAgICJFTEVWQVRFRF9SSVNLIiwKICAgICJUQUtFX1BBUlRJQUxfQ09OU0lERVJBVElPTiIsCiAgICAiQlJFQUtfRVZFTl9FTElHSUJMRSIsCiAgICAiQ0FVVElPTiIsCiAgICAiUkVDT1ZFUlkiLAp9CgojIFBvc2l0aW9uIGludGVsbGlnZW5jZSBhbHNvIG5lZWRzIHRvIHJlcG9ydCBtYXRlcmlhbCBtb3ZlbWVudCB3aGlsZSB0aGUKIyBvcGVyYXRpbmcgc3RhdGUgcmVtYWlucyBIRUFMVEhZLiBUaGVzZSB0aHJlc2hvbGRzIGFyZSBub3RpZmljYXRpb24tb25seTsKIyB0aGV5IG5ldmVyIGFsdGVyIGV4ZWN1dGlvbiwgb3JkZXJzLCBTTCwgVFAsIG9yIHNjYW5uZXIgZGVjaXNpb25zLgpQT1NJVElPTl9JTlRFTExJR0VOQ0VfTUFURVJJQUxfUl9ERUxUQSA9IDAuNTAKCgpkZWYgX2lzX2F1dG9fYWRkX2NhbmRpZGF0ZShzY29yZSwgcGxhbik6CiAgICAiIiJBcHBseSB0aGUgc2Nhbm5lcidzIHVuYXR0ZW5kZWQgd2F0Y2hsaXN0IHBvbGljeS4iIiIKICAgIHRyYWRlX3R5cGUgPSBzdHIocGxhbi5nZXQoInRyYWRlX3R5cGUiLCAiSU5UUkFEQVkiKSkudXBwZXIoKQogICAgaWYgdHJhZGVfdHlwZSBpbiBnZXRhdHRyKHNjYW5uZXIsICJBVVRPX0FERF9FWENMVURFX1RZUEVTIiwgc2V0KCkpOgogICAgICAgIHJldHVybiBGYWxzZQogICAgaWYgc2NvcmUgPCBnZXRhdHRyKHNjYW5uZXIsICJBVVRPX0FERF9NSU5fU0NPUkUiLCA5MCk6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiBnZXRhdHRyKHNjYW5uZXIsICJBVVRPX0FERF9SRUFEWV9PTkxZIiwgVHJ1ZSk6CiAgICAgICAgcmV0dXJuIHBsYW4uZ2V0KCJzdGF0dXMiKSBpbiAoIlJFQURZX01BUktFVCIsICJSRUFEWV9MSU1JVCIpCiAgICByZXR1cm4gVHJ1ZQoKCgoKZGVmIF9pc19hbGVydF9jYW5kaWRhdGUoc2NvcmUsIHBsYW4pOgogICAgIiIiTm90aWZ5IG9uIGEgaGlnaC1xdWFsaXR5IHNldHVwIGV2ZW4gd2hlbiB0aGUgY3VycmVudCBwcmljZSBpcyBub3QgcmVhZHkuCgogICAgUkVBRFkgaXMgYW4gZXhlY3V0aW9uIHN0YXRlLCBub3QgdGhlIGRlZmluaXRpb24gb2YgYSB2YWxpZCB0aGVzaXMuIEEKICAgIHF1YWxpdHkgcHVsbGJhY2sgc2hvdWxkIGJlIHN1cmZhY2VkIGFzIFdBSVRJTkcvTkVBUl9SRUFEWSBzbyB0aGUgdHJhZGVyCiAgICBjYW4gcGxhY2UvcHJlcGFyZSB0aGUgbGltaXQgcGxhbiBiZWZvcmUgcHJpY2UgcmVhY2hlcyB0aGUgem9uZS4KICAgICIiIgogICAgc3RhdHVzID0gcGxhbi5nZXQoInN0YXR1cyIpCiAgICBpZiBzdGF0dXMgbm90IGluICgiUkVBRFlfTUFSS0VUIiwgIlJFQURZX0xJTUlUIiwgIk5FQVJfUkVBRFkiLAogICAgICAgICAgICAgICAgICAgICAgIldBSVRfUFVMTEJBQ0siLCAiV0FJVF9CUkVBS09VVCIsICJXQUlUX1JFVEVTVCIpOgogICAgICAgIHJldHVybiBGYWxzZQogICAgaWYgc2NvcmUgPCBnZXRhdHRyKHNjYW5uZXIsICJNSU5fU0VUVVBfU0NPUkUiLCA2MCk6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiBwbGFuLmdldCgic2V0dXBfcXVhbGl0eSIsIDApIDwgZ2V0YXR0cihzY2FubmVyLCAiTUlOX1NFVFVQX1FVQUxJVFkiLCA3MCk6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiBmbG9hdChwbGFuLmdldCgiYWN0aW9uYWJsZV9yciIsIDAuMCkgb3IgMC4wKSA8IGdldGF0dHIoc2Nhbm5lciwgIk1JTl9TVFJVQ1RVUkFMX1JSIiwgMi4wKToKICAgICAgICByZXR1cm4gRmFsc2UKICAgIHRyYWRlX3R5cGUgPSBzdHIocGxhbi5nZXQoInRyYWRlX3R5cGUiLCAiSU5UUkFEQVkiKSkudXBwZXIoKQogICAgaWYgdHJhZGVfdHlwZSBpbiBnZXRhdHRyKHNjYW5uZXIsICJBVVRPX0FERF9FWENMVURFX1RZUEVTIiwgc2V0KCkpOgogICAgICAgIHJldHVybiBGYWxzZQogICAgcmV0dXJuIFRydWUKCmRlZiBfZm9ybWF0X2FsZXJ0KHN5bWJvbCwgdXNlZCwgc2NvcmUsIGRpcmVjdGlvbiwgcGxhbiwgaXNfbmV3PVRydWUsIHJlYXNvbj1Ob25lKToKICAgIHN0YXR1cyA9IHBsYW4uZ2V0KCJzdGF0dXMiLCAiVU5LTk9XTiIpCiAgICBleGVjdXRpb25fdHlwZSA9IHBsYW4uZ2V0KCJleGVjdXRpb25fdHlwZSIsICJVTktOT1dOIikKICAgIHByaWNlID0gcGxhbi5nZXQoImN1cnJlbnRfcHJpY2UiKQogICAgZW50cnkgPSBwbGFuLmdldCgicHJlZmVycmVkX2VudHJ5IikKICAgIHpvbmVfbG93ID0gcGxhbi5nZXQoInpvbmVfbG93IikKICAgIHpvbmVfaGlnaCA9IHBsYW4uZ2V0KCJ6b25lX2hpZ2giKQogICAgaW52YWxpZGF0aW9uID0gcGxhbi5nZXQoImludmFsaWRhdGlvbiIpCgogICAgaGVhZGVyID0gKAogICAgICAgIGYi8J+GlSBORVcgU0VUVVA6IHtzeW1ib2x9IHtkaXJlY3Rpb259IFt7cGxhbi5nZXQoJ3RyYWRlX3R5cGUnLCAnSU5UUkFEQVknKX1dIgogICAgICAgIGlmIGlzX25ldyBlbHNlCiAgICAgICAgZiLwn5SEIEFDVElWRSBTRVRVUCBVUERBVEU6IHtzeW1ib2x9IHtkaXJlY3Rpb259IFt7cGxhbi5nZXQoJ3RyYWRlX3R5cGUnLCAnSU5UUkFEQVknKX1dIgogICAgKQogICAgc2NvcmVfbGluZSA9IGYiQ3VycmVudCBTY29yZToge3Njb3JlOi4wZn0vMTAwIgoKICAgIGxpbmVzID0gWwogICAgICAgIGhlYWRlciwKICAgICAgICBzY29yZV9saW5lLAogICAgICAgICJFbnRyeSBzaWduYWw6IEZSRVNIIiBpZiBpc19uZXcgZWxzZSAiQWxyZWFkeSB0cmFja2VkIC0tIE5PVCBhIG5ldyBlbnRyeSBzaWduYWwuIiwKICAgICAgICBmIlNvdXJjZToge3VzZWQuZ2V0KHNjYW5uZXIuRU5UUllfVEYpIG9yICdmYWxsYmFjayBleGNoYW5nZSd9IiwKICAgICAgICBmIuKchSB7c3RhdHVzfSIsCiAgICAgICAgZiJFeGVjdXRpb246IHtleGVjdXRpb25fdHlwZX0iLAogICAgXQogICAgaWYgcHJpY2UgaXMgbm90IE5vbmU6CiAgICAgICAgbGluZXMuYXBwZW5kKGYiQ3VycmVudDoge3ByaWNlOi44Z30iKQogICAgaWYgZW50cnkgaXMgbm90IE5vbmU6CiAgICAgICAgbGluZXMuYXBwZW5kKGYiUHJlZmVycmVkIEVudHJ5OiB7ZW50cnk6LjhnfSIpCiAgICBpZiB6b25lX2xvdyBpcyBub3QgTm9uZSBhbmQgem9uZV9oaWdoIGlzIG5vdCBOb25lOgogICAgICAgIGxpbmVzLmFwcGVuZChmIlpvbmU6IHt6b25lX2xvdzouOGd9IC0ge3pvbmVfaGlnaDouOGd9ICh7cGxhbi5nZXQoJ3pvbmVfbGFiZWwnLCAnc3RydWN0dXJhbCcpfSkiKQogICAgaWYgaW52YWxpZGF0aW9uIGlzIG5vdCBOb25lOgogICAgICAgIGxpbmVzLmFwcGVuZChmIlNMIC8gSW52YWxpZGF0aW9uOiB7aW52YWxpZGF0aW9uOi44Z30iKQoKICAgIHRhcmdldHMgPSBwbGFuLmdldCgidmFsaWRhdGVkX3RhcmdldHMiKSBvciBbXQogICAgaWYgdGFyZ2V0czoKICAgICAgICBmb3IgaSwgdGFyZ2V0IGluIGVudW1lcmF0ZSh0YXJnZXRzWzozXSwgMSk6CiAgICAgICAgICAgIGxpbmVzLmFwcGVuZChmIlRQe2l9OiB7dGFyZ2V0WydwcmljZSddOi44Z30gKH57dGFyZ2V0LmdldCgncicsIDApOi4yZn1SKSIpCiAgICBlbHNlOgogICAgICAgIGxpbmVzLmFwcGVuZCgiVFA6IG5vIHZhbGlkYXRlZCBzdHJ1Y3R1cmFsIHRhcmdldCIpCgogICAgZGN0eCA9IHBsYW4uZ2V0KCJkZXJpdmF0aXZlc19jb250ZXh0Iikgb3Ige30KICAgIGlmIGRjdHg6CiAgICAgICAgZHN0YXRlID0gZGN0eC5nZXQoInN0YXRlIiwgIk5FVVRSQUwiKQogICAgICAgIGRzY29yZSA9IGRjdHguZ2V0KCJzY29yZSIpCiAgICAgICAgZHJlYXNvbiA9IGRjdHguZ2V0KCJyZWFzb24iKQogICAgICAgIGxpbmVzLmFwcGVuZCgKICAgICAgICAgICAgZiJEZXJpdmF0aXZlczoge2RzdGF0ZX0iICsKICAgICAgICAgICAgKGYiICh7ZHNjb3JlOisuMGZ9KSIgaWYgaXNpbnN0YW5jZShkc2NvcmUsIChpbnQsIGZsb2F0KSkgZWxzZSAiIikKICAgICAgICApCiAgICAgICAgaWYgZHJlYXNvbjoKICAgICAgICAgICAgbGluZXMuYXBwZW5kKGYiRGVyaXZhdGl2ZXMgQ29udGV4dDoge2RyZWFzb259IikKCiAgICBsaW5lcy5leHRlbmQoWwogICAgICAgIGYiU2V0dXAgUXVhbGl0eToge3BsYW4uZ2V0KCdzZXR1cF9xdWFsaXR5JywgMCk6LjBmfSIsCiAgICAgICAgZiJFbnRyeSBRdWFsaXR5OiB7cGxhbi5nZXQoJ2VudHJ5X3F1YWxpdHknLCAwKTouMGZ9IiwKICAgICAgICBmIlN0cnVjdHVyYWwgUjpSOiB7cGxhbi5nZXQoJ3N0cnVjdHVyYWxfcnInLCAwKTouMmZ9IiwKICAgICAgICBmIlJlZ2ltZToge3BsYW4uZ2V0KCdyZWdpbWUnLCAnbi9hJyl9IC8ge3BsYW4uZ2V0KCd0cmVuZF9hbGlnbm1lbnQnLCAnbi9hJyl9IiwKICAgIF0pCiAgICByZXR1cm4gIlxuIi5qb2luKGxpbmVzKQoKCmRlZiBfZm9ybWF0X2hlYWx0aF9hbGVydChlbnRyeSwgc25hcHNob3QpOgogICAgc3ltYm9sID0gZW50cnkuZ2V0KCJzeW1ib2wiLCAiPyIpCiAgICBkaXJlY3Rpb24gPSBlbnRyeS5nZXQoImRpcmVjdGlvbiIsICI/IikKICAgIHN0YXRlID0gc25hcHNob3QuZ2V0KCJoZWFsdGhfc3RhdGUiLCAiVU5LTk9XTiIpCiAgICBwcmV2ID0gZW50cnkuZ2V0KCJwb3NpdGlvbl9oZWFsdGhfcHJldmlvdXNfc3RhdGUiKSBvciAiSU5JVElBTCIKICAgIHJlYXNvbiA9IHNuYXBzaG90LmdldCgicmVhc29uIiwgIiIpCiAgICBjdXJyZW50X3IgPSBzbmFwc2hvdC5nZXQoImN1cnJlbnRfciIsIGVudHJ5LmdldCgiY3VycmVudF9yIiwgMC4wKSkKICAgIG1heF9yID0gc25hcHNob3QuZ2V0KCJtYXhfciIsIGVudHJ5LmdldCgibWF4X3IiLCAwLjApKQoKICAgIGlmIHN0YXRlID09ICJSRUNPVkVSWSI6CiAgICAgICAgcHJlZml4ID0gIvCfn6IiCiAgICAgICAgYWN0aW9uID0gIlJpc2sgaXMgaW1wcm92aW5nOyBjb250aW51ZSBtb25pdG9yaW5nIHRoZSBleGlzdGluZyBwb3NpdGlvbi4iCiAgICBlbGlmIHN0YXRlID09ICJFWElUX1dBUk5JTkciOgogICAgICAgIHByZWZpeCA9ICLwn5S0IgogICAgICAgIGFjdGlvbiA9ICJQcm90ZWN0IC8gZXZhbHVhdGUgZXhpdDsgdGhpcyBpcyBhbiBleGlzdGluZyBwb3NpdGlvbiwgbm90IGEgbmV3IGVudHJ5LiIKICAgIGVsaWYgc3RhdGUgPT0gIkVMRVZBVEVEX1JJU0siOgogICAgICAgIHByZWZpeCA9ICLwn5+gIgogICAgICAgIGFjdGlvbiA9ICJSaXNrIGlzIGVsZXZhdGVkOyBtb25pdG9yIGNsb3NlbHkuIEV4aXN0aW5nIHBvc2l0aW9uIG9ubHkuIgogICAgZWxpZiBzdGF0ZSA9PSAiQ0FVVElPTiI6CiAgICAgICAgcHJlZml4ID0gIuKaoO+4jyIKICAgICAgICBhY3Rpb24gPSAiQ2F1dGlvbjsgZXhpc3RpbmcgcG9zaXRpb24gb25seSwgbm90IGEgbmV3IGVudHJ5IHNpZ25hbC4iCiAgICBlbHNlOgogICAgICAgIHByZWZpeCA9ICLwn5+iIgogICAgICAgIGFjdGlvbiA9ICJFeGlzdGluZyBwb3NpdGlvbiByZW1haW5zIGhlYWx0aHkuIgoKICAgIHJldHVybiAoCiAgICAgICAgZiJ7cHJlZml4fSBQT1NJVElPTiBIRUFMVEg6IHtzeW1ib2x9IHtkaXJlY3Rpb259XG4iCiAgICAgICAgZiJTdGF0ZToge3N0YXRlfSAoZnJvbSB7cHJldn0pXG4iCiAgICAgICAgZiJFeGNoYW5nZTogQmluZ1ggT1BFTlxuIgogICAgICAgIGYiQ3VycmVudCBSOiB7ZmxvYXQoY3VycmVudF9yKTorLjJmfVIgfCBNYXggUjoge2Zsb2F0KG1heF9yKTorLjJmfVJcbiIKICAgICAgICBmIldoeToge3JlYXNvbn1cbiIKICAgICAgICBmIkFjdGlvbjoge2FjdGlvbn0iCiAgICApCgoKZGVmIF9mb3JtYXRfcG9zaXRpb25fb3Blbl9hbGVydChlbnRyeSwgc25hcHNob3QsIGRpc2NvdmVyZWQ9RmFsc2UpOgogICAgIiIiRm9ybWF0IGEgb25lLXRpbWUgY29uZmlybWF0aW9uIHRoYXQgQmluZ1ggaGFzIGFuIGFjdGl2ZSBwb3NpdGlvbi4iIiIKICAgIHN5bWJvbCA9IGVudHJ5LmdldCgic3ltYm9sIiwgIj8iKQogICAgZGlyZWN0aW9uID0gZW50cnkuZ2V0KCJkaXJlY3Rpb24iLCAiPyIpCiAgICBwbmwgPSBzbmFwc2hvdC5nZXQoInVucmVhbGl6ZWRfcG5sIikKICAgIHBubF9zb3VyY2UgPSBzbmFwc2hvdC5nZXQoInVucmVhbGl6ZWRfcG5sX3NvdXJjZSIpCiAgICBjdXJyZW50X3IgPSBzbmFwc2hvdC5nZXQoImN1cnJlbnRfciIpCiAgICBkdXJhdGlvbiA9IHNuYXBzaG90LmdldCgiZHVyYXRpb24iKQogICAgZW50cnlfcHJpY2UgPSBzbmFwc2hvdC5nZXQoImVudHJ5X3ByaWNlIikKICAgIGN1cnJlbnRfcHJpY2UgPSBzbmFwc2hvdC5nZXQoImN1cnJlbnRfcHJpY2UiKQoKICAgIGxpbmVzID0gWwogICAgICAgIGYi8J+foiBQT1NJVElPTiBPUEVOOiB7c3ltYm9sfSB7ZGlyZWN0aW9ufSIsCiAgICAgICAgIkV4Y2hhbmdlOiBCaW5nWCBPUEVOIiwKICAgICAgICAiRGlzY292ZXJ5OiBleGlzdGluZyBleGNoYW5nZSBwb3NpdGlvbiBjb25maXJtZWQuIiBpZiBkaXNjb3ZlcmVkIGVsc2UgIkRpc2NvdmVyeTogbG9jYWwgdHJpZ2dlcmVkIHBvc2l0aW9uIGNvbmZpcm1lZCBPUEVOLiIsCiAgICBdCiAgICBpZiBlbnRyeV9wcmljZSBpcyBub3QgTm9uZToKICAgICAgICBsaW5lcy5hcHBlbmQoZiJFbnRyeToge2VudHJ5X3ByaWNlOi44Z30iKQogICAgaWYgY3VycmVudF9wcmljZSBpcyBub3QgTm9uZToKICAgICAgICBsaW5lcy5hcHBlbmQoZiJDdXJyZW50OiB7Y3VycmVudF9wcmljZTo4Z30iKQogICAgaWYgcG5sIGlzIG5vdCBOb25lOgogICAgICAgIGxpbmVzLmFwcGVuZCgKICAgICAgICAgICAgZiJVbnJlYWxpemVkIFAmTDoge3BubDoruLjRmIiArIChmIiAoe3BubF9zb3VyY2V9KSIgaWYgcG5sX3NvdXJjZSB0aGVuIGVsc2UgIiIpCiAgICAgICAgKQogICAgaWYgY3VycmVudF9yIGlzIG5vdCBOb25lOgogICAgICAgIGxpbmVzLmFwcGVuZChmIlI6IHtjdXJyZW50X3I6Ky4yZn1SIikKICAgIGlmIGR1cmF0aW9uOgogICAgICAgIGxpbmVzLmFwcGVuZChmIlRpbWUgaW4gdHJhZGU6IHtkdXJhdGlvbn0iKQogICAgbGluZXMuYXBwZW5kKCJBVEhFTkEgaXMgbm93IGFjdGl2ZWx5IG1vbml0b3JpbmcgdGhpcyBleGlzdGluZyBwb3NpdGlvbi4iKQogICAgbGluZXMuYXBwZW5kKCJObyBvcmRlci9TTC9UUCBtb2RpZmljYXRpb24gaXMgcGVyZm9ybWVkLiIpCiAgICByZXR1cm4gIlxuIi5qb2luKGxpbmVzKQoKZGVmIF9mb3JtYXRfY2xvc2VfYWxlcnQoZW50cnkpOgogICAgc3ltYm9sID0gZW50cnkuZ2V0KCJzeW1ib2wiLCAiPyIpCiAgICBkaXJlY3Rpb24gPSBlbnRyeS5nZXQoImRpcmVjdGlvbiIsICI/IikKICAgIHJlYXNvbiA9IGVudHJ5LmdldCgicG9zaXRpb25fZXhpdF9yZWFzb24iLCAiQ0xPU0VEIikKICAgIHByaWNlID0gZW50cnkuZ2V0KCJleGNoYW5nZV9jbG9zZV9wcmljZSIpCiAgICBjbG9zZWRfYXQgPSBlbnRyeS5nZXQoImV4Y2hhbmdlX2Nsb3NlZF9hdCIsICJ1bmtub3duIikKICAgIHJlYWxpemVkX3BubCA9IGVudHJ5LmdldCgiZXhjaGFuZ2VfcmVhbGl6ZWRfcG5sIikKICAgIGNsb3NlX3NvdXJjZSA9IGVudHJ5LmdldCgiZXhjaGFuZ2VfY2xvc2Vfc291cmNlIiwgIkJpbmdYIikKICAgIHBvc2l0aW9uX2lkID0gZW50cnkuZ2V0KCJleGNoYW5nZV9wb3NpdGlvbl9pZCIpCiAgICBwcmljZV90ZXh0ID0gZiIgYXQge2Zsb2F0KHByaWNlKTouOGd9IiBpZiBpc2luc3RhbmNlKHByaWNlLCAoaW50LCBmbG9hdCkpIGVsc2UgIiIKICAgIHBu bF90ZXh0ID0gKAogICAgICAgIGYiXG5SZWFsaXplZCBQJkw6IHtmbG9hdChyZWFsaXplZF9wbmwpOisuLjRmIFVTRFQiIgogICAgICAgIGlmIGlzaW5zdGFuY2UocmVhbGl6ZWRfcG5sLCAoaW50LCBmbG9hdCkpCiAgICAgICAgZWxzZSAoZiJcblJlYWxpemVkIFAmTDoge3JlYWxpemVkX3BubH0iIGlmIHJlYWxpemVkX3BubCBub3QgaW4gKE5vbmUsICIiKSB0aGVuIGVsc2UgIiIpCiAgICApCiAgICBkdXJhdGlvbl9tcyA9IE5vbmUKICAgIHN0YXJ0ID0gZW50cnkuZ2V0KCJ0cmlnZ2VyZWRfYXQiKSBvciBlbnRyeS5nZXQoIm9wZW5lZF9hdCIpIG9yIGVudHJ5LmdldCgicG9zaXRpb25fb3BlbmVkX2F0IikKICAgIGlmIHN0YXJ0IGFuZCBjbG9zZWRfYXQgbm90IGluIChOb25lLCAiIiwgInVua25vd24iKToKICAgICAgICB0cnk6CiAgICAgICAgICAgIHN0YXJ0X21zID0gcG9zaXRpb25faW50ZWwudGltZXN0YW1wX21zKHN0YXJ0KQogICAgICAgICAgICBlbmRfbXMgPSBwb3NpdGlvbl9pbnRlbC50aW1lc3RhbXBfbXMoY2xvc2VkX2F0KQogICAgICAgICAgICBpZiBzdGFydF9tcyBpcyBub3QgTm9uZSBhbmQgZW5kX21zIGlzIG5vdCBOb25lOgogICAgICAgICAgICAgICAgZHVyYXRpb25fbXMgPSBtYXgoMCwgZW5kX21zIC0gc3RhcnRfbXMpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICAgICAgZHVyYXRpb25fbXMgPSBOb25lCiAgICBkdXJhdGlvbl90ZXh0ID0gKAogICAgICAgIGYiXG5UaW1lIGluIHRyYWRlOiB7cG9zaXRpb25faW50ZWwuZm9ybWF0X2R1cmF0aW9uKGR1cmF0aW9uX21zKX0iCiAgICAgICAgIGlmIGR1cmF0aW9uX21zIGlzIG5vdCBOb25lCiAgICAgICAgIGVsc2UgIiIKICAgICkKICAgIGlkX3RleHQgPSBmIlxuUG9zaXRpb24gSUQ6IHtwb3NpdGlvbl9pZH0iIGlmIHBvc2l0aW9uX2lkIGVsc2UgIiIKICAgIHJldHVybiAoCiAgICAgICAgZiLwn5OHIFBPU0lUSU9OIENMT1NFQDogc3ltYm9sIHsgc3ltYm9sfSB7ZGlyZWN0aW9ufVxuIgogICAgICAgIGYgIkV4aXQgcmVhc29uOiB7cmVhc29ufXt0cmlnZ2VyX3ByaWNlfSIKICAgICAgICBmIntwbmxfdGV4dH0iCiAgICAgICAgZiJ7ZHVyYXRpb25fdGV4dH0iCiAgICAgICAgZiJcblx0Q2xvc2Ugc291cmNlOiB7Y2xvc2Vfc291cmNlfSIKICAgICAgICBmIntpZF90ZXh0fVxuIgogICAgICAgIGYiQmluZ1ggY2xvc2VkIGF0OiB7Y2xvc2VkX2F0fVxuIgogICAgICAgICJUaGlzIHBvc2l0aW9uIGlzIG5vIGxvbmdlciBhY3RpdmVseSBtb25pdG9yZWQuXG4iCiAgICAgICAgIkhpc3RvcmljYWwgcmVjb3JkIHJldGFpbmVkOyB0aGlzIGlzIE5PVCBhIG5ldyBlbnRyeSBzaWduYWwuIgogICAgKQoKZGVmIF9mb3JtYXRfcG9zaXRpb25faW50ZWxsaWdlbmNlX2FsZXJ0KGVudHJ5LCBzbmFwc2hvdCwgcHJldmlvdXNfc3RhdGU9Tm9uZSk6CiAgICAiIiJGb3JtYXQgYSBtZWFuaW5nZnVsIHBvc2l0aW9uLWludGVsbGlnZW5jZSB0cmFuc2l0aW9uIGZvciBUZWxlZ3JhbS4iIiIKICAgIHRyYW5zaXRpb24gPSBwcmV2aW91c19zdGF0ZSBvciAiSU5JVElBTCIKICAgIHJldHVybiAoCiAgICAgICAgZiLigK0gUE9TSVRJT04gSU5URUxMSUdFTkNFIFVQREFURToge2VudHJ5LmdldCg'...(truncated due to size limit)
+#!/usr/bin/env python3
+"""
+Unattended full-market scanner for smc_scanner.py.
+
+Designed for GitHub Actions / cron and for repeated ~15-minute scans.
+Uses the Phase 1-4.5 pipeline exposed by the current smc_scanner module:
+  regime -> setup -> structural R:R -> setup/entry quality -> execution state
+  -> lifecycle/deduplication -> actionable ranking.
+
+BingX position synchronization and ATHENA position health are layered on top
+of the existing setup scanner. They do not modify SMC setup generation.
+"""
+
+import os
+import sys
+import time
+from datetime import datetime, timezone
+
+import smc_scanner as scanner
+import derivatives_monitor as derivatives
+import bingx_position_tracker as bingx
+import position_health as health
+import position_intelligence as position_intel
+from market_data_aggregator import MarketDataAggregator
+from market_intelligence import AssetIdentifiers, MarketIntelligence
+
+try:
+    from coinmarketcap_client import CoinMarketCapClient
+except Exception:
+    CoinMarketCapClient = None
+
+try:
+    from cryptorank_client import CryptoRankClient
+except Exception:
+    CryptoRankClient = None
+
+
+MAX_SYMBOLS = 150
+TOP_ACTIONABLE_TO_PRINT = 10
+MARKET_INTELLIGENCE_MAX_ASSETS = 10
+POSITION_INTELLIGENCE_ALERT_STATES = {
+    "EXIT_WARNING",
+    "ELEVATED_RISK",
+    "TAKE_PARTIAL_CONSIDERATION",
+    "BREAK_EVEN_ELIGIBLE",
+    "CAUTION",
+    "RECOVERY",
+}
+
+# Position intelligence also needs to report material movement while the
+# operating state remains HEALTHY. These thresholds are notification-only;
+# they never alter execution, orders, SL, TP, or scanner decisions.
+POSITION_INTELLIGENCE_MATERIAL_R_DELTA = 0.50
+
+
+def _is_auto_add_candidate(score, plan):
+    """Apply the scanner's unattended watchlist policy."""
+    trade_type = str(plan.get("trade_type", "INTRADAY")).upper()
+    if trade_type in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set()):
+        return False
+    if score < getattr(scanner, "AUTO_ADD_MIN_SCORE", 90):
+        return False
+    if getattr(scanner, "AUTO_ADD_READY_ONLY", True):
+        return plan.get("status") in ("READY_MARKET", "READY_LIMIT")
+    return True
+
+
+
+
+def _is_alert_candidate(score, plan):
+    """Notify on a high-quality setup even when the current price is not ready.
+
+    READY is an execution state, not the definition of a valid thesis. A
+    quality pullback should be surfaced as WAITING/NEAR_READY so the trader
+    can place/prepare the limit plan before price reaches the zone.
+    """
+    status = plan.get("status")
+    if status not in ("READY_MARKET", "READY_LIMIT", "NEAR_READY",
+                      "WAIT_PULLBACK", "WAIT_BREAKOUT", "WAIT_RETEST"):
+        return False
+    if score < getattr(scanner, "MIN_SETUP_SCORE", 60):
+        return False
+    if plan.get("setup_quality", 0) < getattr(scanner, "MIN_SETUP_QUALITY", 70):
+        return False
+    if float(plan.get("actionable_rr", 0.0) or 0.0) < getattr(scanner, "MIN_STRUCTURAL_RR", 2.0):
+        return False
+    trade_type = str(plan.get("trade_type", "INTRADAY")).upper()
+    if trade_type in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set()):
+        return False
+    return True
+
+def _format_alert(symbol, used, score, direction, plan, is_new=True, reason=None):
+    status = plan.get("status", "UNKNOWN")
+    execution_type = plan.get("execution_type", "UNKNOWN")
+    price = plan.get("current_price")
+    entry = plan.get("preferred_entry")
+    zone_low = plan.get("zone_low")
+    zone_high = plan.get("zone_high")
+    invalidation = plan.get("invalidation")
+
+    header = (
+        f"🆕 NEW SETUP: {symbol} {direction} [{plan.get('trade_type', 'INTRADAY')}]"
+        if is_new else
+        f"🔄 ACTIVE SETUP UPDATE: {symbol} {direction} [{plan.get('trade_type', 'INTRADAY')}]"
+    )
+    score_line = f"Current Score: {score:.0f}/100"
+
+    lines = [
+        header,
+        score_line,
+        "Entry signal: FRESH" if is_new else "Already tracked -- NOT a new entry signal.",
+        f"Source: {used.get(scanner.ENTRY_TF) or 'fallback exchange'}",
+        f"✅ {status}",
+        f"Execution: {execution_type}",
+    ]
+    if price is not None:
+        lines.append(f"Current: {price:.8g}")
+    if entry is not None:
+        lines.append(f"Preferred Entry: {entry:.8g}")
+    if zone_low is not None and zone_high is not None:
+        lines.append(f"Zone: {zone_low:.8g} - {zone_high:.8g} ({plan.get('zone_label', 'structural')})")
+    if invalidation is not None:
+        lines.append(f"SL / Invalidation: {invalidation:.8g}")
+
+    targets = plan.get("validated_targets") or []
+    if targets:
+        for i, target in enumerate(targets[:3], 1):
+            lines.append(f"TP{i}: {target['price']:.8g} (~{target.get('r', 0):.2f}R)")
+    else:
+        lines.append("TP: no validated structural target")
+
+    dctx = plan.get("derivatives_context") or {}
+    if dctx:
+        dstate = dctx.get("state", "NEUTRAL")
+        dscore = dctx.get("score")
+        dreason = dctx.get("reason")
+        lines.append(
+            f"Derivatives: {dstate}" +
+            (f" ({dscore:+.0f})" if isinstance(dscore, (int, float)) else "")
+        )
+        if dreason:
+            lines.append(f"Derivatives Context: {dreason}")
+
+    lines.extend([
+        f"Setup Quality: {plan.get('setup_quality', 0):.0f}",
+        f"Entry Quality: {plan.get('entry_quality', 0):.0f}",
+        f"Structural R:R: {plan.get('structural_rr', 0):.2f}",
+        f"Regime: {plan.get('regime', 'n/a')} / {plan.get('trend_alignment', 'n/a')}",
+    ])
+    return "\n".join(lines)
+
+
+def _format_health_alert(entry, snapshot):
+    symbol = entry.get("symbol", "?")
+    direction = entry.get("direction", "?")
+    state = snapshot.get("health_state", "UNKNOWN")
+    prev = entry.get("position_health_previous_state") or "INITIAL"
+    reason = snapshot.get("reason", "")
+    current_r = snapshot.get("current_r", entry.get("current_r", 0.0))
+    max_r = snapshot.get("max_r", entry.get("max_r", 0.0))
+
+    if state == "RECOVERY":
+        prefix = "🟢"
+        action = "Risk is improving; continue monitoring the existing position."
+    elif state == "EXIT_WARNING":
+        prefix = "🔴"
+        action = "Protect / evaluate exit; this is an existing position, not a new entry."
+    elif state == "ELEVATED_RISK":
+        prefix = "🟠"
+        action = "Risk is elevated; monitor closely. Existing position only."
+    elif state == "CAUTION":
+        prefix = "⚠️"
+        action = "Caution; existing position only, not a new entry signal."
+    else:
+        prefix = "🟢"
+        action = "Existing position remains healthy."
+
+    return (
+        f"{prefix} POSITION HEALTH: {symbol} {direction}\n"
+        f"State: {state} (from {prev})\n"
+        f"Exchange: BingX OPEN\n"
+        f"Current R: {float(current_r):+.2f}R | Max R: {float(max_r):+.2f}R\n"
+        f"Why: {reason}\n"
+        f"Action: {action}"
+    )
+
+
+def _format_position_open_alert(entry, snapshot, discovered=False):
+    """Format a one-time confirmation that BingX has an active position."""
+    symbol = entry.get("symbol", "?")
+    direction = entry.get("direction", "?")
+    pnl = snapshot.get("unrealized_pnl")
+    pnl_source = snapshot.get("unrealized_pnl_source")
+    current_r = snapshot.get("current_r")
+    duration = snapshot.get("duration")
+    entry_price = snapshot.get("entry_price")
+    current_price = snapshot.get("current_price")
+
+    lines = [
+        f"🟢 POSITION OPEN: {symbol} {direction}",
+        "Exchange: BingX OPEN",
+        "Discovery: existing exchange position confirmed." if discovered else "Discovery: local triggered position confirmed OPEN.",
+    ]
+    if entry_price is not None:
+        lines.append(f"Entry: {entry_price:.8g}")
+    if current_price is not None:
+        lines.append(f"Current: {current_price:.8g}")
+    if pnl is not None:
+        lines.append(
+            f"Unrealized P&L: {pnl:+.4f}"
+            + (f" ({pnl_source})" if pnl_source else "")
+        )
+    if current_r is not None:
+        lines.append(f"R: {current_r:+.2f}R")
+    if duration:
+        lines.append(f"Time in trade: {duration}")
+    lines.append("ATHENA is now actively monitoring this existing position.")
+    lines.append("No order/SL/TP modification is performed.")
+    return "\n".join(lines)
+
+
+def _format_close_alert(entry):
+    symbol = entry.get("symbol", "?")
+    direction = entry.get("direction", "?")
+    reason = entry.get("position_exit_reason", "CLOSED")
+    price = entry.get("exchange_close_price")
+    closed_at = entry.get("exchange_closed_at", "unknown")
+    realized_pnl = entry.get("exchange_realized_pnl")
+    close_source = entry.get("exchange_close_source", "BingX")
+    position_id = entry.get("exchange_position_id")
+    price_text = f" at {float(price):.8g}" if isinstance(price, (int, float)) else ""
+    pnl_text = (
+        f"\nRealized P&L: {float(realized_pnl):+.4f} USDT"
+        if isinstance(realized_pnl, (int, float))
+        else (f"\nRealized P&L: {realized_pnl}" if realized_pnl not in (None, "") else "")
+    )
+    duration_ms = None
+    start = entry.get("triggered_at") or entry.get("opened_at") or entry.get("position_opened_at")
+    if start and closed_at not in (None, "", "unknown"):
+        try:
+            start_ms = position_intel._timestamp_ms(start)
+            end_ms = position_intel._timestamp_ms(closed_at)
+            if start_ms is not None and end_ms is not None:
+                duration_ms = max(0, end_ms - start_ms)
+        except Exception:
+            duration_ms = None
+    duration_text = (
+        f"\nTime in trade: {position_intel.format_duration(duration_ms)}"
+        if duration_ms is not None
+        else ""
+    )
+    id_text = f"\nPosition ID: {position_id}" if position_id else ""
+    return (
+        f"🔴 POSITION CLOSED: {symbol} {direction}\n"
+        f"Exit reason: {reason}{price_text}"
+        f"{pnl_text}"
+        f"{duration_text}"
+        f"\nClose source: {close_source}"
+        f"{id_text}\n"
+        f"BingX closed at: {closed_at}\n"
+        "This position is no longer actively monitored.\n"
+        "Historical record retained; this is NOT a new entry signal."
+    )
+
+
+def _format_position_intelligence_alert(entry, snapshot, previous_state=None):
+    """Format a meaningful position-intelligence transition for Telegram."""
+    transition = previous_state or "INITIAL"
+    return (
+        f"🔔 POSITION INTELLIGENCE UPDATE: {entry.get('symbol', '?')} "
+        f"{entry.get('direction', '?')}\n"
+        f"Transition: {transition} → {snapshot.get('operating_state', 'UNKNOWN')}\n\n"
+        + position_intel.format_position_intelligence(snapshot)
+    )
+
+
+def _material_position_move(previous_snapshot, snapshot):
+    """Return a notification reason for material movement since last alert.
+
+    The comparison is deliberately against the last *alerted* snapshot, not
+    the immediately previous 15-minute scan. That prevents a large move from
+    being hidden by repeated small scan-to-scan changes.
+    """
+    if not isinstance(previous_snapshot, dict):
+        return None
+
+    old_r = previous_snapshot.get("current_r")
+    new_r = snapshot.get("current_r")
+    if old_r is not None and new_r is not None:
+        try:
+            r_delta = float(new_r) - float(old_r)
+            if abs(r_delta) >= POSITION_INTELLIGENCE_MATERIAL_R_DELTA:
+                return f"R moved {r_delta:+.2f}R since last intelligence alert"
+        except (TypeError, ValueError):
+            pass
+
+    return None
+
+
+def _maybe_send_position_intelligence(entry, sync_result, health_snapshot):
+    """Build intelligence and alert on state changes or material movement."""
+    exchange_position = (sync_result or {}).get("position") if isinstance(sync_result, dict) else None
+    snapshot = position_intel.build_position_intelligence(
+        entry,
+        exchange_position=exchange_position,
+        health_snapshot=health_snapshot,
+    )
+    state = snapshot.get("operating_state", "UNKNOWN")
+    previous_state = entry.get("position_intelligence_state")
+    last_alert_snapshot = entry.get("position_intelligence_alert_snapshot")
+
+    entry["position_intelligence_state"] = state
+
+    state_transition = (
+        previous_state != state
+        and state in POSITION_INTELLIGENCE_ALERT_STATES
+        and not (previous_state is None and state in {"CAUTION", "RECOVERY"})
+    )
+    material_reason = _material_position_move(last_alert_snapshot, snapshot)
+
+    # A state transition remains the primary alert path. HEALTHY positions
+    # can now also alert when P&L/R has moved materially since the last alert.
+    should_alert = state_transition or material_reason is not None
+
+    if not should_alert:
+        # Establish the first snapshot as a baseline without sending an
+        # unsolicited HEALTHY message.
+        if last_alert_snapshot is None:
+            entry["position_intelligence_alert_snapshot"] = snapshot
+        return snapshot, False
+
+    transition = previous_state
+    message = _format_position_intelligence_alert(entry, snapshot, transition)
+    if material_reason and not state_transition:
+        message = (
+            f"🔔 POSITION INTELLIGENCE MOVEMENT: {entry.get('symbol', '?')} "
+            f"{entry.get('direction', '?')}\n"
+            f"Reason: {material_reason}\n\n"
+            + position_intel.format_position_intelligence(snapshot)
+        )
+    print("\n" + "-" * 78)
+    print("POSITION INTELLIGENCE ALERT")
+    print(message)
+    print("-" * 78)
+    sent = bool(scanner.send_telegram_message(message))
+    if sent:
+        entry["position_intelligence_alert_snapshot"] = snapshot
+        print("  Telegram position-intelligence alert sent.")
+    return snapshot, sent
+
+
+def _prepare_watchlist_entry(it):
+    """Back-fill legacy fields exactly where scanner.check_watchlist would."""
+    it.setdefault("status", "pending")
+    it.setdefault("entries", [{"price": it.get("price", 0), "size_pct": 100, "filled": False}])
+    it.setdefault("trail_mode", "fixed")
+    it.setdefault("original_invalidation", it.get("invalidation"))
+    it.setdefault("current_score", it.get("score", it.get("added_score", 0)))
+    it.setdefault("added_score", it.get("current_score", 0))
+    it.setdefault("history", [])
+    it.setdefault("added_at", datetime.now(timezone.utc).isoformat())
+    it.setdefault("targets", it.get("targets", []))
+    it.setdefault("entry_instruction", None)
+    it.setdefault("entry_price", None)
+    it.setdefault("max_r", 0.0)
+    it.setdefault("max_favorable_price", None)
+    it.setdefault("peak_score", it.get("current_score", it.get("added_score", 0)))
+    it.setdefault("last_warning", None)
+    it.setdefault("reversal_state", "STABLE")
+    it.setdefault("reversal_reason", "No active reversal evidence detected.")
+    it.setdefault("reversal_alert_state", "STABLE")
+    it.setdefault("current_r", 0.0)
+    it.setdefault("setup_fingerprint", None)
+    it.setdefault("trade_type", "INTRADAY")
+    it.setdefault("attempt_num", 1)
+    it.setdefault("lineage_note", None)
+    it.setdefault("dead_reported", False)
+    it.setdefault("position_close_reported", False)
+    it.setdefault("position_open_reported", False)
+    it.setdefault("last_score_delta_pct", 0.0)
+    it.setdefault("last_score_arrow", "flat")
+    it.setdefault("position_intelligence_state", None)
+    it.setdefault("position_intelligence_snapshot", None)
+    it.setdefault("position_intelligence_alert_snapshot", None)
+    for key in ("triggered_at", "invalidated_at", "expired_at", "expire_reason"):
+        it.setdefault(key, None)
+
+
+def _base_asset_symbol(symbol):
+    """Return the exchange-independent base symbol without guessing a source ID."""
+    value = str(symbol or "").upper().strip()
+    for suffix in ("-SWAP", "_USDT", "-USDT", "USDT"):
+        if value.endswith(suffix):
+            value = value[:-len(suffix)]
+            break
+    return value
+
+
+def _build_market_intelligence():
+    """Build the read-only MI layer from installed source adapters."""
+    clients = {}
+    if CoinMarketCapClient is not None:
+        try:
+            clients["coinmarketcap"] = CoinMarketCapClient()
+        except Exception as exc:
+            print(f"  ! CoinMarketCap client unavailable: {type(exc).__name__}: {exc}")
+    if CryptoRankClient is not None:
+        try:
+            clients["cryptorank"] = CryptoRankClient()
+        except Exception as exc:
+            print(f"  ! CryptoRank client unavailable: {type(exc).__name__}: {exc}")
+
+    return MarketIntelligence(
+        aggregator=MarketDataAggregator(),
+        coinmarketcap_client=clients.get("coinmarketcap"),
+        cryptorank_client=clients.get("cryptorank"),
+    )
+
+
+def _market_intelligence_snapshot(mi, symbol):
+    """Fetch corroborating market context without touching SMC/trade fields.
+
+    CMC and CryptoRank use the normalized trading base symbol only as their
+    explicit source-symbol selector. CoinGecko, ETF, and pool sources remain
+    opt-in and are not guessed from an exchange symbol.
+    """
+    base = _base_asset_symbol(symbol)
+    return mi.get_snapshot(
+        AssetIdentifiers(
+            symbol=base,
+            cmc_symbol=base,
+            cryptorank_symbol=base,
+        )
+    )
+
+
+def _attach_market_intelligence(qualifying):
+    """Attach compact, context-only MI results to the top qualifying plans."""
+    if not qualifying:
+        return
+
+    try:
+        mi = _build_market_intelligence()
+    except Exception as exc:
+        print(f"Market intelligence unavailable: {type(exc).__name__}: {exc}")
+        return
+
+    ranked = sorted(qualifying, key=lambda item: float(item[3]), reverse=True)
+    for symbol, _tf_results, _used, _score, _direction, plan in ranked[:MARKET_INTELLIGENCE_MAX_ASSETS]:
+        try:
+            snapshot = _market_intelligence_snapshot(mi, symbol)
+            plan["market_intelligence_context"] = {
+                "symbol": snapshot.get("symbol"),
+                "source_status": snapshot.get("source_status", {}),
+                "errors": snapshot.get("errors", {}),
+                "record_count": snapshot.get("record_count", 0),
+                "source_count": snapshot.get("source_count", 0),
+                "categories": snapshot.get("categories", []),
+                "consensus": snapshot.get("consensus", {}),
+                "conflicts": snapshot.get("conflicts", []),
+                "unreconciled": snapshot.get("unreconciled", []),
+                "missing": snapshot.get("missing", []),
+                "freshness": snapshot.get("freshness", {}),
+            }
+        except Exception as exc:
+            plan["market_intelligence_context"] = {
+                "symbol": _base_asset_symbol(symbol),
+                "source_status": {},
+                "errors": {"orchestration": f"{type(exc).__name__}: {exc}"},
+            }
+
+
+def _freeze_discovered_fill(entry, discovery):
+    """Convert a confirmed BingX discovery into local lifecycle state only."""
+    position = discovery.get("position") or {}
+    amount = discovery.get("amount")
+
+    entry["status"] = "triggered"
+    entry["exchange_sync_status"] = bingx.OPEN
+    entry["position_lifecycle"] = bingx.OPEN
+    entry["position_close_reported"] = False
+    entry["triggered_at"] = entry.get("triggered_at") or datetime.now(timezone.utc).isoformat()
+
+    if amount is not None:
+        entry["exchange_position_amount"] = amount
+
+    position_id = position.get("positionId") or position.get("positionID") or position.get("position_id")
+    if position_id:
+        entry["exchange_position_id"] = str(position_id)
+
+    avg_price = position.get("avgPrice") or position.get("averagePrice")
+    if avg_price not in (None, ""):
+        try:
+            entry["entry_price"] = float(avg_price)
+        except (TypeError, ValueError):
+            pass
+
+    entries = entry.get("entries") or []
+    for leg in entries:
+        if isinstance(leg, dict):
+            leg["filled"] = True
+            leg["filled_at"] = leg.get("filled_at") or datetime.now(timezone.utc).isoformat()
+
+
+def _sync_watchlist(active_key):
+    """Synchronize watchlist lifecycle against the authoritative BingX state."""
+    try:
+        items = scanner.load_watchlist()
+    except Exception as exc:
+        print(f"! Could not load watchlist: {type(exc).__name__}: {exc}")
+        return
+
+    if not items:
+        print("Watchlist is empty.")
+        return
+
+    before = len(items)
+    items = [it for it in items if not (
+        it.get("dead_reported") and it.get("status") in ("invalidated", "expired")
+        and scanner._hours_from_now(it.get("invalidated_at") or it.get("expired_at")) >= scanner.REENTRY_HISTORY_HOURS
+    )]
+    if before != len(items):
+        print(f"(pruned {before - len(items)} previously-reported dead setup(s))")
+
+    for it in items:
+        _prepare_watchlist_entry(it)
+        prev_status = it.get("status")
+        was_exchange_open = it.get("exchange_sync_status") == bingx.OPEN
+        discovered_open = False
+
+        # A pending BingX setup may already have a real exchange position.
+        # Discover it before local refresh; UNKNOWN/ERROR/NOT_FOUND/NOT_MATCHED
+        # never become OPEN or CLOSED.
+        if (
+            str(it.get("exchange", "")).lower() == "bingx"
+            and prev_status not in ("triggered", "invalidated", "expired")
+        ):
+            try:
+                discovery = bingx.discover_open_position(it)
+                if discovery.get("state") == bingx.OPEN:
+                    print(f"  {it.get('symbol', '?')}: BingX OPEN discovered for pending setup; freezing local fill state.")
+                    _freeze_discovered_fill(it, discovery)
+                    discovered_open = True
+                    prev_status = "triggered"
+                else:
+                    print(
+                        f"  {it.get('symbol', '?')} {it.get('direction', '?')}: "
+                        f"BingX discovery={discovery.get('state')}; no lifecycle change."
+                    )
+            except Exception as exc:
+                print(f"  ! {it.get('symbol', '?')}: BingX discovery error: {type(exc).__name__}: {exc}")
+
+        if prev_status != "triggered":
+            try:
+                scanner.refresh_entry(it, active_key)
+                time.sleep(0.1)
+                if it.get("status") != prev_status:
+                    scanner._notify_status_change(it, prev_status)
+                    if it.get("status") in ("invalidated", "expired"):
+                        it["dead_reported"] = True
+            except Exception as exc:
+                scanner._log(it, f"Refresh error, left as-is: {exc}")
+            continue
+
+        sync_result = bingx.sync_position(it)
+        sync_state = sync_result.get("state") if isinstance(sync_result, dict) else sync_result
+
+        if sync_state == bingx.OPEN:
+            dctx = None
+            try:
+                dctx = health.get_derivatives_context(it.get("symbol"))
+            except Exception:
+                dctx = None
+
+            snapshot, transitioned = health.apply_health(it, dctx)
+
+            if transitioned:
+                message = _format_health_alert(it, snapshot)
+                print("\n" + "-" * 78)
+                print("POSITION HEALTH ALERT")
+                print(message)
+                print("-" * 78)
+                if scanner.send_telegram_message(message):
+                    print("  Telegram health alert sent.")
+
+            intel_snapshot, _intel_sent = _maybe_send_position_intelligence(
+                it, sync_result, snapshot
+            )
+            it["position_intelligence_snapshot"] = intel_snapshot
+
+            # The first confirmed OPEN must always produce one Telegram
+            # confirmation. This is separate from risk-state alerts: an OPEN
+            # position is an important lifecycle event even when its initial
+            # operating state is HEALTHY.
+            if not was_exchange_open:
+                message = _format_position_open_alert(
+                    it,
+                    intel_snapshot,
+                    discovered=discovered_open,
+                )
+                print("\n" + "-" * 78)
+                print("POSITION OPEN ALERT")
+                print(message)
+                print("-" * 78)
+                if scanner.send_telegram_message(message):
+                    print("  Telegram position-open alert sent.")
+            continue
+
+        if sync_state == bingx.CLOSED:
+            if not it.get("position_close_reported"):
+                message = _format_close_alert(it)
+                print("\n" + "-" * 78)
+                print("POSITION CLOSED ALERT")
+                print(message)
+                print("-" * 78)
+                if scanner.send_telegram_message(message):
+                    print("  Telegram closure alert sent.")
+                it["position_close_reported"] = True
+            continue
+
+        print(
+            f"  {it.get('symbol', '?')} {it.get('direction', '?')}: "
+            f"BingX sync={sync_state}; active position monitoring suppressed."
+        )
+
+    scanner.save_watchlist(items)
+
+
+def scan_all(active_key, symbols):
+    """Run the SMC pipeline with derivatives as non-invasive context."""
+    qualifying = []
+    derivatives_data = derivatives.monitor(symbols=symbols)
+    derivatives_results = (
+        derivatives_data.get("results", {})
+        if isinstance(derivatives_data, dict) else {}
+    )
+    if not isinstance(derivatives_data, dict) or not derivatives_data.get("bulk_fetch_ok", False):
+        diagnostics = derivatives_data.get("diagnostics", {}) if isinstance(derivatives_data, dict) else {}
+        bulk_diag = diagnostics.get("bulk_fetch", {}) if isinstance(diagnostics, dict) else {}
+        source_status = derivatives_data.get("source_status", {}) if isinstance(derivatives_data, dict) else {}
+        status = (bulk_diag.get("status") if isinstance(bulk_diag, dict) else None) or \
+                 source_status.get("bybit_bulk_tickers") or "UNKNOWN"
+        error_type = bulk_diag.get("error_type") if isinstance(bulk_diag, dict) else None
+        message = bulk_diag.get("message") if isinstance(bulk_diag, dict) else None
+        detail = ": ".join(str(x) for x in (error_type, message) if x)
+        print("Derivatives intelligence unavailable this cycle; continuing SMC-only. "
+              f"Bulk status={status}" + (f" ({detail})" if detail else ""))
+    scan_cycle = int(time.time() // 900)
+
+    total = len(symbols)
+    for n, symbol in enumerate(symbols, 1):
+        print(f"\nScanning {symbol} ({n}/{total})...")
+        try:
+            tf_results, used = scanner.scan_symbol(active_key, symbol)
+            score, direction, regime_info = scanner.score_setup_with_regime(tf_results)
+            if score < scanner.MIN_SETUP_SCORE or not direction:
+                continue
+
+            # Pass the actual discovery score into the plan. This is critical:
+            # determine_execution_state() owns the MIN_TRADE_SCORE hard gate,
+            # so omitting setup_score would silently allow sub-80 setups to
+            # become READY in unattended full-market scans.
+            plan = scanner.build_entry_plan(
+                tf_results, direction, regime_info, setup_score=score
+            )
+            if not plan:
+                continue
+            if regime_info:
+                plan.update(regime_info)
+
+            exec_state = scanner.determine_execution_state(plan, tf_results, direction)
+            plan.update(exec_state)
+            lifecycle = scanner.update_setup_lifecycle(symbol, plan, scan_cycle)
+            plan["lifecycle_info"] = lifecycle
+
+            # Context only: NEVER modify SMC score, direction, entry, SL, TP,
+            # execution state, or trade classification.
+            dctx = derivatives_results.get(symbol)
+            if dctx:
+                plan["derivatives_context"] = {
+                    "state": dctx.get("state"),
+                    "score": dctx.get("score"),
+                    "reason": dctx.get("reason"),
+                    "since": dctx.get("since"),
+                    "is_new_transition": bool(dctx.get("is_new_transition", False)),
+                }
+            qualifying.append((symbol, tf_results, used, score, direction, plan))
+        except Exception as exc:
+            print(f"  ! {symbol}: scan error: {type(exc).__name__}: {exc}")
+
+    _attach_market_intelligence(qualifying)
+    return qualifying
+
+
+def main():
+    started = time.time()
+    print("=" * 78)
+    print("FULL MARKET SCAN — SMC PHASE 1-4.5")
+    print(f"Started: {datetime.now(timezone.utc).isoformat()}")
+    print("=" * 78)
+
+    active_key = scanner.detect_active_exchange()
+    if not active_key:
+        print("ERROR: no supported exchange is reachable.")
+        return 1
+
+    used_key, symbols = scanner.get_symbols_with_fallback(active_key, MAX_SYMBOLS)
+    if not symbols:
+        print("ERROR: could not retrieve the market list.")
+        return 1
+
+    symbols = symbols[:MAX_SYMBOLS]
+    print(f"Exchange: {used_key or active_key}")
+    print(f"Markets: {len(symbols)}")
+    print(f"Timeframes: {', '.join(scanner.TFS_ALL)}")
+
+    # Exchange synchronization must happen before the final watchlist refresh,
+    # so confirmed closures cannot be reinterpreted as active setup changes.
+    _sync_watchlist(active_key)
+
+    qualifying = scan_all(active_key, symbols)
+    buckets = scanner.classify_and_rank([q[5] for q in qualifying])
+    ready = buckets["READY_NOW"]
+    near = buckets["NEAR_READY"]
+    waiting = buckets["WAITING"]
+    invalidated = buckets["INVALIDATED"]
+    no_trade = buckets["NO_TRADE"]
+
+    print("\n" + "#" * 78)
+    print("FINAL SCAN RESULT")
+    print("#" * 78)
+    print(f"Markets scanned : {len(symbols)}")
+    print(f"Setup-qualified : {len(qualifying)}")
+    print(f"READY NOW       : {len(ready)}")
+    print(f"NEAR READY      : {len(near)}")
+    print(f"WAITING         : {len(waiting)}")
+    print(f"INVALIDATED     : {len(invalidated)}")
+    print(f"NO TRADE        : {len(no_trade)}")
+
+    if ready:
+        print("\nTOP ACTIONABLE SETUPS")
+        for rank, plan in enumerate(ready[:TOP_ACTIONABLE_TO_PRINT], 1):
+            print(
+                f"{rank}. {plan.get('symbol', '?')} {plan.get('direction', '?')} "
+                f"{plan.get('status')} | SQ={plan.get('setup_quality', 0):.0f} "
+                f"EQ={plan.get('entry_quality', 0):.0f} "
+                f"SRR={plan.get('structural_rr', 0):.2f} "
+                f"TP1R={plan.get('actionable_rr', plan.get('mechanical_rr', 0)):.2f}"
+            )
+
+    by_plan_id = {id(q[5]): q for q in qualifying}
+    alerts_sent = 0
+    auto_added = 0
+
+    # Alert on quality setups across the whole execution lifecycle, not only
+    # READY. This is the key distinction between "no trade yet" and "no setup".
+    # READY is still the only state eligible for unattended watchlist auto-add.
+    alert_plans = ready + near + waiting
+    for plan in alert_plans:
+        match = by_plan_id.get(id(plan))
+        if not match:
+            continue
+        symbol, _tf_results, used, score, direction, plan = match
+        lifecycle = plan.get("lifecycle_info", {})
+        if not _is_alert_candidate(score, plan):
+            continue
+
+        if lifecycle.get("send_alert"):
+            message = _format_alert(
+                symbol, used, score, direction, plan,
+                is_new=bool(lifecycle.get("is_new")),
+                reason=lifecycle.get("reason"),
+            )
+            print("\n" + "-" * 78)
+            print("ALERT")
+            print(message)
+            print("-" * 78)
+            if getattr(scanner, "TELEGRAM_ENABLED", False):
+                sent = scanner.send_telegram_message(message)
+                scanner.record_setup_alert_result(symbol, sent)
+                if sent:
+                    alerts_sent += 1
+                else:
+                    print(f"  ! {symbol}: Telegram alert was eligible but delivery failed; queued for retry.")
+            else:
+                print(f"  ! {symbol}: Telegram disabled; alert not sent and not queued for retry.")
+
+        if _is_auto_add_candidate(score, plan):
+            try:
+                exchange_for_watchlist = used.get(scanner.ENTRY_TF) or active_key
+                added = scanner.add_to_watchlist(
+                    symbol,
+                    exchange_for_watchlist,
+                    score,
+                    direction,
+                    plan,
+                    trail_mode=getattr(scanner, "AUTO_TRAIL_MODE", "fixed"),
+                    split_entries=None,
+                )
+                if added:
+                    auto_added += 1
+            except Exception as exc:
+                print(f"  ! auto-add failed for {symbol}: {type(exc).__name__}: {exc}")
+
+    # Do NOT call scanner.check_watchlist() here: _sync_watchlist() already
+    # refreshed pending setups and exchange-gated triggered positions. Calling
+    # the old helper again would risk reprocessing confirmed BingX closures.
+
+    elapsed = time.time() - started
+    print("\n" + "=" * 78)
+    print(f"Alerts sent      : {alerts_sent}")
+    print(f"Auto-added       : {auto_added}")
+    print(f"Elapsed          : {elapsed / 60:.1f} minutes")
+    print(f"Finished         : {datetime.now(timezone.utc).isoformat()}")
+    print("=" * 78)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
