@@ -10,6 +10,7 @@ Responsibilities:
 - provide persistent, cross-run opportunity deduplication;
 - commit an opportunity to persistent state only after Telegram confirms the
   send succeeded;
+- apply stricter alert admission for WAIT/NEAR candidates;
 - never touch order/position execution logic;
 - never modify ``smc_scanner.py`` itself.
 
@@ -26,6 +27,12 @@ from datetime import datetime, timezone
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "notification_state.json")
 OPPORTUNITY_PREFIX = "opportunity:"
 OPPORTUNITY_REARM_CYCLES = 4
+
+# Alert-admission floors. These intentionally apply only to notification
+# selection; the scanner continues to track lower-quality setups internally.
+NEAR_READY_MIN_ENTRY_QUALITY = 55.0
+WAIT_MIN_ENTRY_QUALITY = 40.0
+WAIT_MIN_SETUP_QUALITY_CONFLICTED = 80.0
 
 # Claims made during this process but not yet successfully delivered to
 # Telegram. They are deliberately in-memory: a failed send must be retryable
@@ -177,6 +184,58 @@ def _commit_sent_setup_from_message(text: str) -> None:
     _save_state(data)
 
 
+def _alert_admission(plan: dict, scanner) -> tuple[bool, str]:
+    """Apply notification-only quality floors without changing scanner logic."""
+    status = str(plan.get("status") or "").upper()
+    if status not in {
+        "READY_MARKET",
+        "READY_LIMIT",
+        "NEAR_READY",
+        "WAIT_PULLBACK",
+        "WAIT_BREAKOUT",
+        "WAIT_RETEST",
+    }:
+        return False, "status not alertable"
+
+    score = float(plan.get("setup_score", plan.get("score", 0)) or 0)
+    setup_quality = float(plan.get("setup_quality", 0) or 0)
+    entry_quality = float(plan.get("entry_quality", 0) or 0)
+    actionable_rr = float(plan.get("actionable_rr", 0) or 0)
+    trade_type = str(plan.get("trade_type", "INTRADAY")).upper()
+    trend_alignment = str(plan.get("trend_alignment", "")).upper()
+
+    if score < float(getattr(scanner, "MIN_SETUP_SCORE", 60)):
+        return False, "setup score below alert floor"
+    if setup_quality < float(getattr(scanner, "MIN_SETUP_QUALITY", 70)):
+        return False, "setup quality below alert floor"
+    if actionable_rr < float(getattr(scanner, "MIN_STRUCTURAL_RR", 2.0)):
+        return False, "actionable R:R below alert floor"
+    if trade_type in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set()):
+        return False, "trade type excluded"
+
+    if status in {"READY_MARKET", "READY_LIMIT"}:
+        required_entry = float(getattr(scanner, "MIN_READY_ENTRY_QUALITY", 75))
+        if entry_quality < required_entry:
+            return False, "ready entry quality below floor"
+        return True, "ready opportunity passed admission"
+
+    if status == "NEAR_READY":
+        if entry_quality < NEAR_READY_MIN_ENTRY_QUALITY:
+            return False, "near-ready entry quality below floor"
+        return True, "near-ready opportunity passed admission"
+
+    # WAIT states are deliberately retained so a good setup at a poor current
+    # price can still be surfaced for Gemini. But a very weak entry signal is
+    # not enough on its own. A conflicted regime must compensate with a stronger
+    # setup-quality score; otherwise the setup remains internal-only.
+    if entry_quality < WAIT_MIN_ENTRY_QUALITY:
+        return False, "wait entry quality too weak"
+    if trend_alignment == "CONFLICTED" and setup_quality < WAIT_MIN_SETUP_QUALITY_CONFLICTED:
+        return False, "conflicted wait setup requires stronger setup quality"
+
+    return True, "wait opportunity passed admission"
+
+
 try:
     import smc_scanner as scanner
 
@@ -203,38 +262,28 @@ try:
             if not isinstance(result, dict):
                 return result
 
-            status = plan.get("status")
-            score = float(plan.get("setup_score", plan.get("score", 0)) or 0)
-            setup_quality = float(plan.get("setup_quality", 0) or 0)
-            actionable_rr = float(plan.get("actionable_rr", 0) or 0)
-            trade_type = str(plan.get("trade_type", "INTRADAY")).upper()
-
-            qualifies = (
-                status in {
-                    "READY_MARKET",
-                    "READY_LIMIT",
-                    "NEAR_READY",
-                    "WAIT_PULLBACK",
-                    "WAIT_BREAKOUT",
-                    "WAIT_RETEST",
-                }
-                and score >= float(getattr(scanner, "MIN_SETUP_SCORE", 60))
-                and setup_quality >= float(getattr(scanner, "MIN_SETUP_QUALITY", 70))
-                and actionable_rr >= float(getattr(scanner, "MIN_STRUCTURAL_RR", 2.0))
-                and trade_type not in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set())
-            )
-
+            qualifies, admission_reason = _alert_admission(plan, scanner)
             if qualifies:
                 fingerprint = result.get("fingerprint") or plan.get("setup_fingerprint")
                 should_alert, reason = claim_opportunity_alert(
                     symbol,
                     plan.get("direction"),
                     fingerprint,
-                    status,
+                    plan.get("status"),
                     scan_cycle=scan_cycle,
                 )
                 result["send_alert"] = bool(should_alert)
                 result["reason"] = reason
+            elif str(plan.get("status") or "").upper() in {
+                "READY_MARKET",
+                "READY_LIMIT",
+                "NEAR_READY",
+                "WAIT_PULLBACK",
+                "WAIT_BREAKOUT",
+                "WAIT_RETEST",
+            }:
+                result["send_alert"] = False
+                result["reason"] = admission_reason
 
             return result
 
