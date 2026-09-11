@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -58,17 +59,52 @@ jobs:
       - name: Persist ATHENA runtime state
         if: always()
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Persist the AUTHORITATIVE files actually used by production code.
           # Do not replace these with obsolete names such as watchlist.json
           # or scanner_state.json.
-          git add             smc_watchlist.json             smc_setup_states.json             position_registry.json             notification_state.json             derivatives_history.json             derivatives_state.json             2>/dev/null || true
+          git add \
+            smc_watchlist.json \
+            smc_setup_states.json \
+            position_registry.json \
+            notification_state.json \
+            derivatives_history.json \
+            derivatives_state.json \
+            2>/dev/null || true
 
           if git diff --cached --quiet; then
             echo "No ATHENA runtime state changes to commit."
-          else
-            git commit -m "chore: persist ATHENA runtime state [skip ci]"
-            git push
+            exit 0
           fi
+
+          git commit -m "chore: persist ATHENA runtime state [skip ci]"
+
+          # The scan can take several minutes. During that time another
+          # repository writer may advance main, making a plain `git push`
+          # fail with a non-fast-forward error. Rebase our small runtime-state
+          # commit onto the newest main and retry instead of force-pushing.
+          for attempt in 1 2 3; do
+            echo "Synchronizing runtime-state commit with origin/main (attempt ${attempt}/3)..."
+            git fetch origin main
+
+            if ! git rebase origin/main; then
+              echo "Runtime-state rebase conflicted; aborting without force-push."
+              git rebase --abort || true
+              exit 1
+            fi
+
+            if git push origin HEAD:main; then
+              echo "ATHENA runtime state persisted successfully."
+              exit 0
+            fi
+
+            echo "Push raced with another writer; retrying..."
+            sleep $((attempt * 2))
+          done
+
+          echo "Failed to persist ATHENA runtime state after 3 synchronized push attempts."
+          exit 1
