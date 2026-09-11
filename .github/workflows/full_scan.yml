@@ -54,7 +54,7 @@ jobs:
         run: |
           # Install the central Telegram boundary before full_scan starts.
           # smc_scanner.py itself remains untouched.
-          python -c "import athena_notification_state; import full_scan; raise SystemExit(full_scan.main())"
+          python -c "import athena_notification_state; import athena_quality_layer; raise SystemExit(athena_quality_layer.main())"
 
       - name: Persist ATHENA runtime state
         if: always()
