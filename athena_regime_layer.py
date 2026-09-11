@@ -13,7 +13,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-
 ACCUMULATION = "CONFIRMED_ACCUMULATION_LIKE"
 DISTRIBUTION = "CONFIRMED_DISTRIBUTION_LIKE"
 POTENTIAL_ACCUMULATION = "POTENTIAL_ACCUMULATION"
@@ -29,15 +28,6 @@ def _df(tf_results: Dict[str, Any], tf: str):
         return None
     value = row.get("df")
     return value if value is not None and len(value) else None
-
-
-def _pct_change(a: float, b: float) -> Optional[float]:
-    try:
-        if a == 0:
-            return None
-        return (b / a - 1.0) * 100.0
-    except Exception:
-        return None
 
 
 def _safe_float(v) -> Optional[float]:
@@ -64,7 +54,6 @@ def _range_stats(df, window: int = 48) -> Optional[Dict[str, float]]:
 
 
 def _efficiency(df, window: int = 24) -> Optional[float]:
-    """Kaufman-style directional efficiency: net move / total path."""
     if df is None or len(df) < window + 1:
         return None
     w = df.tail(window + 1)
@@ -101,22 +90,29 @@ def _volume_ratio(df, window: int = 24) -> Optional[float]:
         return None
 
 
-def _edge_sweep(df, stats: Dict[str, float], side: str) -> Tuple[bool, str]:
-    """Detect a recent range-edge raid followed by a reclaim/rejection."""
-    if df is None or len(df) < 12:
+def _edge_sweep(df, side: str) -> Tuple[bool, str]:
+    """Detect a recent edge raid against the range that existed before it.
+
+    The boundary is deliberately calculated from older bars, not from the
+    sweep candle itself. Otherwise the sweep would redefine the range edge
+    and become impossible to detect.
+    """
+    if df is None or len(df) < 24:
         return False, ""
-    w = df.tail(min(24, len(df)))
-    lo, hi = stats["low"], stats["high"]
     try:
-        last = w.iloc[-1]
+        base = df.iloc[:-6].tail(30)
+        recent = df.tail(6)
+        base_low = float(base["low"].min())
+        base_high = float(base["high"].max())
+        last = recent.iloc[-1]
         if side == "LOW":
-            swept = float(w["low"].iloc[:-1].min()) < lo * 0.9975
-            reclaimed = float(last["close"]) > lo and float(last["close"]) > float(last["open"])
+            swept = float(recent["low"].min()) < base_low * 0.9975
+            reclaimed = float(last["close"]) > base_low and float(last["close"]) > float(last["open"])
             if swept and reclaimed:
                 return True, "recent range-low liquidity sweep followed by bullish reclaim"
         else:
-            swept = float(w["high"].iloc[:-1].max()) > hi * 1.0025
-            rejected = float(last["close"]) < hi and float(last["close"]) < float(last["open"])
+            swept = float(recent["high"].max()) > base_high * 1.0025
+            rejected = float(last["close"]) < base_high and float(last["close"]) < float(last["open"])
             if swept and rejected:
                 return True, "recent range-high liquidity sweep followed by bearish rejection"
     except Exception:
@@ -134,20 +130,18 @@ def _range_regime(df) -> Dict[str, Any]:
     evidence: List[str] = []
     score = 0
 
-    # A low-efficiency, bounded market is the prerequisite for accumulation /
-    # distribution. A narrow range and contracting volatility strengthen it.
     if eff is not None and eff < 0.35:
         score += 25
         evidence.append("low directional efficiency / rotational price action")
     if stats["span_pct"] <= 18:
         score += 20
-        evidence.append("bounded multi-week-style 4H range")
+        evidence.append("bounded 4H range")
     if vr is not None and vr < 0.85:
         score += 15
         evidence.append("volatility contraction inside the range")
 
-    low_sweep, low_reason = _edge_sweep(df, stats, "LOW")
-    high_sweep, high_reason = _edge_sweep(df, stats, "HIGH")
+    low_sweep, low_reason = _edge_sweep(df, "LOW")
+    high_sweep, high_reason = _edge_sweep(df, "HIGH")
     if low_sweep:
         score += 25
         evidence.append(low_reason)
@@ -184,9 +178,8 @@ def _range_regime(df) -> Dict[str, Any]:
 
 
 def _derivatives_alignment(direction: str, dctx: Dict[str, Any], regime: str) -> Dict[str, Any]:
-    """Use existing derivative state as context only; never as a hard gate."""
     if not isinstance(dctx, dict) or not dctx:
-        return {"state": "UNAVAILABLE", "score": 0, "reason": "No persisted derivatives context."}
+        return {"state": "UNAVAILABLE", "score": 0, "raw_score": 0.0, "reason": "No persisted derivatives context."}
     state = str(dctx.get("state", "NEUTRAL")).upper()
     score = _safe_float(dctx.get("score")) or 0.0
     reason = str(dctx.get("reason", ""))
@@ -215,14 +208,11 @@ def _derivatives_alignment(direction: str, dctx: Dict[str, Any], regime: str) ->
 
 
 def enrich_plan(plan: Dict[str, Any], tf_results: Dict[str, Any]) -> Dict[str, Any]:
-    """Attach regime intelligence without altering core execution fields."""
     df4 = _df(tf_results, "4H")
     df1 = _df(tf_results, "1H")
     base = _range_regime(df4)
     state = base["state"]
 
-    # 1H confirmation: a reclaimed range low should show improving short-term
-    # direction; a rejected range high should show the inverse.
     confirm = 0
     if df1 is not None and len(df1) >= 12:
         eff1 = _efficiency(df1, 12)
@@ -248,12 +238,8 @@ def enrich_plan(plan: Dict[str, Any], tf_results: Dict[str, Any]) -> Dict[str, A
         state = DISTRIBUTION
 
     direction = str(plan.get("direction", "")).upper()
-    dctx = plan.get("derivatives_context") or {}
-    d = _derivatives_alignment(direction, dctx, state)
-
-    # Regime quality is intentionally separate from setup/entry quality.
-    regime_quality = confidence
-    regime_quality = max(0, min(100, regime_quality + d["score"]))
+    d = _derivatives_alignment(direction, plan.get("derivatives_context") or {}, state)
+    regime_quality = max(0, min(100, confidence + d["score"]))
 
     plan.update({
         "market_regime": state,
@@ -271,7 +257,6 @@ def enrich_plan(plan: Dict[str, Any], tf_results: Dict[str, Any]) -> Dict[str, A
         "regime_derivatives_reason": d["reason"],
     })
 
-    # Only enrich explanatory fields. Never override direction/status/entry.
     why = plan.get("why_this_setup", "")
     regime_text = f"regime={state} ({confidence}/100)"
     if d["state"] != "UNAVAILABLE":
