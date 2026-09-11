@@ -6,6 +6,7 @@ on:
     types: [athena_tick]
   schedule:
     # GitHub schedule remains as a fallback, offset from quarter-hour boundaries.
+    # Scheduler heartbeat: keep this workflow definition active.
     - cron: "7,22,37,52 * * * *"
 
 permissions:
