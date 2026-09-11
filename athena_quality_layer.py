@@ -88,9 +88,35 @@ def refine_qualifying(qualifying):
 
 def install():
     import full_scan
-    original=full_scan.scan_all
-    def wrapped_scan_all(active_key,symbols): return refine_qualifying(original(active_key,symbols))
+    original_scan_all=full_scan.scan_all
+    original_rank=full_scan.scanner.classify_and_rank
+    original_format=full_scan._format_alert
+
+    def wrapped_scan_all(active_key,symbols):
+        return refine_qualifying(original_scan_all(active_key,symbols))
+
+    def wrapped_rank(plans):
+        buckets=original_rank(plans)
+        for key in ("READY_NOW","NEAR_READY","WAITING"):
+            buckets[key].sort(key=lambda p: (float(p.get("opportunity_score",0) or 0), float(p.get("setup_quality",0) or 0), float(p.get("entry_quality",0) or 0)), reverse=True)
+        return buckets
+
+    def wrapped_format(symbol,used,score,direction,plan,is_new=True,reason=None):
+        msg=original_format(symbol,used,score,direction,plan,is_new=is_new,reason=reason)
+        extra=[
+            f"Opportunity Score: {plan.get('opportunity_score',0):.0f}/100",
+            f"Market Quality: {plan.get('market_quality_score',0):.0f}/100 ({plan.get('market_quality_state','UNKNOWN')})",
+            f"Location: planned={plan.get('planned_location','UNKNOWN')} / current={plan.get('current_location','UNKNOWN')}",
+            f"Timing: {plan.get('entry_timing','UNKNOWN')} — {plan.get('entry_timing_reason','')}",
+            f"WHY: {plan.get('why_this_setup','')}",
+        ]
+        if plan.get("required_confirmation"):
+            extra.append(f"Wait/Confirm: {plan['required_confirmation']}")
+        return msg+"\n"+"\n".join(extra)
+
     full_scan.scan_all=wrapped_scan_all
+    full_scan.scanner.classify_and_rank=wrapped_rank
+    full_scan._format_alert=wrapped_format
     return full_scan
 
 
