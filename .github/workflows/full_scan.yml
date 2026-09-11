@@ -2,8 +2,10 @@ name: ATHENA Full Market Scan
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [athena_tick]
   schedule:
-    # Offset from quarter-hour boundaries to reduce GitHub Actions scheduler contention.
+    # GitHub schedule remains as a fallback, offset from quarter-hour boundaries.
     - cron: "7,22,37,52 * * * *"
 
 permissions:
