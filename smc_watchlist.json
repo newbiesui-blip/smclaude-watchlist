@@ -308,7 +308,7 @@
       "operating_state": "EXIT_WARNING",
       "generated_at": "2026-09-07T18:24:58.972491+00:00"
     },
-    "exchange_sync_checked_at": 1789079588893,
+    "exchange_sync_checked_at": 1789086735804,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "DOT-USDT",
@@ -628,7 +628,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079589428,
+    "exchange_sync_checked_at": 1789086736353,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -787,7 +787,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079590011,
+    "exchange_sync_checked_at": 1789086736916,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -1112,7 +1112,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079590556,
+    "exchange_sync_checked_at": 1789086737620,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -1536,7 +1536,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079592792,
+    "exchange_sync_checked_at": 1789086739899,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -1772,102 +1772,6 @@
     "position_intelligence_alert_snapshot": null
   },
   {
-    "symbol": "PIEVERSE-USDT",
-    "exchange": "bingx",
-    "direction": "BULLISH",
-    "status": "invalidated",
-    "added_score": 90,
-    "current_score": 52,
-    "trade_type": "INTRADAY",
-    "attempt_num": 1,
-    "lineage_note": null,
-    "setup_fingerprint": "bd8e7882aafd25f9",
-    "added_at": "2026-09-03T20:35:19.097303+00:00",
-    "triggered_at": "2026-09-03T23:21:52.513174+00:00",
-    "invalidated_at": "2026-09-04T00:02:16.052650+00:00",
-    "expired_at": null,
-    "expire_reason": null,
-    "zone_low": 1.1448,
-    "zone_high": 1.1507,
-    "zone_label": "Order Block",
-    "entries": [
-      {
-        "price": 1.14775,
-        "size_pct": 100,
-        "filled": true
-      }
-    ],
-    "invalidation": 1.14138535,
-    "original_invalidation": 1.14138535,
-    "targets": [
-      {
-        "price": 1.1451,
-        "label": "prior swing high (liquidity)",
-        "r": 6.217817934519388
-      },
-      {
-        "price": 1.148,
-        "label": "prior swing high (liquidity)",
-        "r": 11.852715437677235
-      },
-      {
-        "price": 1.1494,
-        "label": "prior swing high (liquidity)",
-        "r": 14.57301078402952
-      }
-    ],
-    "trail_mode": "trail_structural",
-    "last_note": "Invalidated on 2026-09-04T00:02:16.052650+00:00. Stop at 1.14139 was breached after triggering on 2026-09-03T23:21:52.513174+00:00.",
-    "entry_instruction": "Filled: 100% @ 1.14775. All legs filled. Enter at CMP (1.1419) if you haven't already, or on your next confirmation candle.",
-    "entry_price": 1.14775,
-    "max_r": 0.0,
-    "max_favorable_price": 1.143,
-    "peak_score": 90,
-    "last_warning": null,
-    "reversal_state": "LIQUIDITY_SWEEP",
-    "reversal_reason": "Bearish liquidity sweep detected on 15M,1H,4H; rejection exists but structure has not confirmed reversal.",
-    "reversal_alert_state": "STABLE",
-    "current_r": -0.9191393085244368,
-    "history": [
-      "[2026-09-03 23:21 UTC] Entry condition met at 1.1427 -- now tracking as triggered. Filled: 100% @ 1.14775. All legs filled. Enter at CMP (1.1427) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-03 23:21 UTC] Position state: STABLE -> LIQUIDITY_SWEEP. Bearish liquidity sweep detected on 15M,1H,4H; rejection exists but structure has not confirmed reversal.",
-      "[2026-09-03 23:21 UTC] Refreshed: score 90.0 -> 52.0 (down -42.2%), currently -0.79R. Stop held at 1.14139 (no tighter structural level yet). Targets updated. | Filled: 100% @ 1.14775. All legs filled. Enter at CMP (1.1427) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-03 23:32 UTC] Refreshed: score 52.0 -> 52.0 (flat +0.0%), currently -0.75R. Stop held at 1.14139 (no tighter structural level yet). Targets updated. | Filled: 100% @ 1.14775. All legs filled. Enter at CMP (1.143) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-03 23:48 UTC] Refreshed: score 52.0 -> 52.0 (flat +0.0%), currently -0.92R. Stop held at 1.14139 (no tighter structural level yet). Targets updated. | Filled: 100% @ 1.14775. All legs filled. Enter at CMP (1.1419) if you haven't already, or on your next confirmation candle.",
-      "[2026-09-04 00:02 UTC] Triggered on 2026-09-03T23:21:52.513174+00:00, but has now invalidated -- price 1.1411 broke the stop at 1.14139."
-    ],
-    "dead_reported": true,
-    "last_score_delta_pct": 0.0,
-    "last_score_arrow": "flat",
-    "position_tracker_version": 1,
-    "position_opened_at": "2026-09-03T23:21:52.513174+00:00",
-    "position_lifecycle": "PENDING",
-    "position_exit_reason": null,
-    "position_age_minutes": 0.0,
-    "position_targets": [],
-    "tp_status": [],
-    "tp_hit_at": {},
-    "exchange_sync_status": "UNSYNCED",
-    "exchange_sync_at": null,
-    "exchange_position_id": null,
-    "exchange_avg_price": null,
-    "exchange_position_amt": null,
-    "exchange_unrealized_pnl": null,
-    "exchange_realized_pnl": null,
-    "exchange_liquidation_price": null,
-    "exchange_closed_at": null,
-    "exchange_close_price": null,
-    "exchange_close_source": null,
-    "exchange_close_order_id": null,
-    "exchange_sync_error": null,
-    "exchange_partial_close_detected": false,
-    "position_close_reported": false,
-    "position_intelligence_state": null,
-    "position_intelligence_snapshot": null,
-    "position_open_reported": false,
-    "position_intelligence_alert_snapshot": null
-  },
-  {
     "symbol": "0G-USDT",
     "exchange": "bingx",
     "direction": "BULLISH",
@@ -2010,7 +1914,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-04T19:51:45.734892+00:00 -- price ran away without ever reaching the zone. Current price 2.182 vs zone 2.043-2.055.",
+    "last_note": "Expired on 2026-09-04T19:51:45.734892+00:00 -- price ran away without ever reaching the zone. Current price 2.252 vs zone 2.043-2.055.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2205,7 +2109,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-04T14:58:23.256938+00:00 -- price ran away without ever reaching the zone. Current price 0.6708 vs zone 0.5818-0.5875.",
+    "last_note": "Expired on 2026-09-04T14:58:23.256938+00:00 -- price ran away without ever reaching the zone. Current price 0.6657 vs zone 0.5818-0.5875.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2452,7 +2356,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-04T09:08:12.924417+00:00 -- price ran away without ever reaching the zone. Current price 1121.5 vs zone 946.79-950.63.",
+    "last_note": "Expired on 2026-09-04T09:08:12.924417+00:00 -- price ran away without ever reaching the zone. Current price 1082.3 vs zone 946.79-950.63.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -2722,7 +2626,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079611748,
+    "exchange_sync_checked_at": 1789086756990,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -2885,7 +2789,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-05T09:20:19.687065+00:00 -- price ran away without ever reaching the zone. Current price 0.009545 vs zone 0.009515-0.009542.",
+    "last_note": "Expired on 2026-09-05T09:20:19.687065+00:00 -- price ran away without ever reaching the zone. Current price 0.009532 vs zone 0.009515-0.009542.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3089,7 +2993,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079617256,
+    "exchange_sync_checked_at": 1789086762348,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -3139,7 +3043,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-06T10:35:51.763958+00:00 -- price ran away without ever reaching the zone. Current price 0.3994 vs zone 0.3851-0.3875.",
+    "last_note": "Expired on 2026-09-06T10:35:51.763958+00:00 -- price ran away without ever reaching the zone. Current price 0.3985 vs zone 0.3851-0.3875.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3208,7 +3112,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-06T00:00:19.951069+00:00 -- price ran away without ever reaching the zone. Current price 111.42 vs zone 120.15-120.39.",
+    "last_note": "Expired on 2026-09-06T00:00:19.951069+00:00 -- price ran away without ever reaching the zone. Current price 111.36 vs zone 120.15-120.39.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3395,7 +3299,7 @@
       "operating_state": "CAUTION",
       "generated_at": "2026-09-07T06:54:02.739044+00:00"
     },
-    "exchange_sync_checked_at": 1789079621101,
+    "exchange_sync_checked_at": 1789086766218,
     "position_open_reported": false,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 29.32,
@@ -3465,7 +3369,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-05T11:32:13.150070+00:00 -- price ran away without ever reaching the zone. Current price 0.010434 vs zone 0.009986-0.010053.",
+    "last_note": "Expired on 2026-09-05T11:32:13.150070+00:00 -- price ran away without ever reaching the zone. Current price 0.01034 vs zone 0.009986-0.010053.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3589,7 +3493,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079623240,
+    "exchange_sync_checked_at": 1789086768388,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -3694,7 +3598,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079623774,
+    "exchange_sync_checked_at": 1789086768934,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -3744,7 +3648,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-05T19:00:01.256811+00:00 -- price ran away without ever reaching the zone. Current price 0.258 vs zone 0.258-0.2592.",
+    "last_note": "Expired on 2026-09-05T19:00:01.256811+00:00 -- price ran away without ever reaching the zone. Current price 0.2519 vs zone 0.258-0.2592.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3813,7 +3717,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-06T00:54:06.009208+00:00 -- price ran away without ever reaching the zone. Current price 122.32 vs zone 131.8-132.13.",
+    "last_note": "Expired on 2026-09-06T00:54:06.009208+00:00 -- price ran away without ever reaching the zone. Current price 121.04 vs zone 131.8-132.13.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -3938,7 +3842,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079631778,
+    "exchange_sync_checked_at": 1789086777046,
     "position_intelligence_alert_snapshot": null
   },
   {
@@ -4109,7 +4013,7 @@
       "operating_state": "HEALTHY",
       "generated_at": "2026-09-07T20:39:16.352980+00:00"
     },
-    "exchange_sync_checked_at": 1789079632336,
+    "exchange_sync_checked_at": 1789086777576,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "FF-USDT",
@@ -4247,7 +4151,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-06T01:33:56.018265+00:00 -- price ran away without ever reaching the zone. Current price 0.06177 vs zone 0.06742-0.06762.",
+    "last_note": "Expired on 2026-09-06T01:33:56.018265+00:00 -- price ran away without ever reaching the zone. Current price 0.0617 vs zone 0.06742-0.06762.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -4377,16 +4281,16 @@
       "position_lifecycle": "OPEN",
       "active": true,
       "entry_price": 2.45,
-      "current_price": 2.509,
+      "current_price": 2.462,
       "position_amount": 7.0,
-      "unrealized_pnl": 0.4114,
+      "unrealized_pnl": 0.0839,
       "unrealized_pnl_source": "exchange",
-      "current_r": 0.2159,
+      "current_r": 0.044,
       "max_r": 0.0,
       "sl": 2.1777285,
       "sl_distance": {
-        "price": 0.3312714999999997,
-        "percent": 13.203328019131117,
+        "price": 0.2842715,
+        "percent": 11.546364744110479,
         "favorable": true,
         "at_or_beyond": false
       },
@@ -4396,21 +4300,21 @@
           "price": 2.206,
           "r": 1.8932610141739035,
           "reached": true,
-          "distance_percent": 12.07652451175767
+          "distance_percent": 10.398050365556466
         },
         {
           "index": 2,
           "price": 2.226,
           "r": 3.9400296781456974,
           "reached": true,
-          "distance_percent": 11.279394180948582
+          "distance_percent": 9.585702680747369
         },
         {
           "index": 3,
           "price": 2.239,
           "r": 5.270429309727351,
           "reached": true,
-          "distance_percent": 10.761259465922679
+          "distance_percent": 9.057676685621457
         }
       ],
       "partial_profit": {
@@ -4425,13 +4329,13 @@
       },
       "health_state": "HEALTHY",
       "health_reason": "SMC structure and derivatives are currently supportive/neutral.",
-      "duration_ms": 423580993,
-      "duration": "4d 21h",
+      "duration_ms": 430726257,
+      "duration": "4d 23h",
       "warnings": [],
       "operating_state": "HEALTHY",
-      "generated_at": "2026-09-10T22:33:54.189472+00:00"
+      "generated_at": "2026-09-11T00:32:59.453889+00:00"
     },
-    "exchange_sync_checked_at": 1789079634188,
+    "exchange_sync_checked_at": 1789086779453,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "NEAR-USDT",
@@ -4500,17 +4404,17 @@
     "exchange_position_id": "2098080894673960960",
     "exchange_position_side": "LONG",
     "exchange_avg_price": "2.450",
-    "exchange_unrealized_pnl": "0.4114",
-    "exchange_realized_pnl": "-0.0034",
+    "exchange_unrealized_pnl": "0.0839",
+    "exchange_realized_pnl": "-0.0051",
     "exchange_leverage": 122,
     "exchange_liquidation_price": 1.716,
-    "exchange_position_value": "17.56",
+    "exchange_position_value": "17.23",
     "exchange_available_amount": "7",
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
     "position_health_reason": "SMC structure and derivatives are currently supportive/neutral.",
-    "position_health_updated_at": "2026-09-10T22:33:54.189390+00:00",
+    "position_health_updated_at": "2026-09-11T00:32:59.453811+00:00",
     "position_health_risk_score": 0,
     "position_health_derivatives_state": "NEUTRAL",
     "position_health_derivatives_score": 0.0,
@@ -4749,7 +4653,7 @@
       "operating_state": "EXIT_WARNING",
       "generated_at": "2026-09-06T22:00:27.237473+00:00"
     },
-    "exchange_sync_checked_at": 1789079636381,
+    "exchange_sync_checked_at": 1789086781640,
     "position_open_reported": true,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 617.2,
@@ -4874,7 +4778,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079636919,
+    "exchange_sync_checked_at": 1789086782210,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -4979,7 +4883,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079637521,
+    "exchange_sync_checked_at": 1789086782746,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -5084,7 +4988,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079638073,
+    "exchange_sync_checked_at": 1789086783290,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -5262,7 +5166,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079640229,
+    "exchange_sync_checked_at": 1789086785438,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -5380,7 +5284,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-06T17:45:41.626480+00:00 -- price ran away without ever reaching the zone. Current price 0.009549 vs zone 0.010057-0.0101.",
+    "last_note": "Expired on 2026-09-06T17:45:41.626480+00:00 -- price ran away without ever reaching the zone. Current price 0.009534 vs zone 0.010057-0.0101.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -5577,7 +5481,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1789079645589,
+    "exchange_sync_checked_at": 1789086790790,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -5753,7 +5657,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079646130,
+    "exchange_sync_checked_at": 1789086791499,
     "position_intelligence_alert_snapshot": {
       "symbol": "TRUST-USDT",
       "direction": "BULLISH",
@@ -5984,7 +5888,7 @@
     "exchange_liquidation_price": 0.3463,
     "exchange_position_value": "30.01",
     "exchange_available_amount": "72.411",
-    "exchange_sync_checked_at": 1789079646680,
+    "exchange_sync_checked_at": 1789086792029,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": null,
@@ -6098,7 +6002,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079647230,
+    "exchange_sync_checked_at": 1789086792571,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null
   },
@@ -6247,7 +6151,7 @@
     "exchange_liquidation_price": 0.0006296,
     "exchange_position_value": "15.02",
     "exchange_available_amount": "16523",
-    "exchange_sync_checked_at": 1789079647799,
+    "exchange_sync_checked_at": 1789086793096,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -6434,7 +6338,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079649944,
+    "exchange_sync_checked_at": 1789086795300,
     "position_intelligence_alert_snapshot": null
   },
   {
@@ -6525,7 +6429,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079650486,
+    "exchange_sync_checked_at": 1789086795856,
     "position_intelligence_alert_snapshot": null
   },
   {
@@ -6630,7 +6534,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079651031,
+    "exchange_sync_checked_at": 1789086796387,
     "position_intelligence_alert_snapshot": null
   },
   {
@@ -6848,7 +6752,7 @@
     "exchange_liquidation_price": 0.1783,
     "exchange_position_value": "15.23",
     "exchange_available_amount": "58.87",
-    "exchange_sync_checked_at": 1789079651567,
+    "exchange_sync_checked_at": 1789086796959,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -7000,7 +6904,7 @@
     "exchange_liquidation_price": 69.53,
     "exchange_position_value": "80.01",
     "exchange_available_amount": "1.2182",
-    "exchange_sync_checked_at": 1789079652129,
+    "exchange_sync_checked_at": 1789086797657,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -7086,7 +6990,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079652703
+    "exchange_sync_checked_at": 1789086798200
   },
   {
     "symbol": "ETH-USDT",
@@ -7191,7 +7095,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079653247
+    "exchange_sync_checked_at": 1789086798752
   },
   {
     "symbol": "PI-USDT",
@@ -7296,7 +7200,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079653774
+    "exchange_sync_checked_at": 1789086799299
   },
   {
     "symbol": "POL-USDT",
@@ -7400,7 +7304,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079654321
+    "exchange_sync_checked_at": 1789086799867
   },
   {
     "symbol": "BERA-USDT",
@@ -7505,7 +7409,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079654863
+    "exchange_sync_checked_at": 1789086800404
   },
   {
     "symbol": "BTC-USDT",
@@ -7610,7 +7514,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079655410
+    "exchange_sync_checked_at": 1789086800955
   },
   {
     "symbol": "AIXBT-USDT",
@@ -7701,7 +7605,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079655937
+    "exchange_sync_checked_at": 1789086801470
   },
   {
     "symbol": "ENA-USDT",
@@ -7806,7 +7710,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079656493
+    "exchange_sync_checked_at": 1789086802027
   },
   {
     "symbol": "ASTER-USDT",
@@ -7911,7 +7815,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079657102
+    "exchange_sync_checked_at": 1789086802563
   },
   {
     "symbol": "LA-USDT",
@@ -8167,7 +8071,7 @@
     "exchange_liquidation_price": 0.0599,
     "exchange_position_value": "50.01",
     "exchange_available_amount": "756.200",
-    "exchange_sync_checked_at": 1789079657636,
+    "exchange_sync_checked_at": 1789086803123,
     "exchange_sync_error": null,
     "position_health_state": "CAUTION",
     "position_health_previous_state": "CAUTION",
@@ -8281,7 +8185,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079658174
+    "exchange_sync_checked_at": 1789086803668
   },
   {
     "symbol": "NCSKINTC2USD-USDT",
@@ -8329,7 +8233,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-09T06:38:37.749554+00:00 -- price ran away without ever reaching the zone. Current price 100.14 vs zone 97.24-97.5.",
+    "last_note": "Expired on 2026-09-09T06:38:37.749554+00:00 -- price ran away without ever reaching the zone. Current price 99.87 vs zone 97.24-97.5.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -8427,7 +8331,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079660322
+    "exchange_sync_checked_at": 1789086805807
   },
   {
     "symbol": "BLESS-USDT",
@@ -8605,7 +8509,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079662509
+    "exchange_sync_checked_at": 1789086807955
   },
   {
     "symbol": "SUI-USDT",
@@ -8784,7 +8688,7 @@
     "exchange_liquidation_price": 0.2931,
     "exchange_position_value": "7.49",
     "exchange_available_amount": "9",
-    "exchange_sync_checked_at": 1789079663033,
+    "exchange_sync_checked_at": 1789086808505,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -9075,7 +8979,7 @@
     "exchange_liquidation_price": 135.72,
     "exchange_position_value": "50.07",
     "exchange_available_amount": "0.32786",
-    "exchange_sync_checked_at": 1789079665228,
+    "exchange_sync_checked_at": 1789086810628,
     "exchange_sync_error": null,
     "position_opened_at": "2026-09-09T06:53:01.898000+00:00",
     "position_health_state": "HEALTHY",
@@ -9330,7 +9234,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079665805,
+    "exchange_sync_checked_at": 1789086811410,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 0.3,
     "exchange_position_id": "2097662571536662528",
@@ -9455,7 +9359,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079666356
+    "exchange_sync_checked_at": 1789086811967
   },
   {
     "symbol": "SYRUP-USDT",
@@ -9664,7 +9568,7 @@
     "exchange_liquidation_price": 0.14001,
     "exchange_position_value": "14.45",
     "exchange_available_amount": "62.62",
-    "exchange_sync_checked_at": 1789079666917,
+    "exchange_sync_checked_at": 1789086812500,
     "exchange_sync_error": null,
     "position_opened_at": "2026-09-09T07:18:58.091000+00:00",
     "position_health_state": "HEALTHY",
@@ -9779,7 +9683,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079667456
+    "exchange_sync_checked_at": 1789086813031
   },
   {
     "symbol": "THE-USDT",
@@ -9884,7 +9788,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079668002
+    "exchange_sync_checked_at": 1789086813544
   },
   {
     "symbol": "YFI-USDT",
@@ -10103,7 +10007,7 @@
     "exchange_liquidation_price": 1959,
     "exchange_position_value": "39.79",
     "exchange_available_amount": "0.0175",
-    "exchange_sync_checked_at": 1789079668527,
+    "exchange_sync_checked_at": 1789086814091,
     "exchange_sync_error": null,
     "position_opened_at": "2026-09-09T09:10:41.642000+00:00",
     "position_health_state": "HEALTHY",
@@ -10145,7 +10049,7 @@
     "original_invalidation": 337.49548500000003,
     "targets": [],
     "trail_mode": "trail_structural",
-    "last_note": "Still pending -- price 331.78, ~1.01% from zone.",
+    "last_note": "Still pending -- price 332.12, ~0.91% from zone.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -10421,7 +10325,7 @@
     "exchange_liquidation_price": 0.0607,
     "exchange_position_value": "50.16",
     "exchange_available_amount": "750.75",
-    "exchange_sync_checked_at": 1789079670977,
+    "exchange_sync_checked_at": 1789086816585,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": null,
@@ -10491,7 +10395,7 @@
     "exchange_fill_frozen_at": null,
     "position_targets": [],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079671530
+    "exchange_sync_checked_at": 1789086817137
   },
   {
     "symbol": "NCSKNVDA2USD-USDT",
@@ -10568,7 +10472,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079672080
+    "exchange_sync_checked_at": 1789086817701
   },
   {
     "symbol": "NIGHT-USDT",
@@ -10673,7 +10577,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079672620
+    "exchange_sync_checked_at": 1789086818247
   },
   {
     "symbol": "NCCOXAG2USD-USDT",
@@ -10750,7 +10654,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079673204
+    "exchange_sync_checked_at": 1789086818798
   },
   {
     "symbol": "APT-USDT",
@@ -10855,7 +10759,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079673749
+    "exchange_sync_checked_at": 1789086819337
   },
   {
     "symbol": "INJ-USDT",
@@ -10960,7 +10864,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079674307
+    "exchange_sync_checked_at": 1789086819892
   },
   {
     "symbol": "KAITO-USDT",
@@ -11065,7 +10969,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079674823
+    "exchange_sync_checked_at": 1789086820469
   },
   {
     "symbol": "ETHFI-USDT",
@@ -11170,7 +11074,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079675347
+    "exchange_sync_checked_at": 1789086821019
   },
   {
     "symbol": "SPX-USDT",
@@ -11208,7 +11112,7 @@
       }
     ],
     "trail_mode": "trail_structural",
-    "last_note": "Expired on 2026-09-09T22:23:47.681501+00:00 -- price ran away without ever reaching the zone. Current price 0.4817 vs zone 0.5149-0.5171.",
+    "last_note": "Expired on 2026-09-09T22:23:47.681501+00:00 -- price ran away without ever reaching the zone. Current price 0.4746 vs zone 0.5149-0.5171.",
     "entry_instruction": null,
     "entry_price": null,
     "max_r": 0.0,
@@ -11334,7 +11238,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079677487
+    "exchange_sync_checked_at": 1789086823182
   },
   {
     "symbol": "LIGHTER-USDT",
@@ -11464,7 +11368,7 @@
     "exchange_fill_frozen_at": null,
     "position_targets": [],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1789079679766
+    "exchange_sync_checked_at": 1789086825532
   },
   {
     "symbol": "RECALL-USDT",
