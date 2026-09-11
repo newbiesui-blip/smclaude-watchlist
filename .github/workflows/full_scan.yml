@@ -53,8 +53,9 @@ jobs:
           CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
         run: |
           # Install the central Telegram boundary before full_scan starts.
-          # smc_scanner.py itself remains untouched.
-          python -c "import athena_notification_state; import athena_quality_layer; raise SystemExit(athena_quality_layer.main())"
+          # The quality layer and additive Wyckoff regime layer are installed
+          # before the scan; smc_scanner.py itself remains untouched.
+          python -c "import athena_notification_state; import athena_regime_layer; raise SystemExit(athena_regime_layer.main())"
 
       - name: Persist ATHENA runtime state
         if: always()
