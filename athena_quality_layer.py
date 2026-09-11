@@ -66,39 +66,52 @@ def enrich_plan(plan, tf_results):
     except: planned_price=None
     planned=_location(planned_price,dr,direction); mq=_market_quality(tf_results)
     ext=str(plan.get("extension_status","UNKNOWN")).upper(); eq=float(plan.get("entry_quality",0) or 0)
+    setup_quality=float(plan.get("setup_quality",0) or 0)
 
-    # Execution timing is determined primarily from the actual planned entry
-    # geometry, not from the entry-quality score alone.  A score of exactly 70
-    # must never allow a price that has already crossed the whole execution zone
-    # to be labelled TIMELY.
+    # Execution timing is determined from actual execution-zone geometry.
+    # Being beyond a bearish short zone on the downside (or beyond a bullish
+    # long zone on the upside) does NOT automatically mean the setup is late:
+    # it can mean the setup thesis expects a counter-trend pullback into the
+    # zone before execution.  Only explicit extension/chase evidence is treated
+    # as LATE.  This preserves valid "dead-cat bounce / relief-rally into zone"
+    # setups instead of encouraging the scanner to chase the move.
     try: zone_low=float(plan.get("zone_low")) if plan.get("zone_low") is not None else None
     except: zone_low=None
     try: zone_high=float(plan.get("zone_high")) if plan.get("zone_high") is not None else None
     except: zone_high=None
 
-    crossed_execution_zone = False
+    pullback_required = False
+    execution_zone_crossed = False
     outside_execution_zone = False
     if price is not None:
         if direction == "BEARISH" and zone_low is not None and zone_high is not None:
-            crossed_execution_zone = price < zone_low
+            # Below the whole short zone = move has already extended away from
+            # the desired short location. Preserve the setup, but wait for a
+            # relief bounce back into the zone.
+            pullback_required = price < zone_low
+            execution_zone_crossed = pullback_required
             outside_execution_zone = price > zone_high
         elif direction == "BULLISH" and zone_low is not None and zone_high is not None:
-            crossed_execution_zone = price > zone_high
+            # Above the whole long zone = bullish move has extended away from
+            # the desired long location. Wait for a pullback into the zone.
+            pullback_required = price > zone_high
+            execution_zone_crossed = pullback_required
             outside_execution_zone = price < zone_low
         elif planned_price is not None:
-            # Fallback when no explicit zone is available: use planned-entry
-            # geometry with a small relative tolerance rather than entry quality.
             tolerance = abs(planned_price) * 0.0025
             if direction == "BEARISH":
-                crossed_execution_zone = price < planned_price - tolerance
+                pullback_required = price < planned_price - tolerance
+                execution_zone_crossed = pullback_required
                 outside_execution_zone = price > planned_price + tolerance
             elif direction == "BULLISH":
-                crossed_execution_zone = price > planned_price + tolerance
+                pullback_required = price > planned_price + tolerance
+                execution_zone_crossed = pullback_required
                 outside_execution_zone = price < planned_price - tolerance
 
     chase=(direction=="BULLISH" and current.get("state")=="PREMIUM") or (direction=="BEARISH" and current.get("state")=="DISCOUNT")
-    if crossed_execution_zone:
-        timing="LATE"; severity="HIGH"; timing_reason="Current price has already moved through the preferred execution zone; do not chase."
+
+    if pullback_required and setup_quality >= 70 and planned.get("score",50) >= 60:
+        timing="WAIT_PULLBACK"; severity="MEDIUM"; timing_reason="Setup remains valid, but current price has moved beyond the execution zone; wait for a relief pullback into the planned zone rather than chasing."
     elif ext=="EXTENDED" or (chase and eq<70):
         timing="LATE"; severity="HIGH" if ext=="EXTENDED" and chase else "MEDIUM"; timing_reason="Current price is materially worse than the planned execution location."
     elif outside_execution_zone or (planned.get("state") in {"DISCOUNT","PREMIUM","EQUILIBRIUM"} and current.get("state")!=planned.get("state")):
@@ -106,9 +119,12 @@ def enrich_plan(plan, tf_results):
     else:
         timing="TIMELY"; severity="LOW"; timing_reason="Current price is reasonably consistent with the planned execution location."
 
-    loc=float(planned.get("score",50)); market=float(mq.get("score",50)); composite=.45*float(plan.get("setup_quality",0) or 0)+.25*loc+.15*market+.15*float(plan.get("entry_quality",0) or 0)-(12 if timing=="LATE" else 5 if timing=="AWAY_FROM_PLAN" else 0)
-    plan.update({"market_quality_score":round(market),"market_quality_state":mq.get("state"),"market_quality_reason":mq.get("reason"),"dealing_range_low":dr[0] if dr else None,"dealing_range_high":dr[1] if dr else None,"equilibrium":current.get("equilibrium"),"current_location":current.get("state"),"current_location_score":current.get("score"),"current_location_pct":current.get("position_pct"),"current_location_reason":current.get("reason"),"planned_location":planned.get("state"),"planned_location_score":planned.get("score"),"planned_location_pct":planned.get("position_pct"),"planned_location_reason":planned.get("reason"),"execution_zone_crossed":crossed_execution_zone,"execution_zone_outside":outside_execution_zone,"entry_timing":timing,"entry_timing_severity":severity,"entry_timing_reason":timing_reason,"opportunity_score":max(0,min(100,round(composite))),"why_this_setup":f"{plan.get('regime','HTF unknown')} / {plan.get('trend_alignment','alignment unknown')} | {plan.get('setup_type','structure setup')} | planned location {planned.get('state','UNKNOWN').lower()} | current location {current.get('state','UNKNOWN').lower()} | timing {timing.lower()} | structural R:R {float(plan.get('structural_rr',0) or 0):.2f}"})
-    if plan.get("status") in ("READY_MARKET","READY_LIMIT") and timing=="LATE" and planned.get("score",50)>=60 and plan.get("setup_quality",0)>=70:
+    timing_penalty = 12 if timing=="LATE" else 3 if timing=="AWAY_FROM_PLAN" else 0
+    loc=float(planned.get("score",50)); market=float(mq.get("score",50)); composite=.45*setup_quality+.25*loc+.15*market+.15*eq-timing_penalty
+    plan.update({"market_quality_score":round(market),"market_quality_state":mq.get("state"),"market_quality_reason":mq.get("reason"),"dealing_range_low":dr[0] if dr else None,"dealing_range_high":dr[1] if dr else None,"equilibrium":current.get("equilibrium"),"current_location":current.get("state"),"current_location_score":current.get("score"),"current_location_pct":current.get("position_pct"),"current_location_reason":current.get("reason"),"planned_location":planned.get("state"),"planned_location_score":planned.get("score"),"planned_location_pct":planned.get("position_pct"),"planned_location_reason":planned.get("reason"),"execution_zone_crossed":execution_zone_crossed,"execution_zone_outside":outside_execution_zone,"pullback_required":pullback_required,"entry_timing":timing,"entry_timing_severity":severity,"entry_timing_reason":timing_reason,"opportunity_score":max(0,min(100,round(composite))),"why_this_setup":f"{plan.get('regime','HTF unknown')} / {plan.get('trend_alignment','alignment unknown')} | {plan.get('setup_type','structure setup')} | planned location {planned.get('state','UNKNOWN').lower()} | current location {current.get('state','UNKNOWN').lower()} | timing {timing.lower()} | structural R:R {float(plan.get('structural_rr',0) or 0):.2f}"})
+    if plan.get("status") in ("READY_MARKET","READY_LIMIT") and timing=="WAIT_PULLBACK" and planned.get("score",50)>=60 and setup_quality>=70:
+        plan["status"]="WAIT_PULLBACK"; plan["execution_type"]=None; plan["required_confirmation"]="Wait for price to return toward the planned execution zone; do not chase the move."
+    elif plan.get("status") in ("READY_MARKET","READY_LIMIT") and timing=="LATE" and planned.get("score",50)>=60 and setup_quality>=70:
         plan["status"]="WAIT_PULLBACK"; plan["execution_type"]=None; plan["required_confirmation"]="Wait for price to return toward the planned execution zone; do not chase the move."
     elif plan.get("status")=="READY_MARKET" and current.get("score",50)<40 and planned.get("score",50)>=60:
         plan["status"]="WAIT_PULLBACK"; plan["execution_type"]=None; plan["required_confirmation"]="Current price is poorly located; wait for the planned entry location."
