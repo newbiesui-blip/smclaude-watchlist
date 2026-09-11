@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs between the primary ATHENA schedule slots. If GitHub drops a
     # primary scheduled event, this watchdog can recover it via workflow_dispatch.
-    - cron: "2,12,32,42,57 * * * *"
+    - cron: "12,27,42,57 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -35,19 +35,23 @@ jobs:
             --limit 20 \
             --json status,conclusion,createdAt,updatedAt,number,event,databaseId)"
 
-          printf '%s\n' "$RUNS" | python3 -c '
+          export ATHENA_RUNS="$RUNS"
+          python3 - <<'PY'
           import json
+          import os
           import subprocess
-          import sys
           from datetime import datetime, timezone
 
-          runs = json.load(sys.stdin)
+          runs = json.loads(os.environ["ATHENA_RUNS"])
           active_states = {"queued", "in_progress", "requested", "waiting", "pending"}
 
           active = [r for r in runs if r.get("status") in active_states]
           if active:
               newest = max(active, key=lambda r: r.get("createdAt") or "")
-              print(f"ATHENA already has an active run: #{newest.get(chr(34)+chr(110)+chr(117)+chr(109)+chr(98)+chr(101)+chr(114)+chr(34))} ({newest.get(chr(34)+chr(115)+chr(116)+chr(97)+chr(116)+chr(117)+chr(115)+chr(34))}); no recovery dispatch needed.")
+              print(
+                  f"ATHENA already has an active run: #{newest.get('number')} "
+                  f"({newest.get('status')}); no recovery dispatch needed."
+              )
               raise SystemExit(0)
 
           successful = [
@@ -56,26 +60,32 @@ jobs:
           ]
 
           if not successful:
-              print("No successful ATHENA run found in the recent history; dispatching recovery scan.")
+              print("No successful ATHENA run found in recent history; dispatching recovery scan.")
               subprocess.run(
-                  ["gh", "workflow", "run", "full_scan.yml", "--repo", "newbiesui-blip/smclaude-watchlist", "--ref", "main"],
+                  ["gh", "workflow", "run", "full_scan.yml", "--repo", os.environ["GH_REPO"], "--ref", "main"],
                   check=True,
               )
               raise SystemExit(0)
 
-          latest = max(successful, key=lambda r: r.get("updatedAt") or r.get("createdAt") or "")
+          latest = max(
+              successful,
+              key=lambda r: r.get("updatedAt") or r.get("createdAt") or "",
+          )
           stamp = latest.get("updatedAt") or latest.get("createdAt")
           completed_at = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
           age_minutes = (datetime.now(timezone.utc) - completed_at).total_seconds() / 60.0
 
-          print(f"Latest successful ATHENA run: #{latest.get(chr(34)+chr(110)+chr(117)+chr(109)+chr(98)+chr(101)+chr(114)+chr(34))}; age={age_minutes:.1f} minutes.")
+          print(
+              f"Latest successful ATHENA run: #{latest.get('number')}; "
+              f"age={age_minutes:.1f} minutes."
+          )
 
           if age_minutes >= 20.0:
               print("ATHENA scan is stale; dispatching recovery scan.")
               subprocess.run(
-                  ["gh", "workflow", "run", "full_scan.yml", "--repo", "newbiesui-blip/smclaude-watchlist", "--ref", "main"],
+                  ["gh", "workflow", "run", "full_scan.yml", "--repo", os.environ["GH_REPO"], "--ref", "main"],
                   check=True,
               )
           else:
               print("ATHENA scan is fresh; no recovery dispatch needed.")
-          '
+          PY
