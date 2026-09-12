@@ -1,0 +1,59 @@
+name: Apply HTF hierarchy fix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch regime hierarchy
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('smc_scanner.py')
+          text = path.read_text()
+
+          old_constants = '''REGIME_TF_WEIGHTS = {"1D": 0.50, "4H": 0.33, "1H": 0.17}   # macro -> primary -> setup structure\nCOUNTERTREND_PENALTY = 30   # diagnostic context only; never subtracted from score_setup()\nCONFLICTED_PENALTY = 20\nRANGE_PENALTY = 10\n'''
+          new_constants = '''# Regime hierarchy: 1D + 4H establish the primary thesis. 1H is setup\n# development/retracement context and must NOT veto an otherwise coherent\n# 1D/4H thesis merely because it is temporarily counter-directional.\nREGIME_TF_WEIGHTS = {"1D": 0.60, "4H": 0.40}\nREGIME_CONTEXT_TF = "1H"\nCOUNTERTREND_PENALTY = 30   # diagnostic context only; never subtracted from score_setup()\nCONFLICTED_PENALTY = 20\nRANGE_PENALTY = 10\n'''
+          if old_constants not in text:
+              raise SystemExit('Expected regime constants block not found')
+          text = text.replace(old_constants, new_constants, 1)
+
+          start = text.index('def compute_market_regime(tf_results):')
+          end = text.index('\n\ndef check_reversal_evidence', start)
+          new_func = '''def compute_market_regime(tf_results):\n    """\n    Establish the primary market regime from 1D + 4H only.\n\n    1D is macro context and 4H is the primary structural timeframe.\n    1H is deliberately treated as setup-development context rather than\n    a third directional vote: a healthy 1H retracement against a coherent\n    1D/4H thesis is normal and must not be mislabeled as a countertrend trade.\n\n    Returns the same public regime fields as before, plus lower-timeframe\n    context fields used for auditability.\n    """\n    bull_w = bear_w = range_w = available_w = 0.0\n    for tf, w in REGIME_TF_WEIGHTS.items():\n        r = tf_results.get(tf)\n        if not isinstance(r, dict):\n            continue\n        available_w += w\n        if r.get("bias") == "BULLISH":\n            bull_w += w\n        elif r.get("bias") == "BEARISH":\n            bear_w += w\n        else:\n            range_w += w\n\n    d1 = tf_results.get("1D")\n    h4 = tf_results.get("4H")\n    h1 = tf_results.get(REGIME_CONTEXT_TF)\n\n    reason = ", ".join(\n        f"{tf}={(tf_results.get(tf) or {}).get('bias', 'no data')}"\n        for tf in ["1D", "4H", "1H"]\n    )\n\n    if available_w == 0:\n        bias = None\n        strength = 0.0\n    elif (d1 and h4\n          and d1.get("bias") in ("BULLISH", "BEARISH")\n          and h4.get("bias") in ("BULLISH", "BEARISH")\n          and d1.get("bias") != h4.get("bias")):\n        # Dominant structural timeframes disagree: genuine transition.\n        bias = "TRANSITION"\n        strength = max(bull_w, bear_w, range_w)\n    elif bull_w >= 0.5:\n        bias, strength = "BULLISH", bull_w / available_w\n    elif bear_w >= 0.5:\n        bias, strength = "BEARISH", bear_w / available_w\n    elif range_w >= 0.5:\n        bias, strength = "RANGE", range_w / available_w\n    else:\n        bias = "BULLISH" if bull_w > bear_w else "BEARISH"\n        strength = max(bull_w, bear_w) / available_w\n\n    if bias in ("BULLISH", "BEARISH"):\n        trend_word = "UPTREND" if bias == "BULLISH" else "DOWNTREND"\n        primary_aligned = bool(d1 and h4 and d1.get("bias") == bias and h4.get("bias") == bias)\n        regime = f"{'STRONG' if primary_aligned else 'WEAK'}_{trend_word}"\n    elif bias == "RANGE":\n        regime = "RANGE"\n    elif bias == "TRANSITION":\n        regime = "TRANSITION"\n    else:\n        regime = "UNKNOWN"\n\n    lower_tf_retracement = bool(\n        bias in ("BULLISH", "BEARISH")\n        and isinstance(h1, dict)\n        and h1.get("bias") in ("BULLISH", "BEARISH")\n        and h1.get("bias") != bias\n    )\n\n    return {\n        "regime": regime,\n        "regime_bias": bias,\n        "regime_confidence": round(strength * 100),\n        "regime_reason": reason,\n        "primary_timeframes": ["1D", "4H"],\n        "setup_context_timeframe": "1H",\n        "lower_tf_retracement": lower_tf_retracement,\n    }\n'''
+          text = text[:start] + new_func + text[end:]
+
+          # Make the regime-quality label hierarchical: a 1H retracement\n          # does not lose the full aligned-regime quality component.\n          old_quality = '''    regime_component = {\n        "TREND_ALIGNED": 30,\n        "REVERSAL": 27,\n        "RANGE": 18,\n        "COUNTERTREND": 5,\n        "CONFLICTED": 8,\n    }.get(regime_info["trend_alignment"] if regime_info else "CONFLICTED", 8)\n'''
+          new_quality = '''    regime_component = {\n        "TREND_ALIGNED": 30,\n        "REVERSAL": 27,\n        "RANGE": 18,\n        "COUNTERTREND": 5,\n        "CONFLICTED": 8,\n    }.get(regime_info["trend_alignment"] if regime_info else "CONFLICTED", 8)\n\n    # A 1H counter-directional move is not a regime penalty when 1D and 4H\n    # remain aligned. It is normal setup-development/retracement context.\n    # The regime component above is intentionally unchanged for this case:\n    # alignment is not rewarded extra, and healthy retracement is not punished.\n'''
+          if old_quality not in text:
+              raise SystemExit('Expected setup-quality regime block not found')
+          text = text.replace(old_quality, new_quality, 1)
+
+          path.write_text(text)
+
+      - name: Validate
+        run: python -m py_compile smc_scanner.py
+
+      - name: Commit production fix and remove temporary workflow
+        run: |
+          rm -f .github/workflows/_apply_htf_hierarchy_fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add smc_scanner.py .github/workflows/_apply_htf_hierarchy_fix.yml
+          git diff --cached --check
+          git commit -m "fix: make HTF hierarchy primary over LTF alignment"
+          git push
