@@ -512,6 +512,13 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         })
         return result
 
+    if distance_atr is None and abs(entry_ref - price) > 1e-12:
+        result.update({
+            "status": "WAIT_PULLBACK", "execution_type": None, "final_decision": "WAIT_PULLBACK",
+            "required_confirmation": "Execution distance cannot be validated without a usable 15M/1H ATR; do not assume the entry is executable at market.",
+        })
+        return result
+
     if distance_atr is not None and distance_atr > MAX_LIMIT_DISTANCE_ATR:
         result.update({
             "status": "WAIT_PULLBACK", "execution_type": None, "final_decision": "WAIT_PULLBACK",
@@ -519,7 +526,11 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         })
         return result
 
-    essentially_at_price = distance_atr is None or distance_atr <= 0.15
+    essentially_at_price = (
+        distance_atr is not None and distance_atr <= 0.15
+    ) or (
+        distance_atr is None and abs(entry_ref - price) <= 1e-12
+    )
     if essentially_at_price and entry_quality >= 75:
         result.update({
             "status": "READY_MARKET", "execution_type": "MARKET",
