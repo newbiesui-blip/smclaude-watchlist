@@ -124,9 +124,9 @@ def test_no_structural_invalidation_aborts():
 
 def test_good_structure_can_produce_ready_market_when_rr_and_location_are_valid():
     data = tf_results(price=105.0)
-    data["1D"]["swing_high_prices"] = [130.0]
-    data["4H"]["swing_high_prices"] = [125.0, 130.0]
-    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1D"]["swing_high_prices"] = [140.0, 150.0]
+    data["4H"]["swing_high_prices"] = [140.0, 150.0]
+    data["1H"]["swing_high_prices"] = [140.0, 150.0]
     data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
     assert result["structural_rr"] >= 2.0
@@ -137,9 +137,9 @@ def test_good_structure_can_produce_ready_market_when_rr_and_location_are_valid(
 
 def test_extended_price_never_becomes_ready_market():
     data = tf_results(price=105.0)
-    data["1D"]["swing_high_prices"] = [130.0]
-    data["4H"]["swing_high_prices"] = [125.0, 130.0]
-    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1D"]["swing_high_prices"] = [145.0]
+    data["4H"]["swing_high_prices"] = [140.0, 145.0]
+    data["1H"]["swing_high_prices"] = [140.0, 145.0]
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 125}, data, "BULLISH")
     assert result["status"] == "WAIT_PULLBACK"
     assert result["execution_type"] is None
@@ -247,8 +247,8 @@ def test_invalidated_structure_cannot_be_ready():
     data["4H"]["swing_low_prices"] = [100.0]
     data["1D"]["swing_low_prices"] = [90.0]
     data["1H"]["swing_low_prices"] = [98.0]
-    data["4H"]["last_event"] = {"type": "MSS", "direction": "bullish", "price": 101.0, "index": 47}
-    data["4H"]["df"].loc[47, ["open", "close"]] = [101.0, 101.0]
+    data["4H"]["last_event"] = {"type": "MSS", "direction": "bullish", "price": 110.0, "index": 47}
+    data["4H"]["df"].loc[47, ["open", "close"]] = [110.0, 110.0]
     result = evaluate(
         {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
         data,
@@ -261,12 +261,10 @@ def test_invalidated_structure_cannot_be_ready():
 def test_delayed_range_reclaim_is_detected_after_sweep():
     data = tf_results(price=106.0)
     f4 = data["4H"]["df"].copy()
-    f4.loc[40, ["low", "open", "close", "high"]] = [95.0, 98.0, 96.0, 100.0]
-    f4.loc[41, ["low", "open", "close", "high"]] = [94.0, 97.0, 96.0, 99.0]
-    f4.loc[42, ["low", "open", "close", "high"]] = [99.0, 99.0, 100.5, 102.0]
-    f4.loc[43, ["low", "open", "close", "high"]] = [100.0, 100.5, 103.0, 104.0]
-    for i in range(44, 48):
-        f4.loc[i, ["low", "open", "close", "high"]] = [102.0, 103.0, 106.0, 107.0]
+    f4.loc[44, ["low", "open", "close", "high"]] = [95.0, 98.0, 96.0, 100.0]
+    f4.loc[45, ["low", "open", "close", "high"]] = [99.0, 99.0, 99.0, 101.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [99.0, 99.0, 100.5, 102.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [100.0, 100.5, 103.0, 104.0]
     data["4H"]["df"] = f4
     result = evaluate(
         {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
@@ -362,8 +360,8 @@ def test_four_candle_sweep_window_keeps_unreclaimed_sweep_pending_before_expiry(
 def test_four_candle_sweep_window_expires_without_reclaim():
     data = tf_results(price=97.0)
     f4 = data["4H"]["df"].copy()
-    f4.loc[43, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
-    for i in (44, 45, 46, 47):
+    f4.loc[42, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    for i in (43, 44, 45, 46, 47):
         f4.loc[i, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
     data["4H"]["df"] = f4
     result = evaluate(
