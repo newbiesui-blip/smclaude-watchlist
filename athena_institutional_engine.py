@@ -350,8 +350,9 @@ def _defined_dealing_range(tf_results: Dict[str, Any], direction: str, price: fl
 def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
     """Detect wick sweeps across a rolling four-candle execution window.
 
-    A sweep remains actionable through the sweep candle plus three subsequent
-    candles. A close back inside the cached dealing range validates reclaim.
+    Consecutive candles that remain outside the dealing-range boundary are
+    treated as one sweep episode. This prevents a prolonged liquidity raid
+    from resetting the reclaim clock on every candle.
     """
     price = _price(tf_results, "15M") or _price(tf_results, "1H")
     if price is None:
@@ -362,15 +363,15 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
     lo, hi = dealing
     boundary = lo if direction == "BULLISH" else hi
     candidates = []
-    # Scan enough history to both observe the four-candle validation window
-    # and recognize a sweep that has just crossed its four-candle expiry.
     scan_candles = SWEEP_WINDOW_CANDLES + SWEEP_MAX_RECLAIM_DELAY
+
     for tf in ("15M", "1H", "4H"):
         df = _df(tf_results, tf)
         if df is None or len(df) < SWEEP_WINDOW_CANDLES:
             continue
-        start = max(0, len(df) - scan_candles)
-        for i in range(len(df) - 1, start - 1, -1):
+        start_idx = max(0, len(df) - scan_candles)
+        violations: List[int] = []
+        for i in range(start_idx, len(df)):
             try:
                 violated = (
                     float(df["low"].iloc[i]) < boundary
@@ -378,12 +379,29 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
                     else float(df["high"].iloc[i]) > boundary
                 )
             except Exception:
-                continue
-            if not violated:
-                continue
-            age = len(df) - 1 - i
+                violated = False
+            if violated:
+                violations.append(i)
+
+        if not violations:
+            continue
+
+        # Group contiguous violation candles into one sweep episode.
+        groups: List[List[int]] = []
+        group = [violations[0]]
+        for idx in violations[1:]:
+            if idx == group[-1] + 1:
+                group.append(idx)
+            else:
+                groups.append(group)
+                group = [idx]
+        groups.append(group)
+
+        for group in reversed(groups):
+            sweep_idx = group[0]
+            age = len(df) - 1 - sweep_idx
             reclaim_idx = None
-            for j in range(i, min(len(df), i + SWEEP_MAX_RECLAIM_DELAY + 1)):
+            for j in range(sweep_idx, min(len(df), sweep_idx + SWEEP_MAX_RECLAIM_DELAY + 1)):
                 try:
                     reclaimed = (
                         float(df["close"].iloc[j]) > boundary
@@ -395,20 +413,34 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
                 if reclaimed:
                     reclaim_idx = j
                     break
+
+            if direction == "BULLISH":
+                extreme = min(float(df["low"].iloc[j]) for j in group)
+            else:
+                extreme = max(float(df["high"].iloc[j]) for j in group)
+
             candidates.append({
                 "timeframe": tf,
-                "index": i,
+                "index": sweep_idx,
+                "sweep_end_index": group[-1],
                 "age_candles": age,
                 "boundary": boundary,
-                "extreme": float(df["low"].iloc[i] if direction == "BULLISH" else df["high"].iloc[i]),
+                "extreme": extreme,
                 "reclaimed": reclaim_idx is not None,
                 "reclaim_index": reclaim_idx,
                 "expired": reclaim_idx is None and age > SWEEP_MAX_RECLAIM_DELAY,
             })
+            break
+
     if not candidates:
         return {}
-    # The most recent aligned sweep controls the state.
+
+    # Most recent timeframe episode controls the state. Prefer the episode
+    # with the smallest age, then the higher execution resolution.
+    tf_rank = {"15M": 3, "1H": 2, "4H": 1}
+    candidates.sort(key=lambda x: (x["age_candles"], -tf_rank.get(x["timeframe"], 0)))
     return candidates[0]
+
 
 
 def _range_sweep_state(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
@@ -692,13 +724,18 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     if setup_type in {"ACCUMULATION_RANGE_LOW_RECLAIM", "DISTRIBUTION_RANGE_HIGH_REJECTION"}:
         sweep_extreme = _sweep_extreme(tf_results, direction)
         if sweep_extreme is not None:
-            stop = (sweep_extreme - _buffer(tf_results, sweep_extreme)
-                    if direction == "BULLISH"
-                    else sweep_extreme + _buffer(tf_results, sweep_extreme))
-            stop_tf = "4H"
+            sweep_tf = sweep_state.get("timeframe", "4H")
+            sweep_atr = _atr(_df(tf_results, sweep_tf)) or _atr(_df(tf_results, "4H")) or _atr(_df(tf_results, "1H"))
+            sweep_buffer = (MSS_STOP_ATR_BUFFER * sweep_atr) if sweep_atr else _buffer(tf_results, sweep_extreme)
+            stop = (
+                sweep_extreme - sweep_buffer
+                if direction == "BULLISH"
+                else sweep_extreme + sweep_buffer
+            )
+            stop_tf = sweep_tf
             stop_reason = (
-                f"beyond the 4H swept {'range low' if direction == 'BULLISH' else 'range high'} "
-                f"at {sweep_extreme:.8g}"
+                f"beyond the {sweep_tf} swept {'range low' if direction == 'BULLISH' else 'range high'} "
+                f"at {sweep_extreme:.8g} with 0.5 ATR buffer"
             )
     if stop is None:
         return {
