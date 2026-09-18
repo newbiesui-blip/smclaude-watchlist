@@ -1,0 +1,91 @@
+import pandas as pd
+
+from athena_institutional_engine import evaluate
+
+
+def frame(price=105.0, low=100.0, high=120.0, n=48):
+    rows = []
+    for i in range(n):
+        rows.append({
+            "open": price,
+            "high": high,
+            "low": low,
+            "close": price,
+            "volume": 1000.0,
+        })
+    return pd.DataFrame(rows)
+
+
+def tf_results(price=105.0, bullish=True, accumulation=False):
+    bias = "BULLISH" if bullish else "BEARISH"
+    f4 = frame(price=price, low=100, high=120)
+    if accumulation:
+        # Old range establishes 100/120; recent candles raid 100 and reclaim it.
+        for i in range(40, 48):
+            f4.loc[i, "low"] = 95.0
+            f4.loc[i, "open"] = 98.0
+            f4.loc[i, "close"] = 104.0
+            f4.loc[i, "high"] = 106.0
+    f1 = frame(price=price, low=100, high=125)
+    f15 = frame(price=price, low=102, high=112)
+    return {
+        "1D": {"bias": bias, "swing_high_prices": [130], "swing_low_prices": [90], "df": frame(price=price, low=90, high=130)},
+        "4H": {"bias": bias if not accumulation else "RANGING", "swing_high_prices": [120, 130], "swing_low_prices": [100, 90], "df": f4},
+        "1H": {"bias": bias, "swing_high_prices": [115, 125], "swing_low_prices": [100, 95], "df": f1},
+        "15M": {
+            "bias": bias,
+            "price": price,
+            "swing_high_prices": [112],
+            "swing_low_prices": [102],
+            "recent_sweep": {"direction": "bullish", "price": 100, "index": 47} if bullish else None,
+            "last_event": {"type": "BoS", "direction": "bullish" if bullish else "bearish", "price": price, "index": 47},
+            "df": f15,
+        },
+    }
+
+
+def test_structural_stop_uses_4h_before_15m():
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, tf_results(), "BULLISH")
+    assert result["invalidation_timeframe"] == "4H"
+    assert result["invalidation"] < 100
+
+
+def test_structural_rr_below_two_is_no_trade():
+    data = tf_results(price=119.0)
+    data["4H"]["swing_high_prices"] = [120.0]
+    data["1D"]["swing_high_prices"] = [121.0]
+    data["1H"]["swing_high_prices"] = [120.5]
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
+
+
+def test_accumulation_range_low_reclaim_is_supported():
+    result = evaluate({"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, tf_results(accumulation=True), "BULLISH")
+    assert result["setup_type"] == "ACCUMULATION_RANGE_LOW_RECLAIM"
+    assert result["status"] in {"READY_MARKET", "READY_LIMIT", "WAIT_PULLBACK", "NO_TRADE"}
+
+
+def test_scalp_penalty_is_exactly_thirty():
+    base = {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}
+    normal = evaluate(base, tf_results(), "BULLISH")
+    scalp = evaluate({**base, "trade_type": "SCALP"}, tf_results(), "BULLISH")
+    assert scalp["scalp_like"] is True
+    assert scalp["confidence"] == max(0, normal["confidence"] - 30)
+
+
+def test_extended_entry_waits_for_pullback():
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 150}, tf_results(), "BULLISH")
+    assert result["status"] == "WAIT_PULLBACK"
+
+
+def test_countertrend_15m_does_not_override_htf():
+    data = tf_results()
+    data["1D"]["bias"] = "BEARISH"
+    data["4H"]["bias"] = "BEARISH"
+    data["1H"]["bias"] = "BEARISH"
+    data["15M"]["bias"] = "BULLISH"
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105, "index": 47}
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "HTF_CONFLICT_WITHOUT_REVERSAL"
