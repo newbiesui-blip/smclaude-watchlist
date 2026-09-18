@@ -75,7 +75,11 @@ def test_scalp_penalty_is_exactly_thirty():
 
 
 def test_extended_entry_waits_for_pullback():
-    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 150}, tf_results(), "BULLISH")
+    data = tf_results()
+    data["1D"]["swing_high_prices"] = [145.0]
+    data["4H"]["swing_high_prices"] = [140.0, 145.0]
+    data["1H"]["swing_high_prices"] = [140.0, 145.0]
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 150}, data, "BULLISH")
     assert result["status"] == "WAIT_PULLBACK"
 
 
@@ -243,6 +247,8 @@ def test_invalidated_structure_cannot_be_ready():
     data["4H"]["swing_low_prices"] = [100.0]
     data["1D"]["swing_low_prices"] = [90.0]
     data["1H"]["swing_low_prices"] = [98.0]
+    data["4H"]["last_event"] = {"type": "MSS", "direction": "bullish", "price": 101.0, "index": 47}
+    data["4H"]["df"].loc[47, ["open", "close"]] = [101.0, 101.0]
     result = evaluate(
         {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
         data,
@@ -282,3 +288,103 @@ def test_sweep_without_reclaim_is_not_promoted_to_range_reversal():
         "BULLISH",
     )
     assert result["setup_type"] != "ACCUMULATION_RANGE_LOW_RECLAIM"
+
+
+def test_two_tier_target_gate_allows_t1_below_two_when_macro_t2_is_25r_plus():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [145.0]
+    data["4H"]["swing_high_prices"] = [115.0, 140.0]
+    data["1H"]["swing_high_prices"] = [115.0, 120.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["nearest_target_rr"] < 2.0
+    assert result["primary_macro_target_rr"] >= 2.5
+    assert result["target_gate"]["gate_b_two_tier_active"] is True
+    assert result["status"] in {"READY_MARKET", "READY_LIMIT", "WAIT_PULLBACK"}
+    assert result["position_management"]["scale_out_pct"] == 50
+    assert result["position_management"]["scale_out_target"] == result["validated_targets"][0]["price"]
+    assert result["position_management"]["runner_pct"] == 50
+    assert result["position_management"]["runner_target"] == result["validated_targets"][1]["price"]
+    assert result["position_management"]["post_t1_stop"] == "BREAKEVEN"
+
+
+def test_two_tier_target_gate_aborts_when_both_t1_and_t2_fail_two_r():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [112.0]
+    data["4H"]["swing_high_prices"] = [110.0]
+    data["1H"]["swing_high_prices"] = [110.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["nearest_target_rr"] < 2.0
+    assert result["primary_macro_target_rr"] < 2.0
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
+
+
+def test_initial_mss_displacement_body_controls_structural_stop():
+    data = tf_results(price=110.0)
+    data["4H"]["last_event"] = {"type": "MSS", "direction": "bullish", "price": 105.0, "index": 47}
+    data["4H"]["df"].loc[47, ["open", "close"]] = [105.0, 110.0]
+    data["4H"]["swing_low_prices"] = [100.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    # Flat fixture ATR is 20, so 0.5 ATR below the displacement body floor is 95.
+    assert result["invalidation_timeframe"] == "4H"
+    assert abs(result["invalidation"] - 95.0) < 1e-9
+    assert "initial 4H MSS displacement body floor" in result["invalidation_reason"]
+
+
+def test_four_candle_sweep_window_keeps_unreclaimed_sweep_pending_before_expiry():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[45, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
+    data["4H"]["df"] = f4
+    result = evaluate(
+        {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["sweep_state"]["state"] == "PENDING_RECLAIM"
+    assert result["status"] != "INVALID"
+
+
+def test_four_candle_sweep_window_expires_without_reclaim():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[43, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    for i in (44, 45, 46, 47):
+        f4.loc[i, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
+    data["4H"]["df"] = f4
+    result = evaluate(
+        {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["status"] == "INVALID"
+    assert result["final_decision"] == "INVALID"
+    assert result["no_trade_code"] == "SWEEP_RECLAIM_EXPIRED"
+
+
+def test_dynamic_range_uses_verified_spot_cvd_and_macro_foundation():
+    data = tf_results(price=105.0)
+    data["4H"]["spot_cvd_expansion_verified"] = True
+    data["4H"]["macro_higher_low"] = 90.0
+    data["4H"]["swing_low_prices"] = [90.0]
+    data["4H"]["swing_high_prices"] = [130.0]
+    data["1D"]["swing_high_prices"] = [145.0]
+    data["1H"]["swing_high_prices"] = [130.0, 145.0]
+    from athena_institutional_engine import _range
+    lo, hi = _range(data, "4H", direction="BULLISH", price=105.0)
+    assert lo == 90.0
+    assert hi >= 120.0
