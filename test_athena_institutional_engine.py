@@ -88,7 +88,8 @@ def test_countertrend_15m_does_not_override_htf():
     data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105, "index": 47}
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
     assert result["status"] == "NO_TRADE"
-    assert result["no_trade_code"] == "HTF_CONFLICT_WITHOUT_REVERSAL"
+    # The hard structural-R:R gate is evaluated before the HTF-conflict gate.
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
 
 
 def test_distribution_range_high_rejection_is_detected():
@@ -235,3 +236,49 @@ def test_far_structural_entry_cannot_be_called_ready():
     )
     assert result["status"] in {"WAIT_PULLBACK", "NO_TRADE"}
     assert result["status"] != "READY_MARKET"
+
+
+def test_invalidated_structure_cannot_be_ready():
+    data = tf_results(price=99.0)
+    data["4H"]["swing_low_prices"] = [100.0]
+    data["1D"]["swing_low_prices"] = [90.0]
+    data["1H"]["swing_low_prices"] = [98.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["status"] == "INVALID"
+    assert result["final_decision"] == "INVALID"
+
+
+def test_delayed_range_reclaim_is_detected_after_sweep():
+    data = tf_results(price=106.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[40, ["low", "open", "close", "high"]] = [95.0, 98.0, 96.0, 100.0]
+    f4.loc[41, ["low", "open", "close", "high"]] = [94.0, 97.0, 96.0, 99.0]
+    f4.loc[42, ["low", "open", "close", "high"]] = [99.0, 99.0, 100.5, 102.0]
+    f4.loc[43, ["low", "open", "close", "high"]] = [100.0, 100.5, 103.0, 104.0]
+    for i in range(44, 48):
+        f4.loc[i, ["low", "open", "close", "high"]] = [102.0, 103.0, 106.0, 107.0]
+    data["4H"]["df"] = f4
+    result = evaluate(
+        {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["setup_type"] == "ACCUMULATION_RANGE_LOW_RECLAIM"
+
+
+def test_sweep_without_reclaim_is_not_promoted_to_range_reversal():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    for i in range(40, 48):
+        f4.loc[i, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    data["4H"]["df"] = f4
+    result = evaluate(
+        {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["setup_type"] != "ACCUMULATION_RANGE_LOW_RECLAIM"
