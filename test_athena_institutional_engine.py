@@ -46,7 +46,7 @@ def tf_results(price=105.0, bullish=True, accumulation=False):
 
 def test_structural_stop_uses_4h_before_15m():
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, tf_results(), "BULLISH")
-    assert result["invalidation_timeframe"] in {"4H", "1H"}
+    assert result["invalidation_timeframe"] == "4H"
     assert result["invalidation"] < 100
 
 
@@ -107,6 +107,8 @@ def test_distribution_range_high_rejection_is_detected():
     data["4H"]["df"] = f4
     data["4H"]["swing_high_prices"] = [120.0, 130.0]
     data["4H"]["swing_low_prices"] = [100.0, 90.0]
+    data["1H"]["df"] = data["1H"]["df"].copy()
+    data["1H"]["df"]["high"] = 119.0
     result = evaluate({"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BEARISH")
     assert result["setup_type"] == "DISTRIBUTION_RANGE_HIGH_REJECTION"
     assert result["invalidation_timeframe"] == "4H"
@@ -199,6 +201,8 @@ def test_bearish_engine_is_directionally_symmetric():
     data["1D"]["swing_low_prices"] = [80.0]
     data["4H"]["swing_low_prices"] = [85.0, 80.0]
     data["1H"]["swing_low_prices"] = [85.0, 80.0]
+    data["1H"]["df"] = data["1H"]["df"].copy()
+    data["1H"]["df"]["high"] = 119.0
     data["15M"]["last_event"] = {"type": "BoS", "direction": "bearish", "price": 105.0, "index": 47}
     result = evaluate(
         {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
