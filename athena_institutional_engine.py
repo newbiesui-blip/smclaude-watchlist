@@ -145,6 +145,30 @@ def _edge_sweep_reclaim(tf_results: Dict[str, Any], direction: str) -> Tuple[boo
     return False, ""
 
 
+def _sweep_extreme(tf_results: Dict[str, Any], direction: str) -> Optional[float]:
+    """Return the actual recent sweep extreme for range-edge reversals."""
+    df = _df(tf_results, "4H")
+    if df is None or len(df) < 40:
+        return None
+    try:
+        recent = df.tail(SWEEP_LOOKBACK)
+        return float(recent["low"].min()) if direction == "BULLISH" else float(recent["high"].max())
+    except Exception:
+        return None
+
+
+def _pre_sweep_range(tf_results: Dict[str, Any]) -> Optional[Tuple[float, float]]:
+    """Return the range boundary that existed before the sweep."""
+    df = _df(tf_results, "4H")
+    if df is None or len(df) < 40:
+        return None
+    try:
+        base = df.iloc[:-SWEEP_LOOKBACK].tail(32)
+        return float(base["low"].min()), float(base["high"].max())
+    except Exception:
+        return None
+
+
 def _location(tf_results: Dict[str, Any], direction: str, price: float) -> Dict[str, Any]:
     dr = _range(tf_results, "4H")
     if not dr:
@@ -323,6 +347,17 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     setup_type, setup_notes = _setup_type(tf_results, direction, existing_type)
 
     stop, stop_tf, stop_reason = _structural_stop(tf_results, direction, price)
+    if setup_type in {"ACCUMULATION_RANGE_LOW_RECLAIM", "DISTRIBUTION_RANGE_HIGH_REJECTION"}:
+        sweep_extreme = _sweep_extreme(tf_results, direction)
+        if sweep_extreme is not None:
+            stop = (sweep_extreme - _buffer(tf_results, sweep_extreme)
+                    if direction == "BULLISH"
+                    else sweep_extreme + _buffer(tf_results, sweep_extreme))
+            stop_tf = "4H"
+            stop_reason = (
+                f"beyond the 4H swept {'range low' if direction == 'BULLISH' else 'range high'} "
+                f"at {sweep_extreme:.8g}"
+            )
     if stop is None:
         return {
             "status": "NO_TRADE", "execution_type": None,
@@ -374,6 +409,11 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     )))
 
     entry_ref = _entry_reference(tf_results, direction, price, setup_type)
+    pre_range = _pre_sweep_range(tf_results) if setup_type in {
+        "ACCUMULATION_RANGE_LOW_RECLAIM", "DISTRIBUTION_RANGE_HIGH_REJECTION"
+    } else None
+    if pre_range:
+        entry_ref = pre_range[0] if direction == "BULLISH" else pre_range[1]
     distance_atr = _distance_atr(tf_results, entry_ref, price)
     entry_room = min(100.0, max(0.0, (structural_rr / 2.0) * 100.0))
     extension = _f(plan.get("extension_ratio_pct"))
@@ -427,6 +467,11 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         "edge_location": edge_location,
         "structural_stop_source": stop_tf,
         "structural_stop_reason": stop_reason,
+        "zone_low": entry_ref,
+        "zone_high": entry_ref,
+        "zone_label": "4H range-edge structural level" if setup_type in {
+            "ACCUMULATION_RANGE_LOW_RECLAIM", "DISTRIBUTION_RANGE_HIGH_REJECTION"
+        } else "structural execution level",
     }
 
     # Hard R:R gate: realistic structure must supply >= 1:2.
