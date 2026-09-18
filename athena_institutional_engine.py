@@ -296,17 +296,25 @@ def _dynamic_structural_range(tf_results: Dict[str, Any], direction: str, price:
     return None
 
 
-def _range(tf_results: Dict[str, Any], tf: str = "4H") -> Optional[Tuple[float, float]]:
+def _range(
+    tf_results: Dict[str, Any], tf: str = "4H",
+    direction: Optional[str] = None, price: Optional[float] = None
+) -> Optional[Tuple[float, float]]:
     df = _df(tf_results, tf)
     if df is None or len(df) < 24:
         return None
     try:
-        dynamic = _dynamic_structural_range(tf_results, "BULLISH", _price(tf_results, "15M") or float(df["close"].iloc[-1]))
-        if dynamic and tf == "4H":
-            return dynamic
+        if direction is not None and tf == "4H":
+            current = price or _price(tf_results, "15M") or _price(tf_results, "1H") or float(df["close"].iloc[-1])
+            dynamic = _dynamic_structural_range(tf_results, direction, current)
+            if dynamic:
+                return dynamic
         # Fixed dealing range excludes the latest execution cushion so a fresh
         # breakout/sweep cannot redefine the boundary that it is being tested against.
-        w = df.iloc[:-RANGE_BREAKOUT_EXCLUSION].tail(min(48, len(df) - RANGE_BREAKOUT_EXCLUSION))
+        usable = len(df) - RANGE_BREAKOUT_EXCLUSION
+        if usable < 8:
+            return None
+        w = df.iloc[:usable].tail(min(48, usable))
         lo, hi = float(w["low"].min()), float(w["high"].max())
         if hi <= lo:
             return None
@@ -426,19 +434,18 @@ def _sweep_extreme(tf_results: Dict[str, Any], direction: str) -> Optional[float
     return _f(info.get("extreme")) if info.get("state") == "RECLAIMED" else None
 
 
-def _pre_sweep_range(tf_results: Dict[str, Any]) -> Optional[Tuple[float, float]]:
-    info = _sweep_matrix(tf_results, "BULLISH")
+def _pre_sweep_range(tf_results: Dict[str, Any], direction: str) -> Optional[Tuple[float, float]]:
+    info = _sweep_matrix(tf_results, direction)
     if info and info.get("boundary") is not None:
-        # Boundary is the cached low/high edge used for the sweep validation.
-        return (
-            float(info["boundary"]),
-            float(info["boundary"])
-        )
+        boundary = float(info["boundary"])
+        if direction == "BULLISH":
+            return boundary, boundary
+        return boundary, boundary
     return None
 
 
 def _location(tf_results: Dict[str, Any], direction: str, price: float) -> Dict[str, Any]:
-    dr = _range(tf_results, "4H")
+    dr = _range(tf_results, "4H", direction=direction, price=price)
     if not dr:
         return {"state": "UNKNOWN", "score": 50, "position_pct": None, "reason": "No reliable 4H dealing range."}
     lo, hi = dr
@@ -757,7 +764,7 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     )))
 
     entry_ref = _entry_reference(tf_results, direction, price, setup_type)
-    pre_range = _pre_sweep_range(tf_results) if setup_type in {
+    pre_range = _pre_sweep_range(tf_results, direction) if setup_type in {
         "ACCUMULATION_RANGE_LOW_RECLAIM", "DISTRIBUTION_RANGE_HIGH_REJECTION"
     } else None
     if pre_range:
@@ -831,6 +838,7 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         "htf_alignment_score": alignment_score,
         "liquidity_score": liq_score,
         "liquidity_reasons": liq_reasons,
+        "sweep_state": sweep_state,
         "distance_to_entry_atr": round(distance_atr, 3) if distance_atr is not None else None,
         "preferred_entry": entry_ref,
         "entry_zone": (location.get("low"), location.get("high")) if location.get("low") is not None else None,
