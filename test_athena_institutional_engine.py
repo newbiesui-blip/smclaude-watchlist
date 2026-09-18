@@ -89,3 +89,52 @@ def test_countertrend_15m_does_not_override_htf():
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
     assert result["status"] == "NO_TRADE"
     assert result["no_trade_code"] == "HTF_CONFLICT_WITHOUT_REVERSAL"
+
+
+def test_distribution_range_high_rejection_is_detected():
+    data = tf_results(price=115.0, bullish=False)
+    f4 = data["4H"]["df"].copy()
+    for i in range(40, 48):
+        f4.loc[i, "high"] = 125.0
+        f4.loc[i, "open"] = 122.0
+        f4.loc[i, "close"] = 114.0
+        f4.loc[i, "low"] = 112.0
+    data["4H"]["df"] = f4
+    data["4H"]["swing_high_prices"] = [120.0, 130.0]
+    data["4H"]["swing_low_prices"] = [100.0, 90.0]
+    result = evaluate({"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BEARISH")
+    assert result["setup_type"] == "DISTRIBUTION_RANGE_HIGH_REJECTION"
+    assert result["invalidation_timeframe"] == "4H"
+
+
+def test_no_structural_invalidation_aborts():
+    data = tf_results(price=105.0)
+    data["4H"]["swing_low_prices"] = []
+    data["1D"]["swing_low_prices"] = []
+    data["1H"]["swing_low_prices"] = []
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "NO_STRUCTURAL_INVALIDATION"
+
+
+def test_good_structure_can_produce_ready_market_when_rr_and_location_are_valid():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [130.0]
+    data["4H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, data, "BULLISH")
+    assert result["structural_rr"] >= 2.0
+    assert result["entry_quality"] >= 75
+    assert result["status"] == "READY_MARKET"
+    assert result["execution_type"] == "MARKET"
+
+
+def test_extended_price_never_becomes_ready_market():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [130.0]
+    data["4H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 125}, data, "BULLISH")
+    assert result["status"] == "WAIT_PULLBACK"
+    assert result["execution_type"] is None
