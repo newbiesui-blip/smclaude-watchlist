@@ -246,7 +246,7 @@ def _target_candidates(tf_results: Dict[str, Any], direction: str, price: float)
         for tf in ("1D", "4H", "1H"):
             row = tf_results.get(tf)
             for z in (row.get("bearish_zones") or []) if isinstance(row, dict) else []:
-                mid = (_f(z.get("low")) or 0 + _f(z.get("high")) or 0) / 2
+                mid = ((_f(z.get("low")) or 0.0) + (_f(z.get("high")) or 0.0)) / 2
                 level = _f(z.get("low"))
                 if level is not None and mid > price:
                     out.append((level, "supply zone", tf))
