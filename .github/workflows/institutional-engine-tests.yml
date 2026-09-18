@@ -3,6 +3,8 @@ name: Institutional Engine Tests
 on:
   push:
     branches: ["institutional-entry-engine"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
