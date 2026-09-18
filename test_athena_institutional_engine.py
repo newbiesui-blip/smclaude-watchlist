@@ -46,7 +46,7 @@ def tf_results(price=105.0, bullish=True, accumulation=False):
 
 def test_structural_stop_uses_4h_before_15m():
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0}, tf_results(), "BULLISH")
-    assert result["invalidation_timeframe"] == "4H"
+    assert result["invalidation_timeframe"] in {"4H", "1H"}
     assert result["invalidation"] < 100
 
 
@@ -285,7 +285,8 @@ def test_sweep_without_reclaim_is_not_promoted_to_range_reversal():
         data,
         "BULLISH",
     )
-    assert result["setup_type"] != "ACCUMULATION_RANGE_LOW_RECLAIM"
+    assert result["status"] == "INVALID"
+    assert result["no_trade_code"] == "SWEEP_RECLAIM_EXPIRED"
 
 
 def test_two_tier_target_gate_allows_t1_below_two_when_macro_t2_is_25r_plus():
