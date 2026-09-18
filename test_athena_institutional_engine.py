@@ -138,3 +138,100 @@ def test_extended_price_never_becomes_ready_market():
     result = evaluate({"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 125}, data, "BULLISH")
     assert result["status"] == "WAIT_PULLBACK"
     assert result["execution_type"] is None
+
+
+def test_current_price_rr_gate_cannot_be_hidden_by_farther_target():
+    data = tf_results(price=119.0)
+    # Nearest meaningful structural target is only 1R from current price,
+    # while a farther target is >2R. The hard gate must use realistic current
+    # execution geometry and reject the trade rather than manufacture R:R.
+    data["4H"]["swing_high_prices"] = [120.0, 130.0]
+    data["1D"]["swing_high_prices"] = [121.0, 130.0]
+    data["1H"]["swing_high_prices"] = [120.5, 130.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
+
+
+def test_missing_atr_cannot_be_treated_as_at_price():
+    data = tf_results(price=105.0)
+    data["15M"]["df"] = data["15M"]["df"].iloc[:1].copy()
+    data["1H"]["df"] = data["1H"]["df"].iloc[:1].copy()
+    data["1D"]["swing_high_prices"] = [130.0]
+    data["4H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 100.0, "index": 0}
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    # Without a volatility measure we cannot prove that the planned execution
+    # level is actually close enough for a market entry.
+    assert result["status"] != "READY_MARKET"
+
+
+def test_no_trade_when_thesis_has_no_structural_target():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = []
+    data["4H"]["swing_high_prices"] = []
+    data["1H"]["swing_high_prices"] = []
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
+
+
+def test_bearish_engine_is_directionally_symmetric():
+    data = tf_results(price=105.0, bullish=False)
+    data["1D"]["swing_low_prices"] = [80.0]
+    data["4H"]["swing_low_prices"] = [85.0, 80.0]
+    data["1H"]["swing_low_prices"] = [85.0, 80.0]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bearish", "price": 105.0, "index": 47}
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BEARISH",
+    )
+    assert result["invalidation_timeframe"] == "4H"
+    assert result["invalidation"] > 105.0
+    assert result["structural_target"] is not None
+
+
+def test_institutional_engine_does_not_reintroduce_ob_as_mandatory():
+    data = tf_results(price=105.0)
+    for tf in ("1D", "4H", "1H", "15M"):
+        data[tf]["bullish_zones"] = []
+        data[tf]["bearish_zones"] = []
+    data["1D"]["swing_high_prices"] = [130.0]
+    data["4H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["zone_label"] == "structural execution level"
+    assert result["status"] in {"READY_MARKET", "READY_LIMIT", "WAIT_PULLBACK", "NO_TRADE"}
+
+
+def test_far_structural_entry_cannot_be_called_ready():
+    data = tf_results(price=119.0)
+    data["1D"]["swing_high_prices"] = [130.0]
+    data["4H"]["swing_high_prices"] = [125.0, 130.0]
+    data["1H"]["swing_high_prices"] = [125.0, 130.0]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["status"] in {"WAIT_PULLBACK", "NO_TRADE"}
+    assert result["status"] != "READY_MARKET"
