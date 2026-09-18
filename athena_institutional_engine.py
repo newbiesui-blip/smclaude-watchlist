@@ -362,11 +362,14 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
     lo, hi = dealing
     boundary = lo if direction == "BULLISH" else hi
     candidates = []
+    # Scan enough history to both observe the four-candle validation window
+    # and recognize a sweep that has just crossed its four-candle expiry.
+    scan_candles = SWEEP_WINDOW_CANDLES + SWEEP_MAX_RECLAIM_DELAY
     for tf in ("15M", "1H", "4H"):
         df = _df(tf_results, tf)
         if df is None or len(df) < SWEEP_WINDOW_CANDLES:
             continue
-        start = max(0, len(df) - SWEEP_WINDOW_CANDLES)
+        start = max(0, len(df) - scan_candles)
         for i in range(len(df) - 1, start - 1, -1):
             try:
                 violated = (
