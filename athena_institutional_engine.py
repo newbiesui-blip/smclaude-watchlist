@@ -178,7 +178,6 @@ def _mss_structural_stop(
             except (TypeError, ValueError, KeyError):
                 continue
     return None, "", ""
-
 def _structural_stop(tf_results: Dict[str, Any], direction: str, price: float) -> Tuple[Optional[float], str, str]:
     """Return the thesis invalidation using the MSS milestone first.
 
@@ -387,8 +386,7 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
 
         # A sweep must begin from inside the dealing range. If price was
         # already living outside the boundary, this is continuation/breakdown,
-        # not a fresh liquidity raid.
-        valid_violations: List[int] = []
+        # not a fresh liquidity raid.        valid_violations: List[int] = []
         for idx in violations:
             if idx <= 0:
                 continue
@@ -427,7 +425,7 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
                     break
                 end = j
 
-            penetrations = [i for i in valid_violations if sweep_idx <= i <= end]
+            penetrations = [i for i in violations if sweep_idx <= i <= end]
             if direction == "BULLISH":
                 extreme = min(float(df["low"].iloc[i]) for i in penetrations)
             else:
@@ -997,6 +995,3 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         result.update({
             "status": "READY_LIMIT", "execution_type": "LIMIT",
             "final_decision": "READY_LIMIT", "entry": entry_ref,
-        })
-
-    return result
