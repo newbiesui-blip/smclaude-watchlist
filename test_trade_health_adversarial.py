@@ -157,7 +157,7 @@ def test_fresh_arb_participation_is_not_penalized_as_liquidation_driven():
 
 def test_structural_failure_overrides_favorable_participation():
     data = _tf(89.0)
-    data["1H"]["df"] = _frame([92.0, 89.0])
+    data["1H"]["df"] = _frame([88.0, 89.0])
     cg = _cg(
         oi=(100.0, 105.0),
         spot=(0.0, 100.0),
