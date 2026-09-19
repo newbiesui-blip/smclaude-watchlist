@@ -21,7 +21,7 @@ def test_snapshot_parses_read_only_sources():
             pass
 
         def json(self):
-            return {"code": "0", "data": [{"close": "100"}]}
+            return {"code": "0", "data": [{"close": "100"}, {"close": "101"}]}
 
     class FakeSession:
         def get(self, *args, **kwargs):
