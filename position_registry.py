@@ -511,6 +511,22 @@ def iter_open_needing_alert(
     return out
 
 
+def iter_open_orphans(registry: Optional[Dict[str, Any]] = None) -> List[Tuple[str, Dict[str, Any]]]:
+    """Return every live OPEN true orphan for registry-owned monitoring.
+
+    Unlike iter_open_needing_alert(), this iterator is not notification-state
+    gated: an already-alerted orphan still needs health/intelligence monitoring
+    on every scan cycle.
+    """
+    if registry is None:
+        registry = load_registry()
+    return [
+        (identity, entry)
+        for identity, entry in registry.get("positions", {}).items()
+        if entry.get("lifecycle") == bingx.OPEN and entry.get("orphan", True)
+    ]
+
+
 def iter_closed_needing_alert(registry: Optional[Dict[str, Any]] = None) -> List[Tuple[str, Dict[str, Any]]]:
     """Return authoritative CLOSED positions whose closure alert is unsent."""
     if registry is None:
