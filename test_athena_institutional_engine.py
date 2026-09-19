@@ -347,6 +347,7 @@ def test_initial_mss_displacement_body_controls_structural_stop():
 
 
 def test_four_candle_sweep_window_keeps_unreclaimed_sweep_pending_before_expiry():
+    print("DEBUG_PENDING", _defined_dealing_range(tf_results(price=97.0), "BULLISH", 97.0))
     data = tf_results(price=97.0)
     f4 = data["4H"]["df"].copy()
     f4.loc[45, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
