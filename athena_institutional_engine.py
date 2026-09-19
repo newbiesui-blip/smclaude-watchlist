@@ -386,7 +386,8 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
 
         # A sweep must begin from inside the dealing range. If price was
         # already living outside the boundary, this is continuation/breakdown,
-        # not a fresh liquidity raid.        valid_violations: List[int] = []
+        # not a fresh liquidity raid.
+        valid_violations: List[int] = []
         for idx in violations:
             if idx <= 0:
                 continue
