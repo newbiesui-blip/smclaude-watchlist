@@ -905,10 +905,10 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     extension_score = max(0.0, min(100.0, 100.0 - extension * 0.75))
     separation = _entry_separation(tf_results, direction, price)
     entry_quality = round(max(0, min(100,
-        extension_score * 0.40
-        + entry_room * 0.25
-        + location.get("score", 50) * 0.15
-        + separation.get("score", 50) * 0.20
+        extension_score * 0.30
+        + entry_room * 0.15
+        + location.get("score", 50) * 0.05
+        + separation.get("score", 50) * 0.50
     )))
 
     scalp = _scalp_like(plan, tf_results, stop, price, targets)
@@ -1006,18 +1006,6 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
             "status": "NO_TRADE", "execution_type": None, "final_decision": "NO_TRADE",
             "no_trade_code": "INSUFFICIENT_SETUP_QUALITY",
             "no_trade_reason": f"Setup quality {setup_quality}/100 does not establish a sufficient structural edge.",
-        })
-        return result
-
-    # Immediate opposing structure can invalidate an otherwise good setup
-    # as an entry. The setup remains valid; execution must wait for separation.
-    if separation.get("score", 50) < 60:
-        result.update({
-            "status": "WAIT_PULLBACK", "execution_type": None, "final_decision": "WAIT_PULLBACK",
-            "required_confirmation": (
-                "Immediate opposing structure is too close to current price; "
-                "wait for pullback/reclaim or displacement through the obstacle."
-            ),
         })
         return result
 
