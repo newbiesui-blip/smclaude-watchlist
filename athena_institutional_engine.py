@@ -397,9 +397,30 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
             try:
                 pre_close = float(df["close"].iloc[idx - 1])
                 started_inside = pre_close >= boundary if direction == "BULLISH" else pre_close <= boundary
+                if direction == "BULLISH":
+                    prior_extreme = min(float(df["low"].iloc[k]) for k in range(start_idx, idx))
+                    fresh_extreme = float(df["low"].iloc[idx]) < prior_extreme
+                    post_retrace = any(
+                        float(df["low"].iloc[k]) > float(df["low"].iloc[idx])
+                        for k in range(idx + 1, min(len(df), idx + SWEEP_MAX_RECLAIM_DELAY + 1))
+                    )
+                else:
+                    prior_extreme = max(float(df["high"].iloc[k]) for k in range(start_idx, idx))
+                    fresh_extreme = float(df["high"].iloc[idx]) > prior_extreme
+                    post_retrace = any(
+                        float(df["high"].iloc[k]) < float(df["high"].iloc[idx])
+                        for k in range(idx + 1, min(len(df), idx + SWEEP_MAX_RECLAIM_DELAY + 1))
+                    )
             except Exception:
                 started_inside = False
-            if started_inside:
+                fresh_extreme = False
+                post_retrace = False
+
+            # A sweep may begin from an inside close, at the edge of the
+            # lookback, or as a fresh extreme that immediately shows
+            # retracement. Sustained equal extremes are continuation, not a
+            # fresh liquidity event.
+            if started_inside or idx == start_idx or (fresh_extreme and post_retrace):
                 valid_violations.append(idx)
 
         if not valid_violations:
