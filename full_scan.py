@@ -700,7 +700,7 @@ def _sync_registry_orphans(active_key):
     # legitimately own them. Run the existing read-only intelligence engines
     # against a minimal registry-derived context and persist only their health
     # state back into the registry record.
-    for identity, entry in preg.iter_open_needing_alert(registry, orphans_only=True):
+    for identity, entry in preg.iter_open_orphans(registry):
         context = preg.build_minimal_context_for_health(entry)
         side = str(entry.get("side", "")).upper()
         context["direction"] = "BULLISH" if side == "LONG" else "BEARISH" if side == "SHORT" else side
