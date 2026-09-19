@@ -514,3 +514,99 @@ def test_breakdown_after_sweep_never_becomes_accumulation_reclaim():
     )
     assert result["setup_type"] != "ACCUMULATION_RANGE_LOW_RECLAIM"
     assert result["sweep_state"]["state"] in {"PENDING_RECLAIM", "EXPIRED"}
+
+
+def test_immediate_15m_resistance_blocks_ready_market():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [140.0, 150.0]
+    data["4H"]["swing_high_prices"] = [140.0, 150.0]
+    data["1H"]["swing_high_prices"] = [140.0, 150.0]
+    data["15M"]["swing_high_prices"] = [105.25]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
+
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+
+    assert result["entry_separation"]["level"] == 105.25
+    assert result["entry_separation"]["distance_atr"] < 0.50
+    assert result["entry_quality"] < 60
+    assert result["status"] == "WAIT_PULLBACK"
+    assert result["final_decision"] == "WAIT_PULLBACK"
+
+
+def test_immediate_15m_support_blocks_bearish_market_entry():
+    data = tf_results(price=115.0, bullish=False)
+    data["1D"]["swing_low_prices"] = [80.0, 85.0]
+    data["4H"]["swing_low_prices"] = [80.0, 85.0]
+    data["1H"]["swing_low_prices"] = [80.0, 85.0]
+    data["15M"]["swing_low_prices"] = [114.75]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bearish", "price": 115.0, "index": 47}
+
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BEARISH",
+    )
+
+    assert result["entry_separation"]["level"] == 114.75
+    assert result["entry_quality"] < 60
+    assert result["status"] == "WAIT_PULLBACK"
+
+
+def test_good_setup_with_resistance_beyond_one_atr_can_still_be_ready():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [140.0, 150.0]
+    data["4H"]["swing_high_prices"] = [140.0, 150.0]
+    data["1H"]["swing_high_prices"] = [140.0, 150.0]
+    data["15M"]["swing_high_prices"] = [115.5]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
+
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+
+    assert result["entry_separation"]["distance_atr"] > 1.0
+    assert result["entry_quality"] >= 60
+    assert result["status"] == "READY_MARKET"
+
+
+def test_nearby_supply_zone_is_treated_as_entry_resistance():
+    data = tf_results(price=105.0)
+    data["1D"]["swing_high_prices"] = [140.0, 150.0]
+    data["4H"]["swing_high_prices"] = [140.0, 150.0]
+    data["1H"]["swing_high_prices"] = [140.0, 150.0]
+    data["15M"]["swing_high_prices"] = []
+    data["15M"]["bearish_zones"] = [{"low": 105.2, "high": 106.0}]
+    data["15M"]["last_event"] = {"type": "BoS", "direction": "bullish", "price": 105.0, "index": 47}
+
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+
+    assert result["entry_separation"]["level"] == 105.2
+    assert result["entry_quality"] < 60
+    assert result["status"] == "WAIT_PULLBACK"
+
+
+def test_entry_separation_does_not_override_structural_rr_gate():
+    data = tf_results(price=119.0)
+    data["4H"]["swing_high_prices"] = [120.0, 130.0]
+    data["1D"]["swing_high_prices"] = [121.0, 130.0]
+    data["1H"]["swing_high_prices"] = [120.5, 130.0]
+    data["15M"]["swing_high_prices"] = [119.1]
+
+    result = evaluate(
+        {"setup_type": "MOMENTUM_CONTINUATION", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+
+    assert result["status"] == "NO_TRADE"
+    assert result["no_trade_code"] == "STRUCTURAL_RR_BELOW_2"
