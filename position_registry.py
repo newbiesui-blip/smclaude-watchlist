@@ -473,7 +473,9 @@ def classify_smc_links(
         eid = entry.get("exchange_position_id")
         match = by_pos_id.get(str(eid).strip()) if eid else None
         if match is None:
-            candidates = by_sym_side.get(f"{entry.get('symbol')}:{entry.get('side')}", [])
+            entry_symbol = _canonical_symbol(entry.get("symbol"))
+            entry_side = bingx.normalize_side(entry.get("side") or "")
+            candidates = by_sym_side.get(f"{entry_symbol}:{entry_side}", [])
             # Symbol/side is the approved fallback when the explicit exchange
             # ID cannot establish the link. This also covers a registry entry
             # whose exchange ID exists while the legacy watchlist has not yet
