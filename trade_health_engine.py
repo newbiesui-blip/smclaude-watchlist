@@ -310,6 +310,7 @@ def evaluate(entry: Dict[str, Any], tf_results: Dict[str, Any],
     if structural == "INVALIDATED":
         state = "INVALIDATED"
         action = "EXIT"
+        reason = structural_reason
     else:
         deterioration = 0
         critical = 0
