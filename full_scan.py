@@ -22,6 +22,7 @@ import derivatives_monitor as derivatives
 import bingx_position_tracker as bingx
 import position_health as health
 import position_intelligence as position_intel
+import position_registry as preg
 import trade_health_engine as trade_health
 from coinglass_client import CoinGlassClient
 from market_data_aggregator import MarketDataAggregator
@@ -618,6 +619,163 @@ def _freeze_discovered_fill(entry, discovery):
             leg["filled_at"] = leg.get("filled_at") or datetime.now(timezone.utc).isoformat()
 
 
+def _copy_registry_monitor_state(entry, context):
+    """Persist only monitoring/health fields produced for a registry owner."""
+    for key in (
+        "position_health_state", "position_health_previous_state",
+        "position_health_reason", "position_health_updated_at",
+        "position_health_risk_score", "position_health_derivatives_state",
+        "position_health_derivatives_score", "position_health_transition",
+        "position_intelligence_state", "position_intelligence_snapshot",
+        "position_intelligence_alert_snapshot", "trade_health_state",
+        "trade_health_previous_state", "trade_health_action",
+        "trade_health_reason", "trade_health_snapshot",
+        "trade_health_updated_at", "trade_health_trail_candidate",
+    ):
+        if key in context:
+            entry[key] = context[key]
+
+
+def _registry_exchange_position(entry):
+    """Adapt registry exchange facts to the existing read-only health engines."""
+    return {
+        "positionId": entry.get("exchange_position_id"),
+        "positionSide": entry.get("side"),
+        "positionAmt": entry.get("amount"),
+        "avgPrice": entry.get("avg_entry_price"),
+        "markPrice": entry.get("mark_price"),
+        "unrealizedProfit": entry.get("unrealized_pnl"),
+    }
+
+
+def _sync_registry_orphans(active_key):
+    """Monitor true exchange orphans through the registry owner exactly once.
+
+    SMC-linked positions remain exclusively owned by _sync_watchlist(). The
+    registry is authoritative for exchange-discovered positions that have no
+    live SMC link, including their OPEN/CLOSED lifecycle and one-time alerts.
+    """
+    if not preg.registry_enabled():
+        return
+
+    registry = preg.load_registry()
+    reconciliation = preg.reconcile(registry=registry)
+    if not reconciliation.get("ok"):
+        print(
+            "Registry reconciliation failed; orphan monitoring suppressed: "
+            f"{reconciliation.get('error')}"
+        )
+        return
+
+    classification = preg.classify_smc_links(reconciliation["registry"])
+    registry = classification["registry"]
+    preg.save_registry(registry)
+
+    print(
+        "Registry ownership: "
+        f"linked={classification['linked']} "
+        f"orphans={classification['orphans']}"
+    )
+
+    # Only CLOSED records that were previously classified as true orphans are
+    # eligible for registry-owned closure notification. SMC-linked closures
+    # remain exclusively with the legacy watchlist owner.
+    for identity, entry in preg.iter_closed_needing_alert(registry):
+        if not entry.get("orphan", False):
+            continue
+        message = _format_close_alert({
+            **entry,
+            "direction": entry.get("side", "?"),
+            "triggered_at": entry.get("position_opened_at") or entry.get("first_seen_at"),
+        })
+        print("\\n" + "-" * 78)
+        print("REGISTRY POSITION CLOSED ALERT")
+        print(message)
+        print("-" * 78)
+        if scanner.send_telegram_message(message):
+            preg.mark_close_alert_sent(identity)
+            print("  Registry Telegram closure alert sent.")
+
+    # True orphans are not present in the SMC watchlist, so no legacy path can
+    # legitimately own them. Run the existing read-only intelligence engines
+    # against a minimal registry-derived context and persist only their health
+    # state back into the registry record.
+    for identity, entry in preg.iter_open_needing_alert(registry, orphans_only=True):
+        context = preg.build_minimal_context_for_health(entry)
+        side = str(entry.get("side", "")).upper()
+        context["direction"] = "BULLISH" if side == "LONG" else "BEARISH" if side == "SHORT" else side
+        context["position_health_state"] = entry.get("position_health_state")
+        context["position_health_previous_state"] = entry.get("position_health_previous_state")
+        context["position_intelligence_state"] = entry.get("position_intelligence_state")
+        context["position_intelligence_alert_snapshot"] = entry.get("position_intelligence_alert_snapshot")
+        context["trade_health_state"] = entry.get("trade_health_state")
+        context["trade_health_trail_candidate"] = entry.get("trade_health_trail_candidate")
+
+        exchange_position = _registry_exchange_position(entry)
+        sync_result = {"state": bingx.OPEN, "position": exchange_position}
+
+        try:
+            dctx = health.get_derivatives_context(entry.get("symbol"))
+        except Exception:
+            dctx = None
+        snapshot, transitioned = health.apply_health(context, dctx)
+        _copy_registry_monitor_state(entry, context)
+
+        if transitioned:
+            message = _format_health_alert(context, snapshot)
+            print("\\n" + "-" * 78)
+            print("REGISTRY POSITION HEALTH ALERT")
+            print(message)
+            print("-" * 78)
+            if scanner.send_telegram_message(message):
+                print("  Registry Telegram health alert sent.")
+
+        intel_snapshot, _intel_sent = _maybe_send_position_intelligence(
+            context, sync_result, snapshot
+        )
+        _copy_registry_monitor_state(entry, context)
+        entry["position_intelligence_snapshot"] = intel_snapshot
+
+        try:
+            cg_client = getattr(_sync_registry_orphans, "_coinglass_client", None)
+            if cg_client is None:
+                cg_client = CoinGlassClient()
+                _sync_registry_orphans._coinglass_client = cg_client
+            _maybe_update_trade_health(context, sync_result, active_key, cg_client)
+            _copy_registry_monitor_state(entry, context)
+        except Exception as exc:
+            print(
+                f"  ! {entry.get('symbol', '?')}: registry trade-health layer error: "
+                f"{type(exc).__name__}: {exc}"
+            )
+
+        # Registry owns the first OPEN lifecycle alert for a true orphan. It is
+        # independent of health/intelligence transitions and is idempotent.
+        if not entry.get("open_alert_sent"):
+            open_context = {
+                **context,
+                "direction": entry.get("side", "?"),
+            }
+            message = _format_position_open_alert(
+                open_context, intel_snapshot, discovered=True
+            )
+            print("\\n" + "-" * 78)
+            print("REGISTRY POSITION OPEN ALERT")
+            print(message)
+            print("-" * 78)
+            if scanner.send_telegram_message(message):
+                preg.mark_open_alert_sent(identity)
+                entry["open_alert_sent"] = True
+                print("  Registry Telegram open alert sent.")
+
+        _copy_registry_monitor_state(entry, context)
+        registry = preg.load_registry()
+        registry_entry = registry.get("positions", {}).get(identity)
+        if registry_entry is not None:
+            _copy_registry_monitor_state(registry_entry, context)
+        preg.save_registry(registry)
+
+
 def _sync_watchlist(active_key):
     """Synchronize watchlist lifecycle against the authoritative BingX state."""
     try:
@@ -892,6 +1050,7 @@ def main():
     # Exchange synchronization must happen before the final watchlist refresh,
     # so confirmed closures cannot be reinterpreted as active setup changes.
     _sync_watchlist(active_key)
+    _sync_registry_orphans(active_key)
 
     qualifying = scan_all(active_key, symbols)
     buckets = scanner.classify_and_rank([q[5] for q in qualifying])
