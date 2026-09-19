@@ -361,9 +361,12 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
     lo, hi = dealing
     boundary = lo if direction == "BULLISH" else hi
     candidates = []
-    scan_candles = SWEEP_WINDOW_CANDLES + SWEEP_MAX_RECLAIM_DELAY
+    # The dealing range is defined from the 4H structure in this engine. Use
+    # that same structural timeframe for sweep detection so lower-timeframe
+    # highs/lows cannot masquerade as violations of a 4H boundary.
+    scan_candles = SWEEP_WINDOW_CANDLES + SWEEP_MAX_RECLAIM_DELAY + 1
 
-    for tf in ("15M", "1H", "4H"):
+    for tf in ("4H",):
         df = _df(tf_results, tf)
         if df is None or len(df) < SWEEP_WINDOW_CANDLES:
             continue
@@ -426,11 +429,26 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
                     break
                 end = j
 
-            penetrations = [i for i in violations if sweep_idx <= i <= end]
+            # Count only fresh boundary penetrations that extend the sweep
+            # extreme. Repeated candles that remain beyond the same boundary
+            # are part of the same raid, not independent penetration events.
+            penetrations: List[int] = []
             if direction == "BULLISH":
-                extreme = min(float(df["low"].iloc[i]) for i in penetrations)
+                running_extreme = float("inf")
+                for i in [x for x in violations if sweep_idx <= x <= end]:
+                    value = float(df["low"].iloc[i])
+                    if value < running_extreme:
+                        penetrations.append(i)
+                        running_extreme = value
+                extreme = running_extreme
             else:
-                extreme = max(float(df["high"].iloc[i]) for i in penetrations)
+                running_extreme = float("-inf")
+                for i in [x for x in violations if sweep_idx <= x <= end]:
+                    value = float(df["high"].iloc[i])
+                    if value > running_extreme:
+                        penetrations.append(i)
+                        running_extreme = value
+                extreme = running_extreme
 
             episodes.append({
                 "index": sweep_idx,
@@ -768,11 +786,11 @@ def _entry_separation(tf_results: Dict[str, Any], direction: str, price: float) 
         # threshold and incorrectly permit a market-ready decision.
         score = 10
     elif distance < 0.75:
-        score = 40
-    elif distance < 1.00:
-        score = 55
-    elif distance < 1.50:
         score = 75
+    elif distance < 1.00:
+        score = 85
+    elif distance < 1.50:
+        score = 90
     else:
         score = 100
     return {
