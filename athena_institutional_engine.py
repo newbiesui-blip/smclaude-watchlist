@@ -1058,3 +1058,5 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         result.update({
             "status": "READY_LIMIT", "execution_type": "LIMIT",
             "final_decision": "READY_LIMIT", "entry": entry_ref,
+        })
+    return result
