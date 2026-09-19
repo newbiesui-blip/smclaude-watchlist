@@ -17,10 +17,13 @@ import time
 from datetime import datetime, timezone
 
 import smc_scanner as scanner
+import athena_institutional_engine as institutional
 import derivatives_monitor as derivatives
 import bingx_position_tracker as bingx
 import position_health as health
 import position_intelligence as position_intel
+import trade_health_engine as trade_health
+from coinglass_client import CoinGlassClient
 from market_data_aggregator import MarketDataAggregator
 from market_intelligence import AssetIdentifiers, MarketIntelligence
 
@@ -51,6 +54,7 @@ POSITION_INTELLIGENCE_ALERT_STATES = {
 # operating state remains HEALTHY. These thresholds are notification-only;
 # they never alter execution, orders, SL, TP, or scanner decisions.
 POSITION_INTELLIGENCE_MATERIAL_R_DELTA = 0.50
+TRADE_HEALTH_MATERIAL_PRICE_PCT = 0.50
 
 
 def _is_auto_add_candidate(score, plan):
@@ -183,6 +187,111 @@ def _format_health_alert(entry, snapshot):
         f"Why: {reason}\n"
         f"Action: {action}"
     )
+
+
+def _format_trade_health_alert(entry, snapshot, previous_state=None):
+    state = snapshot.get("trade_health_state", "REASSESS")
+    participation = snapshot.get("participation") or {}
+    trail = snapshot.get("trail_guidance") or {}
+    prefix = {
+        "HEALTHY": "🟢",
+        "DETERIORATING": "🟡",
+        "CRITICAL": "🟠",
+        "INVALIDATED": "🔴",
+        "REASSESS": "⚪",
+    }.get(state, "⚪")
+    action = snapshot.get("health_action", "REASSESS")
+    lines = [
+        f"{prefix} TRADE HEALTH: {entry.get('symbol', '?')} {entry.get('direction', '?')}",
+        f"State: {state}" + (f" (from {previous_state})" if previous_state else ""),
+        f"Action: {action}",
+        f"Current: {snapshot.get('current_price')}",
+        f"R: {snapshot.get('current_r')} | Max R: {snapshot.get('max_r')}",
+        f"Structure: {snapshot.get('structural_status', 'UNKNOWN')}",
+        f"Participation: {participation.get('state', 'UNKNOWN')}",
+        f"Why: {snapshot.get('reason', '')}",
+    ]
+    if trail.get("candidate") is not None:
+        lines.append(
+            f"Structural trail candidate: {trail['candidate']:.8g} "
+            f"({trail.get('timeframe', '?')}; informational only)"
+        )
+    return "\n".join(lines)
+
+
+def _maybe_update_trade_health(entry, sync_result, active_key, coinglass_client):
+    """Re-evaluate an OPEN position against its original thesis.
+
+    This is deliberately separate from legacy position_health and from the
+    exchange/registry ownership path. It is read-only and produces guidance;
+    it never changes a live order or exchange stop.
+    """
+    try:
+        tf_results, _used = scanner.scan_symbol(active_key, entry.get("symbol"))
+    except Exception as exc:
+        print(
+            f"  ! {entry.get('symbol', '?')}: trade-health market scan failed: "
+            f"{type(exc).__name__}: {exc}"
+        )
+        return None, False
+
+    direction = str(entry.get("direction", "")).upper()
+    if direction in {"LONG", "BUY"}:
+        direction = "BULLISH"
+    elif direction in {"SHORT", "SELL"}:
+        direction = "BEARISH"
+
+    # Preserve the original thesis direction; a new opposite scan is evidence
+    # for deterioration/invalidity, not permission to mutate the position side.
+    entry["trade_health_scan_direction"] = direction
+    try:
+        cg = coinglass_client.snapshot(entry.get("symbol"))
+    except Exception as exc:
+        cg = {"enabled": False, "availability": "ERROR", "error": f"{type(exc).__name__}: {exc}"}
+
+    dctx = health.get_derivatives_context(entry.get("symbol")) or {}
+    snapshot = trade_health.evaluate(
+        entry,
+        tf_results,
+        derivatives_context=dctx,
+        coinglass_context=cg,
+    )
+    previous = entry.get("trade_health_state")
+    transitioned = trade_health.apply(entry, snapshot)
+
+    previous_trail = entry.get("trade_health_trail_candidate")
+    current_trail = (snapshot.get("trail_guidance") or {}).get("candidate")
+    material_trail_move = False
+    if previous_trail is not None and current_trail is not None:
+        try:
+            current_price = float(snapshot.get("current_price"))
+            material_trail_move = (
+                abs(float(current_trail) - float(previous_trail))
+                / max(abs(current_price), 1e-12) * 100.0
+                >= TRADE_HEALTH_MATERIAL_PRICE_PCT
+            )
+        except (TypeError, ValueError):
+            material_trail_move = False
+    entry["trade_health_trail_candidate"] = current_trail
+
+    should_alert = (
+        transitioned
+        and previous is not None
+        or material_trail_move
+        and snapshot.get("health_action") in {"HOLD_TRAIL", "TAKE_PARTIALS_OR_TIGHTEN", "PROTECT"}
+    )
+    if not should_alert:
+        return snapshot, False
+
+    message = _format_trade_health_alert(entry, snapshot, previous)
+    print("\n" + "-" * 78)
+    print("TRADE HEALTH ALERT")
+    print(message)
+    print("-" * 78)
+    sent = bool(scanner.send_telegram_message(message))
+    if sent:
+        entry["trade_health_alert_snapshot"] = snapshot
+    return snapshot, sent
 
 
 def _format_position_open_alert(entry, snapshot, discovered=False):
@@ -382,6 +491,13 @@ def _prepare_watchlist_entry(it):
     it.setdefault("position_intelligence_state", None)
     it.setdefault("position_intelligence_snapshot", None)
     it.setdefault("position_intelligence_alert_snapshot", None)
+    it.setdefault("trade_health_state", None)
+    it.setdefault("trade_health_previous_state", None)
+    it.setdefault("trade_health_action", None)
+    it.setdefault("trade_health_reason", None)
+    it.setdefault("trade_health_snapshot", None)
+    it.setdefault("trade_health_trail_candidate", None)
+    it.setdefault("trade_health_alert_snapshot", None)
     for key in ("triggered_at", "invalidated_at", "expired_at", "expire_reason"):
         it.setdefault(key, None)
 
@@ -588,6 +704,21 @@ def _sync_watchlist(active_key):
             )
             it["position_intelligence_snapshot"] = intel_snapshot
 
+            # Post-entry thesis health is evaluated only after BingX confirms
+            # the position is OPEN. It is read-only and does not touch the
+            # registry owner, order endpoints, SL, TP, or SMC scanner.
+            try:
+                cg_client = getattr(_sync_watchlist, "_coinglass_client", None)
+                if cg_client is None:
+                    cg_client = CoinGlassClient()
+                    _sync_watchlist._coinglass_client = cg_client
+                _maybe_update_trade_health(it, sync_result, active_key, cg_client)
+            except Exception as exc:
+                print(
+                    f"  ! {it.get('symbol', '?')}: trade-health layer error: "
+                    f"{type(exc).__name__}: {exc}"
+                )
+
             # The first confirmed OPEN must always produce one Telegram
             # confirmation. This is separate from risk-state alerts: an OPEN
             # position is an important lifecycle event even when its initial
@@ -668,8 +799,52 @@ def scan_all(active_key, symbols):
             if regime_info:
                 plan.update(regime_info)
 
+            # Institutional decision layer runs after the existing SMC plan is built
+            # but before lifecycle/watchlist state is persisted. It consumes the
+            # existing tf_results and never touches smc_scanner.py.
+            institutional_state = institutional.evaluate(plan, tf_results, direction)
+            plan.update(institutional_state)
+
+            # Preserve the existing execution-state calculator as compatibility
+            # plumbing, but let the institutional result own the final trade
+            # decision. This keeps the legacy contract populated for downstream
+            # consumers without allowing old gates to manufacture a trade.
             exec_state = scanner.determine_execution_state(plan, tf_results, direction)
+            legacy_status = dict(exec_state)
             plan.update(exec_state)
+            plan.update(institutional_state)
+
+            # Institutional fields are authoritative for entry/SL/TP decisioning.
+            # Do not let the legacy classifier silently replace a hard institutional
+            # gate or a structurally-derived entry.
+            if institutional_state.get("status"):
+                plan["status"] = institutional_state["status"]
+                plan["final_decision"] = institutional_state.get("final_decision", institutional_state["status"])
+                plan["execution_type"] = institutional_state.get("execution_type")
+            if institutional_state.get("preferred_entry") is not None:
+                plan["preferred_entry"] = institutional_state["preferred_entry"]
+            if institutional_state.get("entry") is not None:
+                plan["entry"] = institutional_state["entry"]
+            if institutional_state.get("invalidation") is not None:
+                plan["invalidation"] = institutional_state["invalidation"]
+                plan["invalidation_level"] = institutional_state["invalidation"]
+            if institutional_state.get("validated_targets") is not None:
+                plan["validated_targets"] = institutional_state["validated_targets"]
+            if institutional_state.get("structural_rr") is not None:
+                plan["structural_rr"] = institutional_state["structural_rr"]
+                plan["actionable_rr"] = institutional_state["structural_rr"]
+            if institutional_state.get("mechanical_rr") is not None:
+                plan["mechanical_rr"] = institutional_state["mechanical_rr"]
+
+            # Keep the watchlist contract coherent when the institutional engine
+            # chooses a pure structural level instead of an existing OB/FVG zone.
+            if plan.get("preferred_entry") is not None and (
+                plan.get("zone_low") is None or plan.get("zone_high") is None
+            ):
+                plan["zone_low"] = plan["preferred_entry"]
+                plan["zone_high"] = plan["preferred_entry"]
+                plan["zone_label"] = "structural execution level"
+
             lifecycle = scanner.update_setup_lifecycle(symbol, plan, scan_cycle)
             plan["lifecycle_info"] = lifecycle
 
