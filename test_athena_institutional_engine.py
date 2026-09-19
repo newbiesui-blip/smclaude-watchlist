@@ -359,7 +359,7 @@ def test_four_candle_sweep_window_keeps_unreclaimed_sweep_pending_before_expiry(
         data,
         "BULLISH",
     )
-    print("DEBUG_MATRIX", _defined_dealing_range(data, "BULLISH", 97.0), _sweep_matrix(data, "BULLISH"), result["sweep_state"])
+    print("DEBUG_MATRIX", _defined_dealing_range(data, "BULLISH", 97.0), _sweep_matrix(data, "BULLISH"), result["sweep_state"], data["4H"]["df"].tail(8)[["low","close"]].to_dict("index"))
     assert result["sweep_state"]["state"] == "PENDING_RECLAIM"
     assert result["status"] != "INVALID"
 
