@@ -763,7 +763,10 @@ def _entry_separation(tf_results: Dict[str, Any], direction: str, price: float) 
     level, label = min(levels, key=lambda x: abs(x[0] - price))
     distance = abs(level - price) / atr
     if distance < 0.50:
-        score = 20
+        # Immediate opposing structure should materially degrade entry quality;
+        # otherwise the weighted score can still land exactly on the execution
+        # threshold and incorrectly permit a market-ready decision.
+        score = 10
     elif distance < 0.75:
         score = 40
     elif distance < 1.00:
