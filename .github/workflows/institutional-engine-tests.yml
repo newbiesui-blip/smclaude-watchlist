@@ -16,4 +16,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install pandas numpy requests pytest
-      - run: pytest -q test_athena_institutional_engine.py test_institutional_integration.py
+      - run: pytest -q test_athena_institutional_engine.py test_institutional_integration.py test_trade_health_engine.py
