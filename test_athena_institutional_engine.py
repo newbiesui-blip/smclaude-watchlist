@@ -1,6 +1,6 @@
 import pandas as pd
 
-from athena_institutional_engine import evaluate
+from athena_institutional_engine import evaluate, _defined_dealing_range, _range_sweep_state, _sweep_matrix
 
 
 def frame(price=105.0, low=100.0, high=120.0, n=48):
@@ -391,3 +391,126 @@ def test_dynamic_range_uses_verified_spot_cvd_and_macro_foundation():
     lo, hi = _range(data, "4H", direction="BULLISH", price=105.0)
     assert lo == 90.0
     assert hi >= 120.0
+
+
+def test_multiple_wick_penetrations_stay_one_sweep_until_delayed_reclaim():
+    data = tf_results(price=104.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[44, ["low", "open", "close", "high"]] = [95.0, 99.0, 98.0, 100.0]
+    f4.loc[45, ["low", "open", "close", "high"]] = [94.0, 98.0, 97.0, 100.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [99.0, 98.0, 99.0, 101.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [100.0, 100.0, 104.0, 105.0]
+    data["4H"]["df"] = f4
+
+    info = _sweep_matrix(data, "BULLISH")
+    assert info["index"] == 44
+    assert info["reclaimed"] is True
+    assert info["reclaim_index"] == 47
+    assert info["penetration_indices"] == [44, 45]
+    assert info["extreme"] == 94.0
+
+
+def test_reclaim_on_third_execution_candle_is_valid():
+    data = tf_results(price=104.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[44, ["low", "open", "close", "high"]] = [95.0, 99.0, 97.0, 100.0]
+    f4.loc[45, ["low", "open", "close", "high"]] = [98.0, 98.0, 97.0, 100.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [99.0, 98.0, 99.0, 101.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [100.0, 100.0, 104.0, 105.0]
+    data["4H"]["df"] = f4
+
+    state = _range_sweep_state(data, "BULLISH")
+    assert state["state"] == "RECLAIMED"
+    assert state["reclaim_index"] - state["index"] == 3
+
+
+def test_fourth_execution_candle_without_reclaim_is_expired():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[43, ["low", "open", "close", "high"]] = [100.0, 102.0, 102.0, 103.0]
+    f4.loc[44, ["low", "open", "close", "high"]] = [95.0, 99.0, 97.0, 100.0]
+    f4.loc[45, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [96.0, 98.0, 97.0, 100.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [97.0, 98.0, 97.0, 100.0]
+    f4.loc[48, ["low", "open", "close", "high"]] = [96.0, 98.0, 97.0, 100.0]
+    data["4H"]["df"] = f4
+    data["4H"]["df"].index = range(49)
+
+    state = _range_sweep_state(data, "BULLISH")
+    assert state["state"] == "EXPIRED"
+    assert state["age_candles"] == 4
+
+
+def test_multiple_independent_sweeps_selects_latest_episode():
+    data = tf_results(price=104.0)
+    f4 = data["4H"]["df"].copy()
+    # First sweep: reclaim, therefore a completed independent episode.
+    f4.loc[42, ["low", "open", "close", "high"]] = [95.0, 99.0, 98.0, 100.0]
+    f4.loc[43, ["low", "open", "close", "high"]] = [100.0, 100.0, 104.0, 105.0]
+    # Second sweep happens later and is the active episode.
+    f4.loc[45, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [96.0, 98.0, 98.0, 100.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [100.0, 100.0, 104.0, 105.0]
+    data["4H"]["df"] = f4
+
+    info = _sweep_matrix(data, "BULLISH")
+    assert info["index"] == 45
+    assert info["extreme"] == 94.0
+    assert info["reclaim_index"] == 47
+
+
+def test_price_already_outside_range_is_not_a_fresh_liquidity_sweep():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    for i in range(42, 48):
+        f4.loc[i, ["low", "open", "close", "high"]] = [94.0, 96.0, 97.0, 99.0]
+    data["4H"]["df"] = f4
+
+    info = _sweep_matrix(data, "BULLISH")
+    assert info == {}
+
+
+def test_sweep_boundary_stays_fixed_while_execution_candles_change():
+    data = tf_results(price=104.0)
+    before = _defined_dealing_range(data, "BULLISH", 104.0)
+    assert before == (100.0, 120.0)
+
+    f4 = data["4H"]["df"].copy()
+    f4.loc[47, ["low", "open", "close", "high"]] = [94.0, 99.0, 104.0, 110.0]
+    data["4H"]["df"] = f4
+
+    after = _defined_dealing_range(data, "BULLISH", 104.0)
+    assert after == before
+
+
+def test_sweep_reclaim_direction_is_symmetric_for_bearish_setup():
+    data = tf_results(price=114.0, bullish=False)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[44, ["low", "open", "close", "high"]] = [110.0, 119.0, 121.0, 126.0]
+    f4.loc[45, ["low", "open", "close", "high"]] = [110.0, 121.0, 121.0, 125.0]
+    f4.loc[46, ["low", "open", "close", "high"]] = [110.0, 121.0, 121.0, 126.0]
+    f4.loc[47, ["low", "open", "close", "high"]] = [110.0, 121.0, 114.0, 122.0]
+    data["4H"]["df"] = f4
+
+    info = _sweep_matrix(data, "BEARISH")
+    assert info["index"] == 44
+    assert info["reclaimed"] is True
+    assert info["reclaim_index"] == 47
+    assert info["extreme"] == 126.0
+
+
+def test_breakdown_after_sweep_never_becomes_accumulation_reclaim():
+    data = tf_results(price=97.0)
+    f4 = data["4H"]["df"].copy()
+    f4.loc[43, ["low", "open", "close", "high"]] = [100.0, 102.0, 102.0, 103.0]
+    for i in range(44, 48):
+        f4.loc[i, ["low", "open", "close", "high"]] = [94.0, 99.0, 97.0, 100.0]
+    data["4H"]["df"] = f4
+
+    result = evaluate(
+        {"setup_type": "TREND_PULLBACK", "trade_type": "INTRADAY", "extension_ratio_pct": 0},
+        data,
+        "BULLISH",
+    )
+    assert result["setup_type"] != "ACCUMULATION_RANGE_LOW_RECLAIM"
+    assert result["sweep_state"]["state"] in {"PENDING_RECLAIM", "EXPIRED"}
