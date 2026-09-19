@@ -179,7 +179,6 @@ def _mss_structural_stop(
                 continue
     return None, "", ""
 
-
 def _structural_stop(tf_results: Dict[str, Any], direction: str, price: float) -> Tuple[Optional[float], str, str]:
     """Return the thesis invalidation using the MSS milestone first.
 
@@ -386,21 +385,33 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
         if not violations:
             continue
 
-        # Group contiguous violation candles into one sweep episode.
-        groups: List[List[int]] = []
-        group = [violations[0]]
-        for idx in violations[1:]:
-            if idx == group[-1] + 1:
-                group.append(idx)
-            else:
-                groups.append(group)
-                group = [idx]
-        groups.append(group)
+        # A sweep must begin from inside the dealing range. If price was
+        # already living outside the boundary, this is continuation/breakdown,
+        # not a fresh liquidity raid.
+        valid_violations: List[int] = []
+        for idx in violations:
+            if idx <= 0:
+                continue
+            try:
+                pre_close = float(df["close"].iloc[idx - 1])
+                started_inside = pre_close >= boundary if direction == "BULLISH" else pre_close <= boundary
+            except Exception:
+                started_inside = False
+            if started_inside:
+                valid_violations.append(idx)
 
-        for group in reversed(groups):
-            sweep_idx = group[0]
-            age = len(df) - 1 - sweep_idx
+        if not valid_violations:
+            continue
+
+        # Build episodes from the first violation until the first reclaim.
+        # Multiple wick penetrations before that reclaim remain one sweep, even
+        # when an intermediate candle does not itself pierce the boundary.
+        episodes: List[Dict[str, Any]] = []
+        for sweep_idx in valid_violations:
+            if episodes and sweep_idx <= episodes[-1]["end"]:
+                continue
             reclaim_idx = None
+            end = sweep_idx
             for j in range(sweep_idx, min(len(df), sweep_idx + SWEEP_MAX_RECLAIM_DELAY + 1)):
                 try:
                     reclaimed = (
@@ -412,23 +423,42 @@ def _sweep_matrix(tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
                     reclaimed = False
                 if reclaimed:
                     reclaim_idx = j
+                    end = j
                     break
+                end = j
 
+            penetrations = [i for i in valid_violations if sweep_idx <= i <= end]
             if direction == "BULLISH":
-                extreme = min(float(df["low"].iloc[j]) for j in group)
+                extreme = min(float(df["low"].iloc[i]) for i in penetrations)
             else:
-                extreme = max(float(df["high"].iloc[j]) for j in group)
+                extreme = max(float(df["high"].iloc[i]) for i in penetrations)
 
+            episodes.append({
+                "index": sweep_idx,
+                "end": end,
+                "reclaim_index": reclaim_idx,
+                "penetrations": penetrations,
+                "extreme": extreme,
+            })
+
+        for episode in reversed(episodes):
+            sweep_idx = episode["index"]
+            age = len(df) - 1 - sweep_idx
+            reclaim_idx = episode["reclaim_index"]
+            # Reclaim is valid only if it occurred within the initial four
+            # candles (initial violation + three execution candles).
+            reclaimed = reclaim_idx is not None and reclaim_idx - sweep_idx <= SWEEP_MAX_RECLAIM_DELAY
             candidates.append({
                 "timeframe": tf,
                 "index": sweep_idx,
-                "sweep_end_index": group[-1],
+                "sweep_end_index": episode["end"],
                 "age_candles": age,
                 "boundary": boundary,
-                "extreme": extreme,
-                "reclaimed": reclaim_idx is not None,
-                "reclaim_index": reclaim_idx,
-                "expired": reclaim_idx is None and age > SWEEP_MAX_RECLAIM_DELAY,
+                "extreme": episode["extreme"],
+                "penetration_indices": episode["penetrations"],
+                "reclaimed": reclaimed,
+                "reclaim_index": reclaim_idx if reclaimed else None,
+                "expired": not reclaimed and age > SWEEP_MAX_RECLAIM_DELAY,
             })
             break
 
