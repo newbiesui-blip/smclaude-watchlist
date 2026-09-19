@@ -333,7 +333,10 @@ def evaluate(entry: Dict[str, Any], tf_results: Dict[str, Any],
             deterioration += 2
             reasons.append(participation["reason"])
         if participation["state"] == "LIQUIDATION_DRIVEN_UP" and direction == "BULLISH":
-            deterioration += 1
+            # A liquidation/short-covering rally is materially weaker than
+            # price + OI + spot-CVD expansion. Treat dominant forced covering
+            # as a genuine deterioration signal for an existing long.
+            deterioration += 2
             reasons.append("Upside expansion is increasingly liquidation/covering-driven rather than confirmed fresh participation.")
         if participation["state"] == "LIQUIDATION_DRIVEN_DOWN" and direction == "BULLISH":
             # A long-side liquidation reset is not automatically bearish when
