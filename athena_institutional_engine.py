@@ -719,6 +719,66 @@ def _distance_atr(tf_results: Dict[str, Any], entry: float, price: float) -> Opt
     return abs(price - entry) / atr if atr and atr > 0 else None
 
 
+def _entry_separation(tf_results: Dict[str, Any], direction: str, price: float) -> Dict[str, Any]:
+    """Measure immediate opposing structure between current price and execution.
+
+    A structurally valid setup can still be a bad entry when the nearest
+    opposing 15M/1H shelf is too close. This is intentionally independent of
+    setup quality and target R:R.
+    """
+    atr = _atr(_df(tf_results, "15M")) or _atr(_df(tf_results, "1H"))
+    if not atr or atr <= 0:
+        return {"score": 50, "distance_atr": None, "level": None, "reason": "No usable execution ATR."}
+
+    row15 = tf_results.get("15M") if isinstance(tf_results, dict) else None
+    row1h = tf_results.get("1H") if isinstance(tf_results, dict) else None
+    levels: List[Tuple[float, str]] = []
+    if direction == "BULLISH":
+        for row, tf in ((row15, "15M"), (row1h, "1H")):
+            if not isinstance(row, dict):
+                continue
+            for level in _swings(tf_results, tf, "high"):
+                if level > price:
+                    levels.append((level, f"{tf} resistance"))
+            for zone in row.get("bearish_zones") or []:
+                level = _f(zone.get("low")) if isinstance(zone, dict) else None
+                if level is not None and level > price:
+                    levels.append((level, f"{tf} supply"))
+    else:
+        for row, tf in ((row15, "15M"), (row1h, "1H")):
+            if not isinstance(row, dict):
+                continue
+            for level in _swings(tf_results, tf, "low"):
+                if level < price:
+                    levels.append((level, f"{tf} support"))
+            for zone in row.get("bullish_zones") or []:
+                level = _f(zone.get("high")) if isinstance(zone, dict) else None
+                if level is not None and level < price:
+                    levels.append((level, f"{tf} demand"))
+
+    if not levels:
+        return {"score": 100, "distance_atr": None, "level": None, "reason": "No immediate opposing execution structure found."}
+
+    level, label = min(levels, key=lambda x: abs(x[0] - price))
+    distance = abs(level - price) / atr
+    if distance < 0.50:
+        score = 20
+    elif distance < 0.75:
+        score = 40
+    elif distance < 1.00:
+        score = 55
+    elif distance < 1.50:
+        score = 75
+    else:
+        score = 100
+    return {
+        "score": score,
+        "distance_atr": round(distance, 3),
+        "level": level,
+        "reason": f"{label} at {level:.8g} is {distance:.2f} ATR from current price",
+    }
+
+
 def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -> Dict[str, Any]:
     """Apply the 17-step institutional decision model to an existing plan."""
     price = _price(tf_results, "15M") or _f(plan.get("current_price"))
@@ -843,10 +903,12 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
     if extension is None:
         extension = 0.0
     extension_score = max(0.0, min(100.0, 100.0 - extension * 0.75))
+    separation = _entry_separation(tf_results, direction, price)
     entry_quality = round(max(0, min(100,
-        extension_score * 0.50
-        + entry_room * 0.30
-        + location.get("score", 50) * 0.20
+        extension_score * 0.40
+        + entry_room * 0.25
+        + location.get("score", 50) * 0.15
+        + separation.get("score", 50) * 0.20
     )))
 
     scalp = _scalp_like(plan, tf_results, stop, price, targets)
@@ -908,6 +970,7 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
         "liquidity_reasons": liq_reasons,
         "sweep_state": sweep_state,
         "distance_to_entry_atr": round(distance_atr, 3) if distance_atr is not None else None,
+        "entry_separation": separation,
         "preferred_entry": entry_ref,
         "entry_zone": (location.get("low"), location.get("high")) if location.get("low") is not None else None,
         "edge_location": edge_location,
@@ -943,6 +1006,18 @@ def evaluate(plan: Dict[str, Any], tf_results: Dict[str, Any], direction: str) -
             "status": "NO_TRADE", "execution_type": None, "final_decision": "NO_TRADE",
             "no_trade_code": "INSUFFICIENT_SETUP_QUALITY",
             "no_trade_reason": f"Setup quality {setup_quality}/100 does not establish a sufficient structural edge.",
+        })
+        return result
+
+    # Immediate opposing structure can invalidate an otherwise good setup
+    # as an entry. The setup remains valid; execution must wait for separation.
+    if separation.get("score", 50) < 60:
+        result.update({
+            "status": "WAIT_PULLBACK", "execution_type": None, "final_decision": "WAIT_PULLBACK",
+            "required_confirmation": (
+                "Immediate opposing structure is too close to current price; "
+                "wait for pullback/reclaim or displacement through the obstacle."
+            ),
         })
         return result
 
