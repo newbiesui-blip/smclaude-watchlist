@@ -51,6 +51,7 @@ jobs:
           BINGX_SECRET_KEY: ${{ secrets.BINGX_SECRET_KEY }}
           CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
           CRYPTORANK_API_KEY: ${{ secrets.CRYPTORANK_API_KEY }}
+          COINGLASS_API_KEY: ${{ secrets.COINGLASS_API_KEY }}
         run: |
           # Install the central Telegram boundary before full_scan starts.
           # The quality layer and additive Wyckoff regime layer are installed

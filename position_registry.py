@@ -472,8 +472,14 @@ def classify_smc_links(
             continue
         eid = entry.get("exchange_position_id")
         match = by_pos_id.get(str(eid).strip()) if eid else None
-        if match is None and not eid:
-            candidates = by_sym_side.get(f"{entry.get('symbol')}:{entry.get('side')}", [])
+        if match is None:
+            entry_symbol = _canonical_symbol(entry.get("symbol"))
+            entry_side = bingx.normalize_side(entry.get("side") or "")
+            candidates = by_sym_side.get(f"{entry_symbol}:{entry_side}", [])
+            # Symbol/side is the approved fallback when the explicit exchange
+            # ID cannot establish the link. This also covers a registry entry
+            # whose exchange ID exists while the legacy watchlist has not yet
+            # persisted that ID.
             # No-ID positions are ambiguous when more than one live SMC entry
             # shares the same symbol/side. In that case leave the exchange
             # record as an orphan so it cannot be silently merged.
@@ -519,6 +525,22 @@ def iter_closed_needing_alert(registry: Optional[Dict[str, Any]] = None) -> List
         (identity, entry)
         for identity, entry in registry.get("positions", {}).items()
         if entry.get("lifecycle") == bingx.CLOSED and not entry.get("close_alert_sent")
+    ]
+
+
+def iter_open_orphans(registry: Optional[Dict[str, Any]] = None) -> List[Tuple[str, Dict[str, Any]]]:
+    """Return every live OPEN true orphan for registry-owned monitoring.
+
+    Unlike iter_open_needing_alert(), this iterator is not notification-state
+    gated: an already-alerted orphan still needs health/intelligence monitoring
+    on every scan cycle.
+    """
+    if registry is None:
+        registry = load_registry()
+    return [
+        (identity, entry)
+        for identity, entry in registry.get("positions", {}).items()
+        if entry.get("lifecycle") == bingx.OPEN and entry.get("orphan", True)
     ]
 
 

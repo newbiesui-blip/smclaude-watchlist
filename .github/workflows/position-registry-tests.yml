@@ -1,0 +1,22 @@
+name: Position Registry Owner Tests
+
+on:
+  push:
+    branches: ["institutional-entry-engine"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  registry-owner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pandas numpy requests pytest
+      - name: Compile production owner path
+        run: python -m py_compile full_scan.py position_registry.py
+      - name: Run registry ownership tests
+        run: pytest -q test_position_registry.py

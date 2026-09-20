@@ -140,6 +140,52 @@ class PositionRegistryTests(unittest.TestCase):
             os.unlink(watch)
         self.assertEqual(reg.iter_open_needing_alert(r["registry"], orphans_only=True), [])
 
+    def test_symbol_side_fallback_links_when_registry_has_exchange_id(self):
+        p = self.pos("p1")
+        with mock.patch.object(bingx, "list_open_positions", return_value=[p]):
+            r = reg.reconcile(path=self.path)
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as fh:
+            json.dump([{
+                "symbol": "EVAA-USDT", "direction": "SHORT",
+                "status": "triggered", "exchange_sync_status": "OPEN"
+            }], fh)
+            watch = fh.name
+        try:
+            c = reg.classify_smc_links(r["registry"], watch)
+        finally:
+            os.unlink(watch)
+        entry = c["registry"]["positions"]["id:p1"]
+        self.assertEqual(c["linked"], 1)
+        self.assertEqual(c["orphans"], 0)
+        self.assertFalse(entry["orphan"])
+        self.assertTrue(entry["smc_linked"])
+
+    def test_open_orphan_iterator_is_not_gated_by_alert_state(self):
+        p = self.pos("p1")
+        with mock.patch.object(bingx, "list_open_positions", return_value=[p]):
+            r = reg.reconcile(path=self.path)
+        registry = r["registry"]
+        self.assertEqual([k for k, _ in reg.iter_open_orphans(registry)], ["id:p1"])
+        registry["positions"]["id:p1"]["open_alert_sent"] = True
+        self.assertEqual([k for k, _ in reg.iter_open_orphans(registry)], ["id:p1"])
+
+    def test_linked_open_position_is_not_registry_orphan(self):
+        p = self.pos("p1")
+        with mock.patch.object(bingx, "list_open_positions", return_value=[p]):
+            r = reg.reconcile(path=self.path)
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as fh:
+            json.dump([{
+                "symbol": "EVAA-USDT", "direction": "SHORT",
+                "exchange_position_id": "p1", "status": "triggered",
+                "exchange_sync_status": "OPEN"
+            }], fh)
+            watch = fh.name
+        try:
+            reg.classify_smc_links(r["registry"], watch)
+        finally:
+            os.unlink(watch)
+        self.assertEqual(reg.iter_open_orphans(r["registry"]), [])
+
     def test_open_alert_is_idempotent(self):
         p = self.pos("p1")
         with mock.patch.object(bingx, "list_open_positions", return_value=[p]):
