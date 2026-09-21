@@ -308,7 +308,7 @@
       "operating_state": "EXIT_WARNING",
       "generated_at": "2026-09-07T18:24:58.972491+00:00"
     },
-    "exchange_sync_checked_at": 1790030726160,
+    "exchange_sync_checked_at": 1790031630523,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "DOT-USDT",
@@ -635,7 +635,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030726734,
+    "exchange_sync_checked_at": 1790031631096,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -801,7 +801,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030727286,
+    "exchange_sync_checked_at": 1790031631631,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -1133,7 +1133,7 @@
     "position_close_reported": false,
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030727864,
+    "exchange_sync_checked_at": 1790031632214,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -1249,8 +1249,8 @@
     "exchange_position_id": "2100223682878324736",
     "exchange_avg_price": "1244.50",
     "exchange_position_amt": null,
-    "exchange_unrealized_pnl": "1.5547",
-    "exchange_liquidation_price": 296.54,
+    "exchange_unrealized_pnl": "1.5954",
+    "exchange_liquidation_price": 290.03,
     "exchange_closed_at": null,
     "exchange_close_price": null,
     "exchange_close_source": null,
@@ -1447,16 +1447,16 @@
       "position_lifecycle": "OPEN",
       "active": true,
       "entry_price": 1244.5,
-      "current_price": 1466.6,
+      "current_price": 1472.42,
       "position_amount": 0.007,
-      "unrealized_pnl": 1.5547,
+      "unrealized_pnl": 1.5954,
       "unrealized_pnl_source": "exchange",
-      "current_r": 0.5309,
+      "current_r": 0.5448,
       "max_r": 44.769698357776356,
       "sl": 826.168885,
       "sl_distance": {
-        "price": 640.4311149999999,
-        "percent": 43.66774273830628,
+        "price": 646.251115,
+        "percent": 43.89040593037313,
         "favorable": true,
         "at_or_beyond": false
       },
@@ -1466,21 +1466,21 @@
           "price": 833.87,
           "r": 0.2749149890852155,
           "reached": true,
-          "distance_percent": 43.14264284740215
+          "distance_percent": 43.36738158949213
         },
         {
           "index": 2,
           "price": 837.21,
           "r": 0.8214721697665582,
           "reached": true,
-          "distance_percent": 42.91490522296467
+          "distance_percent": 43.14054413822143
         },
         {
           "index": 3,
           "price": 840.08,
           "r": 1.291118609453816,
           "reached": true,
-          "distance_percent": 42.71921450975044
+          "distance_percent": 42.9456269270996
         }
       ],
       "partial_profit": {
@@ -1495,13 +1495,13 @@
       },
       "health_state": "HEALTHY",
       "health_reason": "SMC structure and derivatives are currently supportive/neutral.",
-      "duration_ms": 1598724031,
+      "duration_ms": 1599628374,
       "duration": "18d 12h",
       "warnings": [],
       "operating_state": "HEALTHY",
-      "generated_at": "2026-09-21T22:45:28.147715+00:00"
+      "generated_at": "2026-09-21T23:00:32.490805+00:00"
     },
-    "exchange_sync_checked_at": 1790030728146,
+    "exchange_sync_checked_at": 1790031632489,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "ZECUSDT",
@@ -1568,12 +1568,12 @@
     "exchange_position_amount": 0.007,
     "exchange_position_side": "LONG",
     "exchange_leverage": 86,
-    "exchange_position_value": "10.26",
+    "exchange_position_value": "10.3",
     "exchange_available_amount": "0.007",
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
     "position_health_reason": "SMC structure and derivatives are currently supportive/neutral.",
-    "position_health_updated_at": "2026-09-21T22:45:28.147625+00:00",
+    "position_health_updated_at": "2026-09-21T23:00:32.490715+00:00",
     "position_health_risk_score": 0,
     "position_health_derivatives_state": "NEUTRAL",
     "position_health_derivatives_score": 0.0,
@@ -1587,7 +1587,7 @@
       "trade_health_state": "REASSESS",
       "health_action": "REASSESS",
       "reason": "Original structural invalidation has not been breached. CoinGlass participation data is unavailable; no strong health conclusion is promoted.",
-      "current_price": 1466.4,
+      "current_price": 1472.6,
       "current_r": 58.220725600285554,
       "max_r": 44.769698357776356,
       "structural_status": "INTACT",
@@ -1602,15 +1602,15 @@
         "reason": "Insufficient CoinGlass participation evidence.",
         "available": false
       },
-      "momentum_15m_pct": 0.16393442622951443,
-      "momentum_1h_pct": 0.8201172774581064,
+      "momentum_15m_pct": 0.35505216745376544,
+      "momentum_1h_pct": 0.6706362499059979,
       "trail_guidance": {
-        "candidate": 1449.9146428571428,
+        "candidate": 1457.0674999999999,
         "timeframe": "1H",
         "reason": "1H structural swing trail with volatility room; participation=MIXED, health=HEALTHY"
       }
     },
-    "trade_health_trail_candidate": 1449.9146428571428,
+    "trade_health_trail_candidate": 1457.0674999999999,
     "trade_health_alert_snapshot": null,
     "trade_health_scan_direction": "BULLISH",
     "trade_health_updated_at": null
@@ -1757,7 +1757,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030736312,
+    "exchange_sync_checked_at": 1790031640108,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
@@ -1877,7 +1877,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030736948,
+    "exchange_sync_checked_at": 1790031640665,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -2052,7 +2052,7 @@
       "operating_state": "CAUTION",
       "generated_at": "2026-09-07T06:54:02.739044+00:00"
     },
-    "exchange_sync_checked_at": 1790030737514,
+    "exchange_sync_checked_at": 1790031641227,
     "position_open_reported": false,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 29.32,
@@ -2184,7 +2184,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030738045,
+    "exchange_sync_checked_at": 1790031641781,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -2303,16 +2303,16 @@
       "position_lifecycle": "OPEN",
       "active": true,
       "entry_price": 1244.5,
-      "current_price": 1466.38,
+      "current_price": 1472.82,
       "position_amount": 0.007,
-      "unrealized_pnl": 1.5532,
+      "unrealized_pnl": 1.5982,
       "unrealized_pnl_source": "exchange",
-      "current_r": 0.9264,
+      "current_r": 0.9532,
       "max_r": 0.0,
       "sl": 1004.980265,
       "sl_distance": {
-        "price": 461.3997350000001,
-        "percent": 31.46522286174116,
+        "price": 467.8397349999999,
+        "percent": 31.76489557447617,
         "favorable": true,
         "at_or_beyond": false
       },
@@ -2322,21 +2322,21 @@
           "price": 1018.56,
           "r": 1.6918629026102965,
           "reached": true,
-          "distance_percent": 30.539150834026657
+          "distance_percent": 30.8428728561535
         },
         {
           "index": 2,
           "price": 1025.83,
           "r": 3.1329693234629072,
           "reached": true,
-          "distance_percent": 30.043372113640405
+          "distance_percent": 30.34926196004943
         },
         {
           "index": 3,
           "price": 1028.43,
           "r": 3.648358139723842,
           "reached": true,
-          "distance_percent": 29.866064730833752
+          "distance_percent": 30.172729865156633
         }
       ],
       "partial_profit": {
@@ -2351,15 +2351,15 @@
       },
       "health_state": "CAUTION",
       "health_reason": "SMC=LIQUIDITY_SWEEP: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
-      "duration_ms": 1424705920,
-      "duration": "16d 11h",
+      "duration_ms": 1425609654,
+      "duration": "16d 12h",
       "warnings": [
         "HEALTH_CAUTION"
       ],
       "operating_state": "CAUTION",
-      "generated_at": "2026-09-21T22:45:38.336015+00:00"
+      "generated_at": "2026-09-21T23:00:42.070523+00:00"
     },
-    "exchange_sync_checked_at": 1790030738335,
+    "exchange_sync_checked_at": 1790031642069,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "ZEC-USDT",
@@ -2430,17 +2430,17 @@
     "exchange_position_id": "2100223682878324736",
     "exchange_position_side": "LONG",
     "exchange_avg_price": "1244.50",
-    "exchange_unrealized_pnl": "1.5532",
+    "exchange_unrealized_pnl": "1.5982",
     "exchange_realized_pnl": "1.0215",
     "exchange_leverage": 86,
-    "exchange_liquidation_price": 295.98,
-    "exchange_position_value": "10.26",
+    "exchange_liquidation_price": 290.03,
+    "exchange_position_value": "10.3",
     "exchange_available_amount": "0.007",
     "exchange_sync_error": null,
     "position_health_state": "CAUTION",
     "position_health_previous_state": "CAUTION",
     "position_health_reason": "SMC=LIQUIDITY_SWEEP: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
-    "position_health_updated_at": "2026-09-21T22:45:38.335927+00:00",
+    "position_health_updated_at": "2026-09-21T23:00:42.070434+00:00",
     "position_health_risk_score": 2,
     "position_health_derivatives_state": "NEUTRAL",
     "position_health_derivatives_score": 0.0,
@@ -2454,7 +2454,7 @@
       "trade_health_state": "REASSESS",
       "health_action": "REASSESS",
       "reason": "Original structural invalidation has not been breached. CoinGlass participation data is unavailable; no strong health conclusion is promoted.",
-      "current_price": 1466.51,
+      "current_price": 1472.59,
       "current_r": -0.1159624836587114,
       "max_r": 0.0,
       "structural_status": "INTACT",
@@ -2469,15 +2469,15 @@
         "reason": "Insufficient CoinGlass participation evidence.",
         "available": false
       },
-      "momentum_15m_pct": 0.17418508702423252,
-      "momentum_1h_pct": 0.8319524755742815,
+      "momentum_15m_pct": 0.36394615777815087,
+      "momentum_1h_pct": 0.6954226555982443,
       "trail_guidance": {
-        "candidate": 1451.3157142857142,
+        "candidate": 1452.115,
         "timeframe": "1H",
         "reason": "1H structural swing trail with volatility room; participation=MIXED, health=HEALTHY"
       }
     },
-    "trade_health_trail_candidate": 1451.3157142857142,
+    "trade_health_trail_candidate": 1452.115,
     "trade_health_alert_snapshot": null,
     "trade_health_scan_direction": "BULLISH",
     "trade_health_updated_at": null
@@ -2584,7 +2584,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030740425,
+    "exchange_sync_checked_at": 1790031644116,
     "position_intelligence_alert_snapshot": null,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
     "trade_health_state": null,
@@ -2763,7 +2763,7 @@
       "operating_state": "HEALTHY",
       "generated_at": "2026-09-07T20:39:16.352980+00:00"
     },
-    "exchange_sync_checked_at": 1790030740965,
+    "exchange_sync_checked_at": 1790031644687,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "FF-USDT",
@@ -3023,7 +3023,7 @@
       "operating_state": "HEALTHY",
       "generated_at": "2026-09-21T14:00:42.752161+00:00"
     },
-    "exchange_sync_checked_at": 1790030741553,
+    "exchange_sync_checked_at": 1790031645237,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": {
       "symbol": "NEAR-USDT",
@@ -3314,7 +3314,7 @@
       "operating_state": "EXIT_WARNING",
       "generated_at": "2026-09-06T22:00:27.237473+00:00"
     },
-    "exchange_sync_checked_at": 1790030742276,
+    "exchange_sync_checked_at": 1790031645809,
     "position_open_reported": true,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 617.2,
@@ -3446,7 +3446,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030742828,
+    "exchange_sync_checked_at": 1790031646351,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -3558,7 +3558,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030743384,
+    "exchange_sync_checked_at": 1790031646910,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -3670,7 +3670,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030743946,
+    "exchange_sync_checked_at": 1790031647452,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -3782,7 +3782,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030744492,
+    "exchange_sync_checked_at": 1790031648022,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
@@ -3895,7 +3895,7 @@
     "exchange_sync_status": "NOT_FOUND",
     "position_intelligence_state": null,
     "position_intelligence_snapshot": null,
-    "exchange_sync_checked_at": 1790030745065,
+    "exchange_sync_checked_at": 1790031648571,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -4078,7 +4078,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030745628,
+    "exchange_sync_checked_at": 1790031649139,
     "position_intelligence_alert_snapshot": {
       "symbol": "TRUST-USDT",
       "direction": "BULLISH",
@@ -4316,7 +4316,7 @@
     "exchange_liquidation_price": 0.3463,
     "exchange_position_value": "30.01",
     "exchange_available_amount": "72.411",
-    "exchange_sync_checked_at": 1790030746183,
+    "exchange_sync_checked_at": 1790031649699,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": null,
@@ -4437,7 +4437,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030746751,
+    "exchange_sync_checked_at": 1790031650271,
     "position_open_reported": false,
     "position_intelligence_alert_snapshot": null,
     "trade_health_state": null,
@@ -4593,7 +4593,7 @@
     "exchange_liquidation_price": 0.0006296,
     "exchange_position_value": "15.02",
     "exchange_available_amount": "16523",
-    "exchange_sync_checked_at": 1790030747321,
+    "exchange_sync_checked_at": 1790031650821,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -4714,7 +4714,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030747867,
+    "exchange_sync_checked_at": 1790031651392,
     "position_intelligence_alert_snapshot": null,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
     "trade_health_state": null,
@@ -4800,16 +4800,16 @@
       "position_lifecycle": "OPEN",
       "active": true,
       "entry_price": 0.01165,
-      "current_price": 0.011674,
+      "current_price": 0.011749,
       "position_amount": 600.85,
-      "unrealized_pnl": 0.0144,
+      "unrealized_pnl": 0.0594,
       "unrealized_pnl_source": "exchange",
-      "current_r": 0.0377,
+      "current_r": 0.1553,
       "max_r": 0.0,
       "sl": 0.011013455,
       "sl_distance": {
-        "price": 0.0006605450000000002,
-        "percent": 5.658257666609561,
+        "price": 0.0007355450000000006,
+        "percent": 6.260490254489749,
         "favorable": true,
         "at_or_beyond": false
       },
@@ -4819,14 +4819,14 @@
           "price": 0.011416,
           "r": 3.7896365042537044,
           "reached": true,
-          "distance_percent": 2.2100394038033198
+          "distance_percent": 2.8342837688313893
         },
         {
           "index": 2,
           "price": 0.011438,
           "r": 4.051401035159761,
           "reached": true,
-          "distance_percent": 2.021586431385987
+          "distance_percent": 2.6470337901098007
         }
       ],
       "partial_profit": {
@@ -4841,13 +4841,13 @@
       },
       "health_state": "CAUTION",
       "health_reason": "SMC=LIQUIDITY_SWEEP: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
-      "duration_ms": 1288264221,
-      "duration": "14d 21h",
+      "duration_ms": 1289167725,
+      "duration": "14d 22h",
       "warnings": [
         "HEALTH_CAUTION"
       ],
       "operating_state": "CAUTION",
-      "generated_at": "2026-09-21T22:45:48.156098+00:00"
+      "generated_at": "2026-09-21T23:00:51.660159+00:00"
     },
     "exchange_filled_entry_price": null,
     "exchange_original_risk": null,
@@ -4869,7 +4869,7 @@
       }
     ],
     "exchange_sync_status": "OPEN",
-    "exchange_sync_checked_at": 1790030748155,
+    "exchange_sync_checked_at": 1790031651659,
     "position_intelligence_alert_snapshot": {
       "symbol": "ZK-USDT",
       "direction": "BULLISH",
@@ -4936,7 +4936,7 @@
       "trade_health_state": "REASSESS",
       "health_action": "REASSESS",
       "reason": "Original structural invalidation has not been breached. CoinGlass participation data is unavailable; no strong health conclusion is promoted.",
-      "current_price": 0.011681,
+      "current_price": 0.011747,
       "current_r": -0.20822178594800686,
       "max_r": 0.0,
       "structural_status": "INTACT",
@@ -4951,31 +4951,31 @@
         "reason": "Insufficient CoinGlass participation evidence.",
         "available": false
       },
-      "momentum_15m_pct": 0.6115417743324709,
-      "momentum_1h_pct": -0.1282489740082027,
+      "momentum_15m_pct": 0.642563399588763,
+      "momentum_1h_pct": 1.3633618086116157,
       "trail_guidance": {
-        "candidate": 0.011569035714285714,
+        "candidate": 0.011576714285714286,
         "timeframe": "1H",
         "reason": "1H structural swing trail with volatility room; participation=MIXED, health=HEALTHY"
       }
     },
-    "trade_health_trail_candidate": 0.011569035714285714,
+    "trade_health_trail_candidate": 0.011576714285714286,
     "trade_health_alert_snapshot": null,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 600.85,
     "exchange_position_id": "2102036658325241856",
     "exchange_position_side": "LONG",
     "exchange_avg_price": "0.011650",
-    "exchange_unrealized_pnl": "0.0144",
+    "exchange_unrealized_pnl": "0.0594",
     "exchange_realized_pnl": "-0.0021",
     "exchange_leverage": 20,
-    "exchange_position_value": "7.01",
+    "exchange_position_value": "7.05",
     "exchange_available_amount": "600.85",
     "exchange_sync_error": null,
     "position_health_state": "CAUTION",
     "position_health_previous_state": "CAUTION",
     "position_health_reason": "SMC=LIQUIDITY_SWEEP: Bearish liquidity sweep detected on 15M; rejection exists but structure has not confirmed reversal.",
-    "position_health_updated_at": "2026-09-21T22:45:48.156008+00:00",
+    "position_health_updated_at": "2026-09-21T23:00:51.660073+00:00",
     "position_health_risk_score": 2,
     "position_health_derivatives_state": "NEUTRAL",
     "position_health_derivatives_score": 0.0,
@@ -5148,7 +5148,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030750242,
+    "exchange_sync_checked_at": 1790031653678,
     "position_intelligence_alert_snapshot": {
       "symbol": "GRIFFAIN-USDT",
       "direction": "BULLISH",
@@ -5456,7 +5456,7 @@
     "exchange_liquidation_price": 0.1783,
     "exchange_position_value": "15.23",
     "exchange_available_amount": "58.87",
-    "exchange_sync_checked_at": 1790030750826,
+    "exchange_sync_checked_at": 1790031654217,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -5615,7 +5615,7 @@
     "exchange_liquidation_price": 69.53,
     "exchange_position_value": "80.01",
     "exchange_available_amount": "1.2182",
-    "exchange_sync_checked_at": 1790030751380,
+    "exchange_sync_checked_at": 1790031654766,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -5708,7 +5708,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030751925,
+    "exchange_sync_checked_at": 1790031655318,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -5820,7 +5820,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030752480,
+    "exchange_sync_checked_at": 1790031655914,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -5932,7 +5932,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030753039,
+    "exchange_sync_checked_at": 1790031656455,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -6043,7 +6043,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030753592,
+    "exchange_sync_checked_at": 1790031657061,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -6155,7 +6155,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030754149,
+    "exchange_sync_checked_at": 1790031657628,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -6267,7 +6267,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030754732,
+    "exchange_sync_checked_at": 1790031658194,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -6365,7 +6365,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030755430,
+    "exchange_sync_checked_at": 1790031658879,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -6603,7 +6603,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030755981,
+    "exchange_sync_checked_at": 1790031659538,
     "exchange_sync_error": null,
     "trade_health_state": "REASSESS",
     "trade_health_previous_state": "REASSESS",
@@ -6763,7 +6763,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030756550,
+    "exchange_sync_checked_at": 1790031660196,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -7026,7 +7026,7 @@
     "exchange_liquidation_price": 0.0599,
     "exchange_position_value": "50.01",
     "exchange_available_amount": "756.200",
-    "exchange_sync_checked_at": 1790030757092,
+    "exchange_sync_checked_at": 1790031660860,
     "exchange_sync_error": null,
     "position_health_state": "CAUTION",
     "position_health_previous_state": "CAUTION",
@@ -7147,7 +7147,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030757646,
+    "exchange_sync_checked_at": 1790031661513,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -7231,7 +7231,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030758207,
+    "exchange_sync_checked_at": 1790031662234,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -7343,7 +7343,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030758757,
+    "exchange_sync_checked_at": 1790031662892,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -7529,7 +7529,7 @@
     "exchange_liquidation_price": 0.2931,
     "exchange_position_value": "7.49",
     "exchange_available_amount": "9",
-    "exchange_sync_checked_at": 1790030759329,
+    "exchange_sync_checked_at": 1790031663542,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -7770,7 +7770,7 @@
     "exchange_liquidation_price": 135.72,
     "exchange_position_value": "50.07",
     "exchange_available_amount": "0.32786",
-    "exchange_sync_checked_at": 1790030759887,
+    "exchange_sync_checked_at": 1790031664209,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
     "position_opened_at": "2026-09-09T06:53:01.898000+00:00",
     "position_health_state": "HEALTHY",
@@ -8032,7 +8032,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030760472,
+    "exchange_sync_checked_at": 1790031664884,
     "position_lifecycle": "OPEN",
     "exchange_position_amount": 0.3,
     "exchange_position_id": "2097662571536662528",
@@ -8164,7 +8164,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030761091,
+    "exchange_sync_checked_at": 1790031665635,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -8381,7 +8381,7 @@
     "exchange_liquidation_price": 0.14001,
     "exchange_position_value": "14.45",
     "exchange_available_amount": "62.62",
-    "exchange_sync_checked_at": 1790030761693,
+    "exchange_sync_checked_at": 1790031666302,
     "exchange_sync_error": null,
     "position_opened_at": "2026-09-09T07:18:58.091000+00:00",
     "position_health_state": "HEALTHY",
@@ -8503,7 +8503,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030762272,
+    "exchange_sync_checked_at": 1790031666970,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -8615,7 +8615,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030762833,
+    "exchange_sync_checked_at": 1790031667626,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -8841,7 +8841,7 @@
     "exchange_liquidation_price": 1959,
     "exchange_position_value": "39.79",
     "exchange_available_amount": "0.0175",
-    "exchange_sync_checked_at": 1790030763391,
+    "exchange_sync_checked_at": 1790031668288,
     "exchange_sync_error": null,
     "position_opened_at": "2026-09-09T09:10:41.642000+00:00",
     "position_health_state": "HEALTHY",
@@ -9115,7 +9115,7 @@
     "exchange_liquidation_price": 0.0607,
     "exchange_position_value": "50.16",
     "exchange_available_amount": "750.75",
-    "exchange_sync_checked_at": 1790030763962,
+    "exchange_sync_checked_at": 1790031668957,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": null,
@@ -9192,7 +9192,7 @@
     "exchange_fill_frozen_at": null,
     "position_targets": [],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030764518,
+    "exchange_sync_checked_at": 1790031669618,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -9276,7 +9276,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030765077,
+    "exchange_sync_checked_at": 1790031670290,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
     "trade_health_state": null,
     "trade_health_previous_state": null,
@@ -9389,7 +9389,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030765640,
+    "exchange_sync_checked_at": 1790031670952,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -9473,7 +9473,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030766218,
+    "exchange_sync_checked_at": 1790031671601,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -9585,7 +9585,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030766779,
+    "exchange_sync_checked_at": 1790031672249,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -9823,7 +9823,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030767325,
+    "exchange_sync_checked_at": 1790031672904,
     "trade_health_state": "REASSESS",
     "trade_health_previous_state": "REASSESS",
     "trade_health_action": "REASSESS",
@@ -9983,7 +9983,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030767879,
+    "exchange_sync_checked_at": 1790031673553,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -10095,7 +10095,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030768430,
+    "exchange_sync_checked_at": 1790031674211,
     "exchange_sync_error": "('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
     "trade_health_state": null,
     "trade_health_previous_state": null,
@@ -10208,7 +10208,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030768978,
+    "exchange_sync_checked_at": 1790031674864,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -10276,7 +10276,7 @@
     "exchange_fill_frozen_at": null,
     "position_targets": [],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030769576,
+    "exchange_sync_checked_at": 1790031675551,
     "trade_health_state": null,
     "trade_health_previous_state": null,
     "trade_health_action": null,
@@ -10534,7 +10534,7 @@
     "exchange_liquidation_price": 0.00635,
     "exchange_position_value": "9.67",
     "exchange_available_amount": "205.33",
-    "exchange_sync_checked_at": 1790030770126,
+    "exchange_sync_checked_at": 1790031676215,
     "exchange_sync_error": null,
     "position_health_state": "HEALTHY",
     "position_health_previous_state": "HEALTHY",
@@ -10656,7 +10656,7 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030770684
+    "exchange_sync_checked_at": 1790031676956
   },
   {
     "symbol": "TIA-USDT",
@@ -10768,6 +10768,124 @@
       }
     ],
     "exchange_sync_status": "NOT_FOUND",
-    "exchange_sync_checked_at": 1790030771249
+    "exchange_sync_checked_at": 1790031677660
+  },
+  {
+    "symbol": "ZRO-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 93,
+    "current_score": 93,
+    "trade_type": "INTRADAY",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "setup_fingerprint": "489599008127be07",
+    "added_at": "2026-09-21T23:06:16.447551+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 1.1868,
+    "zone_high": 1.1868,
+    "zone_label": "structural execution level",
+    "entries": [
+      {
+        "price": 1.1868,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 1.079192857142857,
+    "original_invalidation": 1.079192857142857,
+    "targets": [
+      {
+        "price": 1.196,
+        "label": "prior swing high (liquidity)",
+        "r": 0.7019831022638936
+      },
+      {
+        "price": 1.2009,
+        "label": "prior swing high (liquidity)",
+        "r": 1.1114732452511773
+      },
+      {
+        "price": 1.2199,
+        "label": "prior swing high (liquidity)",
+        "r": 2.699292167038555
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Waiting for price to reach entry zone.",
+    "entry_instruction": null,
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 93,
+    "last_warning": null,
+    "reversal_state": "STABLE",
+    "reversal_reason": "No active reversal evidence detected.",
+    "reversal_alert_state": "STABLE",
+    "current_r": 0.0,
+    "history": []
+  },
+  {
+    "symbol": "NEIROCTO-USDT",
+    "exchange": "bingx",
+    "direction": "BULLISH",
+    "status": "pending",
+    "added_score": 93,
+    "current_score": 93,
+    "trade_type": "SWING",
+    "attempt_num": 1,
+    "lineage_note": null,
+    "setup_fingerprint": "a436024fc7c2d4f2",
+    "added_at": "2026-09-21T23:06:16.839373+00:00",
+    "triggered_at": null,
+    "invalidated_at": null,
+    "expired_at": null,
+    "expire_reason": null,
+    "zone_low": 9.723e-05,
+    "zone_high": 9.723e-05,
+    "zone_label": "structural execution level",
+    "entries": [
+      {
+        "price": 9.723e-05,
+        "size_pct": 100,
+        "filled": false
+      }
+    ],
+    "invalidation": 8.829607142857143e-05,
+    "original_invalidation": 8.829607142857143e-05,
+    "targets": [
+      {
+        "price": 9.824e-05,
+        "label": "prior swing high (liquidity)",
+        "r": 0.4243973703433097
+      },
+      {
+        "price": 9.86e-05,
+        "label": "prior swing high (liquidity)",
+        "r": 0.6084733382030624
+      },
+      {
+        "price": 9.942e-05,
+        "label": "prior swing high (liquidity)",
+        "r": 1.027757487216937
+      }
+    ],
+    "trail_mode": "trail_structural",
+    "last_note": "Waiting for price to reach entry zone.",
+    "entry_instruction": null,
+    "entry_price": null,
+    "max_r": 0.0,
+    "max_favorable_price": null,
+    "peak_score": 93,
+    "last_warning": null,
+    "reversal_state": "STABLE",
+    "reversal_reason": "No active reversal evidence detected.",
+    "reversal_alert_state": "STABLE",
+    "current_r": 0.0,
+    "history": []
   }
 ]
