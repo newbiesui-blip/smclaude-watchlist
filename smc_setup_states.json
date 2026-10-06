@@ -472,22 +472,22 @@
     "notification_pending": false
   },
   "WAL-USDT": {
-    "fingerprint": "a98b5d63d985bfec",
-    "status": "READY_MARKET",
-    "execution_type": "MARKET",
-    "setup_type": "BOS_CONTINUATION",
+    "fingerprint": "f631641c96ff602b",
+    "status": "READY_LIMIT",
+    "execution_type": "LIMIT",
+    "setup_type": "LIQUIDITY_SWEEP_REVERSAL",
     "direction": "BULLISH",
     "regime": "STRONG_UPTREND",
     "trend_alignment": "TREND_ALIGNED",
-    "preferred_entry": 0.03722,
-    "invalidation_level": 0.035925,
+    "preferred_entry": 0.03726,
+    "invalidation_level": 0.035898928571428575,
     "structural_target": 0.09851,
-    "structural_rr": 45.88,
-    "entry_quality": 89,
+    "structural_rr": 40.711,
+    "entry_quality": 77,
     "setup_quality": 72,
     "lifecycle": "READY",
     "stale_cycles": 0,
-    "last_seen_cycle": 1990328,
+    "last_seen_cycle": 1990341,
     "notification_pending": false
   },
   "ORDI-USDT": {
@@ -3615,14 +3615,14 @@
     "regime": "STRONG_UPTREND",
     "trend_alignment": "TREND_ALIGNED",
     "preferred_entry": 0.03317,
-    "invalidation_level": 0.026490714285714288,
+    "invalidation_level": 0.02649,
     "structural_target": 0.109,
-    "structural_rr": 11.171,
-    "entry_quality": 48,
+    "structural_rr": 11.54,
+    "entry_quality": 50,
     "setup_quality": 72,
     "lifecycle": "DEVELOPING",
     "stale_cycles": 0,
-    "last_seen_cycle": 1990340,
+    "last_seen_cycle": 1990341,
     "notification_pending": false
   },
   "HOLO-USDT": {
@@ -4082,7 +4082,7 @@
     "notification_pending": false
   },
   "SPX-USDT": {
-    "fingerprint": "4a290a12d2a79c30",
+    "fingerprint": "b62d175d531b346c",
     "status": "WAIT_PULLBACK",
     "execution_type": null,
     "setup_type": "DISTRIBUTION_RANGE_HIGH_REJECTION",
@@ -4090,14 +4090,14 @@
     "regime": "STRONG_DOWNTREND",
     "trend_alignment": "TREND_ALIGNED",
     "preferred_entry": 0.4622,
-    "invalidation_level": 0.46961428571428576,
+    "invalidation_level": 0.4699107142857143,
     "structural_target": 0.2545,
-    "structural_rr": 3.136,
+    "structural_rr": 2.62,
     "entry_quality": 21,
     "setup_quality": 79,
     "lifecycle": "DEVELOPING",
     "stale_cycles": 0,
-    "last_seen_cycle": 1990340,
+    "last_seen_cycle": 1990341,
     "notification_pending": false
   },
   "NCCO1OILWTI2USD-USDT": {
@@ -4630,6 +4630,25 @@
     "lifecycle": "DEVELOPING",
     "stale_cycles": 3,
     "last_seen_cycle": 1990339,
+    "notification_pending": false
+  },
+  "NCSKCOIN2USD-USDT": {
+    "fingerprint": "1f44f630b88b342c",
+    "status": "WAIT_PULLBACK",
+    "execution_type": null,
+    "setup_type": "LIQUIDITY_SWEEP_REVERSAL",
+    "direction": "BEARISH",
+    "regime": "STRONG_DOWNTREND",
+    "trend_alignment": "TREND_ALIGNED",
+    "preferred_entry": 187.92,
+    "invalidation_level": 188.52785714285716,
+    "structural_target": 139.17,
+    "structural_rr": 34.822,
+    "entry_quality": 36,
+    "setup_quality": 72,
+    "lifecycle": "DEVELOPING",
+    "stale_cycles": 0,
+    "last_seen_cycle": 1990341,
     "notification_pending": false
   }
 }
