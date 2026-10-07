@@ -1345,6 +1345,34 @@ def compute_mechanical_rr(entry_price, invalidation, validated_targets):
     return reward / risk
 
 
+def swing_rr_qualifies(plan):
+    """
+    Swing-only R:R gate.
+
+    Normal rule: TP1 must be >= 2R.
+    Swing exception: TP1 may be 1R+ when TP2 is >= 2.5R. The first target
+    is then treated as a partial-taking objective, while TP2 is the main
+    structural swing objective. No distant/ATH target is allowed to be
+    manufactured just to satisfy the gate.
+    """
+    if str(plan.get("trade_type", "")).upper() != "SWING":
+        return float(plan.get("actionable_rr", 0.0) or 0.0) >= MIN_STRUCTURAL_RR
+
+    targets = plan.get("validated_targets") or []
+    if not targets:
+        return False
+
+    tp1 = float(targets[0].get("r", 0.0) or 0.0)
+    if tp1 >= MIN_STRUCTURAL_RR:
+        return True
+
+    if len(targets) >= 2:
+        tp2 = float(targets[1].get("r", 0.0) or 0.0)
+        return tp1 >= 1.0 and tp2 >= 2.5
+
+    return False
+
+
 def compute_setup_quality(setup_type, regime_info, structural_rr, structural_rr_quality,
                            validated_targets):
     """Thesis quality with independent context, actionable reward and target quality.
@@ -1891,7 +1919,7 @@ def determine_execution_state(plan, tf_results, direction):
     # midpoint / structural event), not blindly from current market price.
     # This preserves valid pullback setups whose present market entry is poor.
     actionable_rr = float(plan.get("actionable_rr", plan.get("mechanical_rr", structural_rr)) or 0.0)
-    rr_fail = actionable_rr < MIN_STRUCTURAL_RR
+    rr_fail = not swing_rr_qualifies(plan)
     if quality_fail or rr_fail:
         reasons = []
         if quality_fail:
@@ -1900,7 +1928,7 @@ def determine_execution_state(plan, tf_results, direction):
             )
         if rr_fail:
             reasons.append(
-                f"actionable TP1 R:R {actionable_rr:.2f} < minimum {MIN_STRUCTURAL_RR:.2f}"
+                f"R:R gate failed (TP1={actionable_rr:.2f}R; swing exception requires TP1 >= 1R and TP2 >= 2.5R)"
             )
         if quality_fail and rr_fail:
             code = "SETUP_QUALITY_AND_STRUCTURAL_RR_BELOW_FLOOR"
