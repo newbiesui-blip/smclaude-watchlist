@@ -1076,13 +1076,14 @@ def classify_trade_type(price, invalidation, targets, tf_results=None, direction
     R:R happens to be large. Conversely, a valid swing is not rejected merely
     because its stop is wider than an arbitrary percentage.
     """
-    htf_targets = [
-        t for t in (targets or [])
-        if t.get("timeframe_source") in ("4H", "1D")
-        and t.get("target_type") in ("HTF_SWING", "HTF_STRUCTURE", "EXTERNAL_LIQUIDITY")
-    ]
-    if htf_targets:
-        return "SWING"
+    if tf_results is not None and direction in ("BULLISH", "BEARISH"):
+        structural = gather_structural_targets(tf_results, direction, price, None)
+        htf_targets = [
+            t for t in structural
+            if t.get("timeframe_source") in ("4H", "1D")
+        ]
+        if htf_targets:
+            return "SWING"
     return "INTRADAY"
 
 
