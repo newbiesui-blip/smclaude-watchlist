@@ -208,8 +208,8 @@ def _alert_admission(plan: dict, scanner) -> tuple[bool, str]:
         return False, "setup score below alert floor"
     if setup_quality < float(getattr(scanner, "MIN_SETUP_QUALITY", 70)):
         return False, "setup quality below alert floor"
-    if actionable_rr < float(getattr(scanner, "MIN_STRUCTURAL_RR", 2.0)):
-        return False, "actionable R:R below alert floor"
+    if not scanner.swing_rr_qualifies(plan):
+        return False, "swing R:R gate failed"
     if trade_type in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set()):
         return False, "trade type excluded"
 
