@@ -1263,25 +1263,52 @@ def gather_structural_targets(tf_results, direction, price, regime_alignment):
 
 def build_validated_targets(structural_targets, price, risk, max_targets=3):
     """
-    Turns the tier-ordered structural_targets into the TP1/TP2/TP3 display
-    list, sorted nearest-to-furthest (this is what actually gets shown/
-    used for order placement). Only real found levels -- never padded to
-    reach 3. Each entry keeps its type/reason/timeframe_source, per spec
-    section 3's TP1/TP2/TP3 format, plus 'r' (R-multiple) and 'label' for
-    compatibility with the existing print/consumer code.
+    Build realistic swing targets in execution order.
+
+    For swing plans the hierarchy is deliberately:
+      TP1 = nearest meaningful 1H objective
+      TP2 = next meaningful 4H objective
+      TP3 = reachable 1D objective, if one exists
+
+    Only one objective is selected from each timeframe so several nearby
+    1H levels cannot crowd out the higher-timeframe swing target. The 1D
+    layer has already been filtered for ATH/global-extreme and distance
+    realism by gather_structural_targets().
     """
-    by_distance = sorted(structural_targets, key=lambda t: abs(t["price"] - price))
+    if risk <= 0:
+        return []
+
+    preferred_sources = ["1H", "4H", "1D", ENTRY_TF]
     out = []
-    for t in by_distance[:max_targets]:
-        r_multiple = abs(t["price"] - price) / risk if risk > 0 else 0
+
+    for tf_source in preferred_sources:
+        candidates = [
+            t for t in structural_targets
+            if t.get("timeframe_source") == tf_source
+            and (
+                (t.get("price") > price if t.get("direction") == "BULLISH" else
+                 t.get("price") < price)
+                if t.get("direction") in ("BULLISH", "BEARISH")
+                else True
+            )
+        ]
+        if not candidates:
+            continue
+
+        chosen = min(candidates, key=lambda t: abs(t["price"] - price))
+        r_multiple = abs(chosen["price"] - price) / risk
         out.append({
-            "price": t["price"],
-            "target_type": t["target_type"],
-            "target_reason": t["target_reason"],
-            "timeframe_source": t["timeframe_source"],
+            "price": chosen["price"],
+            "target_type": chosen["target_type"],
+            "target_reason": chosen["target_reason"],
+            "timeframe_source": chosen["timeframe_source"],
             "r": r_multiple,
-            "label": f"{t['target_type'].replace('_', ' ').title()} ({t['timeframe_source']})",
+            "label": f"{chosen['target_type'].replace('_', ' ').title()} ({chosen['timeframe_source']})",
         })
+
+        if len(out) >= max_targets:
+            break
+
     return out
 
 
