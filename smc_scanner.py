@@ -81,9 +81,9 @@ AUTO_ADD_MIN_SCORE = HIGH_CONVICTION_SCORE                       # unattended fu
                                                # auto-adds setups scoring at or above this
 AUTO_TRAIL_MODE = "trail_structural"          # default stop behavior for auto-added entries
                                                # (no human present to choose interactively)
-AUTO_ADD_EXCLUDE_TYPES = {"SCALP"}            # trade_types full_scan.py will never auto-add,
-                                               # regardless of score -- e.g. {"SCALP"} or
-                                               # {"SCALP", "SWING"} to only keep INTRADAY
+AUTO_ADD_EXCLUDE_TYPES = {"SCALP", "INTRADAY"} # unattended Telegram/watchlist pipeline is swing-only.
+                                               # Scalp and intraday setups are deliberately suppressed
+                                               # to reduce noise. Existing positions are still monitored.
 AUTO_ADD_READY_ONLY = True                    # if True, full_scan.py only auto-adds setups that
                                                # are immediately actionable RIGHT NOW -- price
                                                # already inside the zone (market entry) or a
@@ -1067,26 +1067,23 @@ SCALP_MAX_R = 1.0        # if the furthest target is still under this many R, it
                           # regardless of % (thin reward-to-risk = fast/tight setup)
 
 
-def classify_trade_type(price, invalidation, targets):
+def classify_trade_type(price, invalidation, targets, tf_results=None, direction=None):
     """
-    Heuristic label -- SCALP / INTRADAY / SWING -- based on how tight the
-    stop is (as % of price) and how far the furthest real target sits in
-    R-multiples. Not a timeframe label from the analysis engine itself,
-    just a practical read on "how much room does this setup actually have."
-    Tune SCALP_RISK_PCT / SWING_RISK_PCT / SCALP_MAX_R above per-asset if
-    a class of symbols (majors vs low-caps) consistently reads wrong.
-    """
-    if price == 0:
-        return "INTRADAY"
-    risk_pct = abs(price - invalidation) / price * 100
-    max_r = max((t["r"] for t in targets), default=0)
+    Classify the setup by actual structural horizon, not by stop width alone.
 
-    if risk_pct < SCALP_RISK_PCT or max_r < SCALP_MAX_R:
-        return "SCALP"
-    elif risk_pct < SWING_RISK_PCT:
-        return "INTRADAY"
-    else:
+    SWING requires at least one meaningful 4H/1D objective. This prevents a
+    tight-stop 1H trade from being mislabeled as a swing simply because its
+    R:R happens to be large. Conversely, a valid swing is not rejected merely
+    because its stop is wider than an arbitrary percentage.
+    """
+    htf_targets = [
+        t for t in (targets or [])
+        if t.get("timeframe_source") in ("4H", "1D")
+        and t.get("target_type") in ("HTF_SWING", "HTF_STRUCTURE", "EXTERNAL_LIQUIDITY")
+    ]
+    if htf_targets:
         return "SWING"
+    return "INTRADAY"
 
 
 def is_ready_now(plan):
@@ -1117,10 +1114,12 @@ def is_ready_now(plan):
 # tier with no real detected level simply contributes nothing.
 
 TARGET_TIERS = [
-    # (target_type, timeframe_source)
-    ("EXTERNAL_LIQUIDITY", "1D"),
+    # Swing thesis target priority: 4H structure first, then a reachable
+    # 1D objective. 1H levels remain the nearest actionable TP candidates.
+    # ATH/global-extreme levels are explicitly filtered out below.
     ("HTF_SWING", "4H"),
     ("HTF_STRUCTURE", "4H"),
+    ("EXTERNAL_LIQUIDITY", "1D"),
     ("STRUCTURE_1H", "1H"),
     ("RANGE_BOUNDARY", "1H"),
     ("SUPPORT_RESISTANCE", "1H"),
@@ -1207,12 +1206,45 @@ def gather_structural_targets(tf_results, direction, price, regime_alignment):
     d1, h4, h1, entry = (tf_results.get("1D"), tf_results.get("4H"),
                           tf_results.get("1H"), tf_results.get(ENTRY_TF))
 
-    add(_nearest_swing_beyond(d1, direction, price), "EXTERNAL_LIQUIDITY", "1D",
-        "Nearest opposing swing point on the daily timeframe -- major resting liquidity.")
+    # Realistic swing objectives:
+    #   TP1 -> nearest meaningful 1H structure
+    #   TP2 -> next meaningful 4H structure
+    #   TP3 -> reachable 1D structure only when it is not an ATH/global
+    #          extreme and is not an unrealistic distance away.
+    #
+    # This deliberately prevents an old ATH from becoming the default
+    # structural target simply because it is the highest daily swing in
+    # the historical candle window.
     add(_nearest_swing_beyond(h4, direction, price), "HTF_SWING", "4H",
-        "Nearest opposing swing high/low on the 4H timeframe.")
+        "Nearest opposing swing high/low on the 4H timeframe -- primary swing objective.")
     add(_nearest_zone_edge_beyond(h4, direction, price), "HTF_STRUCTURE", "4H",
         "Nearest unmitigated opposing OB/FVG on the 4H timeframe.")
+
+    daily_level = _nearest_swing_beyond(d1, direction, price)
+    if daily_level is not None and d1 is not None:
+        daily_df = d1.get("df")
+        h4_df = h4.get("df") if h4 else None
+        daily_extreme = False
+        if daily_df is not None and len(daily_df) >= 20:
+            look = daily_df.tail(min(200, len(daily_df)))
+            if direction == "BULLISH":
+                daily_extreme = daily_level >= float(look["high"].max()) * 0.995
+            else:
+                daily_extreme = daily_level <= float(look["low"].min()) * 1.005
+
+        # A daily target must be reachable from the current structure.
+        # 4H ATR is used when available; otherwise fall back to a 10% cap.
+        daily_reachable = True
+        if h4_df is not None and len(h4_df) >= 20:
+            atr4 = compute_atr(h4_df)
+            daily_reachable = abs(daily_level - price) <= (4.0 * atr4) if atr4 else True
+        else:
+            daily_reachable = abs(daily_level - price) / max(abs(price), 1e-9) <= 0.10
+
+        if not daily_extreme and daily_reachable:
+            add(daily_level, "EXTERNAL_LIQUIDITY", "1D",
+                "Reachable daily swing objective -- not a historical ATH/global extreme.")
+
     add(_nearest_zone_edge_beyond(h1, direction, price), "STRUCTURE_1H", "1H",
         "Nearest unmitigated opposing OB/FVG on the 1H timeframe.")
     if regime_alignment == "RANGE":
@@ -1438,7 +1470,7 @@ def refine_trade_type(base_trade_type, primary_target, tf_results, direction):
         return base_trade_type
     htf_sourced = primary_target["timeframe_source"] in ("1D", "4H")
     if base_trade_type == "SWING" and not htf_sourced:
-        return "INTRADAY"  # demote -- the "swing"-sized R:R wasn't actually HTF-backed
+        return "INTRADAY"
     return base_trade_type
 
 
@@ -1626,7 +1658,7 @@ def build_entry_plan(tf_results, direction, regime_info=None, setup_score=None):
 
     # legacy Phase-1 target list kept for backward compatibility
     targets = find_tp_targets(entry, direction, price, invalidation)
-    trade_type = classify_trade_type(price, invalidation, targets)
+    trade_type = classify_trade_type(price, invalidation, targets, tf_results, direction)
 
     # ---- Phase 3 additions ----
     alignment = regime_info["trend_alignment"] if regime_info else None
