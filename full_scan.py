@@ -87,7 +87,7 @@ def _is_alert_candidate(score, plan):
         return False
     if plan.get("setup_quality", 0) < getattr(scanner, "MIN_SETUP_QUALITY", 70):
         return False
-    if float(plan.get("actionable_rr", 0.0) or 0.0) < getattr(scanner, "MIN_STRUCTURAL_RR", 2.0):
+    if not scanner.swing_rr_qualifies(plan):
         return False
     trade_type = str(plan.get("trade_type", "INTRADAY")).upper()
     if trade_type in getattr(scanner, "AUTO_ADD_EXCLUDE_TYPES", set()):
